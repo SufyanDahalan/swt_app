@@ -1,8 +1,10 @@
 package Spielverlauf;
 
+import org.json.JSONArray;
+
 public abstract class Monster {
 
-	protected int[] position;
+	protected JSONArray position;
 	protected int wertung = 250;
 	protected boolean graben;
 
@@ -16,12 +18,14 @@ public abstract class Monster {
 		throw new UnsupportedOperationException();
 	}
 
+	abstract public boolean testeBewegung(DIRECTION d);
+
 	/**
 	 * 
 	 * @param spawn
 	 * @param geschwindigkeit
 	 */
-	public Monster(int[] spawn, int geschwindigkeit) {
+	public Monster(JSONArray spawn) {
 		// TODO - implement Monster.Monster
 		throw new UnsupportedOperationException();
 	}

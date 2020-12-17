@@ -1,16 +1,13 @@
 package Spielverlauf;
 
-public abstract class Tunnel {
+import org.json.JSONArray;
 
-	private int[] position;
+public abstract class Tunnel{
 
-	/**
-	 * 
-	 * @param pos
-	 */
-	public Tunnel(int[] pos) {
-		// TODO - implement Tunnel.Tunnel
-		throw new UnsupportedOperationException();
+	JSONArray position;
+
+	public Tunnel(JSONArray pos){
+        position = pos;
 	}
 
 }

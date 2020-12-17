@@ -1,5 +1,9 @@
 package Spielbereitstellug;
 
+import Spielverlauf.Level;
+
+import javax.swing.*;
+
 public class Spiel {
 
 	private int aktuelles_level;
