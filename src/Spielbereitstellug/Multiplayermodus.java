@@ -1,5 +1,7 @@
 package Spielbereitstellug;
 
+import java.net.InetAddress;
+
 public class Multiplayermodus {
 
 	private InetAddress ip;

@@ -1,5 +1,7 @@
 package Menuefuehrung;
 
+import javax.swing.*;
+
 public class Hauptmenue {
 
 	private JButton sp_btn;

@@ -2,10 +2,12 @@ package Spielbereitstellug;
 
 import Spielverlauf.*;
 
+import java.time.LocalDate;
+
 public class Nachricht {
 
 	private String inhalt;
-	private Datetime datum;
+	private LocalDate datum;
 	private Spieler absender;
 
 }

@@ -24,7 +24,7 @@ public class Spiel {
 	public Spiel() {
 
 		// initialisiere Skin
-		current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original.png and original.json from skins/
+		current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
 
 		// initialisiere Mapchain
 		// TODO:
