@@ -120,9 +120,6 @@ public class Map extends JPanel {
 	@Override
 	public Dimension getPreferredSize() {
 
-		panel_size[0] =
-		panel_size[1] =
-
 		int field_size;
 		int w_temp_size = panel_size[0]/playground_size.getInt(0) ;
 		int h_temp_size = panel_size[1]/playground_size.getInt(1) ;
