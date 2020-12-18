@@ -18,13 +18,8 @@ public abstract class Monster {
 		throw new UnsupportedOperationException();
 	}
 
-	abstract public boolean testeBewegung(DIRECTION d);
+	abstract public boolean testMove(DIRECTION d);
 
-	/**
-	 * 
-	 * @param spawn
-	 * @param geschwindigkeit
-	 */
 	public Monster(JSONArray spawn) {
 		// TODO - implement Monster.Monster
 		throw new UnsupportedOperationException();

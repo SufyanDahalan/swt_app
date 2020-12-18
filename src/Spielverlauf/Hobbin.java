@@ -5,18 +5,26 @@ import org.json.JSONArray;
 public class Hobbin extends Monster {
 
 	@Override
-	public boolean testeBewegung(DIRECTION d){
+	public boolean testMove(DIRECTION d){
 		// ist Wand
-		if() //TODO: Move is accepted or not
+		if(false) //TODO: check wether Move is accepted or not
 			return true;
 		else
 			return false;
 	}
 
 	public boolean graben(Map m, DIRECTION d) {
-		if(testeBewegung(d)) {
-			m.setTunnel(position);
-			return true; // Bewegung erlaubt
+		if( testMove(d) ) {
+
+			Tunnel t;
+
+			if(d.equals(DIRECTION.RIGHT) || d.equals(DIRECTION.LEFT))
+				t = new TunnelVertikal(position);
+			else
+				t = new TunnelHorizontal(position);
+
+			m.setTunnel(t);
+			return true;
 		}
 		else
 			return false; // wenn Bewegng nicht erlaubt

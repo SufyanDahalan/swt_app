@@ -9,9 +9,9 @@ public class Nobbin extends Monster {
 	}
 
 	@Override
-	public boolean testeBewegung(DIRECTION d){
+	public boolean testMove(DIRECTION d){
 		// ist Erde oder Wand
-		if() //TODO: Move is accepted or not
+		if(false) //TODO: Move is accepted or not
 			return true;
 		else
 			return false;
