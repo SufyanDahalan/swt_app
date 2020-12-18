@@ -30,7 +30,6 @@ public class Map extends JPanel {
 	private ArrayList<Geldsack> geldsaecke;
 	private ArrayList<Tunnel> tunnel;
 	private Kirsche kirsche; // TODO: prüfen ob sinnvoll zu speichern
-	// TODO: ggf. JSON simple verwenden
 
 		public Map(JSONObject obj, int[] panelSize, Skin sk){
 
@@ -60,12 +59,12 @@ public class Map extends JPanel {
 
 			for (int i = 0; i < pos_diam.length(); i++) {
 
-				JSONArray single_diamant = pos_diam.getJSONArray(i);
+				JSONArray single_item = pos_diam.getJSONArray(i);
 
-				diamanten.add( new Diamant( single_diamant ) );
+				diamanten.add( new Diamant( single_item ) );
 			}
 
-			//
+			// Füge Geldsäcke ein
 
 			geldsaecke = new ArrayList<Geldsack>();
 
@@ -91,7 +90,7 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_vertikal.getJSONArray(i);
 
-				tunnel.add( new TunnelVertikal(single_tunnel) );
+				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.VERTICAL) );
 			}
 
 			// Set landscape tunnel
@@ -101,7 +100,7 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
 
-				tunnel.add( new TunnelHorizontal(single_tunnel) );
+				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.HORIZOTAL) );
 			}
 
 			// Set holes
@@ -111,8 +110,13 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_space.getJSONArray(i);
 
-				tunnel.add( new TunnelHorizontal(single_tunnel) );
+				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.SPACE) );
 			}
+
+			System.out.println(pos_tun_space.length());
+			System.out.println(pos_tun_vertikal.length());
+			System.out.println(pos_tun_horizontal.length());
+			System.out.println(tunnel.size());
 
 	}
 
@@ -120,20 +124,82 @@ public class Map extends JPanel {
 	// GUI handling
 
 	protected void paintComponent(Graphics g) {
+
 		super.paintComponent(g);
 
+		// Zeichne Hintergrund
+
+		BufferedImage backgroundImg = skin.getImage("backg_typ1");
+		TexturePaint slatetp = new TexturePaint(backgroundImg, new Rectangle(0, 0, backgroundImg.getWidth(), backgroundImg.getHeight()));
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setPaint(slatetp);
+		g2d.fillRect(0, 0, getWidth(), getHeight());
+
+		// Zeichne Tunnel
+			BufferedImage horzTunImg = skin.getImage("tunnel_hori");
+			BufferedImage vertTunImg = skin.getImage("tunnel_vert");
+			BufferedImage spacTunImg = skin.getImage("tunnel_space");
+
+			for (int i = 0; i < tunnel.size(); i++) {
+
+				Tunnel single_item = tunnel.get(i);
+
+				BufferedImage unscaledImg;
+
+				if (single_item.typ.equals(TUNNELTYP.HORIZOTAL))
+					unscaledImg = horzTunImg;
+				else if (single_item.typ.equals(TUNNELTYP.VERTICAL))
+					unscaledImg = vertTunImg;
+				else
+					unscaledImg = spacTunImg;
+				int x_field = single_item.getPosition().getInt(0) - 1;
+				int y_field = single_item.getPosition().getInt(1) - 1;
+				int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2);
+				int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2);
+
+				g.drawImage(unscaledImg, x_pixel, y_pixel,null);
+
+				// for testing purpose
+				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
+				g.setColor(Color.RED);
+			}
+
 		// Zeichne Diamanten
-			BufferedImage unscaledImg = skin.getImage("diamond");
+			BufferedImage diamImg = skin.getImage("diamond");
 
 			for (int i = 0; i < diamanten.size(); i++) {
-				Diamant single_diamant = diamanten.get(i);
+				Diamant single_item = diamanten.get(i);
 
-				g.drawImage(unscaledImg, single_diamant.getPosition().getInt(0)*field_size, single_diamant.getPosition().getInt(1)*field_size,field_size,field_size,null);
+				int x_field = single_item.getPosition().getInt(0)-1;
+				int y_field = single_item.getPosition().getInt(1)-1;
+				int x_pixel = x_field*field_size-(diamImg.getWidth()/2)+(field_size/2);
+				int y_pixel = y_field*field_size-(diamImg.getHeight()/2)+(field_size/2);
+
+				g.drawImage(diamImg, x_pixel, y_pixel,null);
+
+				// for testing purpose
+				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
+				g.setColor(Color.RED);
 			}
-			unscaledImg = skin.getImage("diamond");
 
 
-		// zeichne....
+		// Zeichne Geld
+			BufferedImage moneyPodImg = skin.getImage("money_static");
+
+			for (int i = 0; i < geldsaecke.size(); i++) {
+				Geldsack single_item = geldsaecke.get(i);
+
+				int x_field = single_item.getPosition().getInt(0)-1;
+				int y_field = single_item.getPosition().getInt(1)-1;
+				int x_pixel = x_field*field_size-(diamImg.getWidth()/2)+(field_size/2);
+				int y_pixel = y_field*field_size-(diamImg.getHeight()/2)+(field_size/2);
+
+				g.drawImage(moneyPodImg, x_pixel, y_pixel,null);
+
+				// for testing purpose
+				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
+				g.setColor(Color.RED);
+			}
 
 	}
 
