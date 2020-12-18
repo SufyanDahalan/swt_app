@@ -1,3 +1,5 @@
+package Spielverlauf;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -8,10 +10,9 @@ import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import java.io.*;
-
-import Spielverlauf.Skin;
 import org.json.*;
+
+import Spielverlauf.*;
 
 public class Test {
 
@@ -26,23 +27,25 @@ public class Test {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
+        File skin_graphic_file = new File("bin/skins");
+        Skin sk = new Skin(skin_graphic_file, "original_skin");
 
-        File skin_graphic_file = new File("skins");
-        Skin s = new Skin(skin_graphic_file, "original_skin");
+        String[] levels;
+        File f = new File("bin/level/");
+        levels = f.list();
 
         JSONObject obj = null;
         try {
-             obj =  new JSONObject(new String(Files.readAllBytes(Paths.get("../bin/level/level_01.json"))));
+             obj =  new JSONObject(new String(Files.readAllBytes(Paths.get("bin/level/"+levels[1]))));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        int[] size = {1000,1000};
 
-        int[] size = {300,300};
+        Map map = new Map(obj, size ,sk);
 
-        Map map = new Map(obj, size ,s);
-
-        frame.add((Component) map);
+        frame.add(map);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
