@@ -8,7 +8,6 @@ public class Diamant extends Item {
 
 	public Diamant(JSONArray pos){
 		super(pos);
-
 	}
 
 }

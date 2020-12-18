@@ -52,6 +52,10 @@ public class Map extends JPanel {
 			spawn_sp1 = obj.getJSONArray("spawn_p1");
 			spawn_sp2 = obj.getJSONArray("spawn_p2");
 
+			// Füge Diamanten ein
+
+			diamanten = new ArrayList<Diamant>();
+
 			JSONArray pos_diam = obj.getJSONArray("pos_diam");
 
 			for (int i = 0; i < pos_diam.length(); i++) {
@@ -60,6 +64,10 @@ public class Map extends JPanel {
 
 				diamanten.add( new Diamant( single_diamant ) );
 			}
+
+			//
+
+			geldsaecke = new ArrayList<Geldsack>();
 
 			JSONArray pos_money = obj.getJSONArray("pos_money");
 
@@ -72,6 +80,8 @@ public class Map extends JPanel {
 
 			//// Set initial tunnels
 
+			tunnel = new ArrayList<Tunnel>();
+
 			JSONObject kind_tun = obj.getJSONObject("pos_tun");
 
 			// Set vertical tunnel
@@ -81,7 +91,7 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_vertikal.getJSONArray(i);
 
-				tunnel.add ( new TunnelVertikal(single_tunnel) );
+				tunnel.add( new TunnelVertikal(single_tunnel) );
 			}
 
 			// Set landscape tunnel
@@ -91,7 +101,7 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
 
-				tunnel.add ( new TunnelHorizontal(single_tunnel) );
+				tunnel.add( new TunnelHorizontal(single_tunnel) );
 			}
 
 			// Set holes
@@ -101,7 +111,7 @@ public class Map extends JPanel {
 
 				JSONArray single_tunnel = pos_tun_space.getJSONArray(i);
 
-				tunnel.add ( new TunnelHorizontal(single_tunnel) );
+				tunnel.add( new TunnelHorizontal(single_tunnel) );
 			}
 
 	}
@@ -114,16 +124,15 @@ public class Map extends JPanel {
 
 		// Zeichne Diamanten
 			BufferedImage unscaledImg = skin.getImage("diamond");
-			// scale by filedsize
-
-			Image img_diamant= unscaledImg.getScaledInstance(field_size, field_size, Image.SCALE_DEFAULT);
 
 			for (int i = 0; i < diamanten.size(); i++) {
 				Diamant single_diamant = diamanten.get(i);
 
-
 				g.drawImage(unscaledImg, single_diamant.getPosition().getInt(0)*field_size, single_diamant.getPosition().getInt(1)*field_size,field_size,field_size,null);
 			}
+			unscaledImg = skin.getImage("diamond");
+
+
 		// zeichne....
 
 	}
@@ -139,7 +148,7 @@ public class Map extends JPanel {
 		else
 			field_size = w_temp_size;
 
-		return new Dimension(playground_size[0]*field_size, playground_size[1]*field_size);
+		return new Dimension(playground_size.getInt(0)*field_size, playground_size.getInt(1)*field_size);
 	}
 
 	// Content handling
@@ -186,7 +195,7 @@ public class Map extends JPanel {
 		monster.add(m);
 	}
 
-	public void removeMonster() {
+	public void removeMonster(Monster m) {
 		// TODO: impl.
 	}
 

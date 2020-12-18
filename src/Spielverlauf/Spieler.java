@@ -4,7 +4,7 @@ public abstract class Spieler {
 
 	protected int x;
 	protected int y;
-	protected string name;
+	protected String name;
 	protected int alter;
 	private int leben = 3;
 
