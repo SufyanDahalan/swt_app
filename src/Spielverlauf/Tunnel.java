@@ -4,15 +4,20 @@ import org.json.JSONArray;
 
 import javax.swing.*;
 
-public abstract class Tunnel{
+public class Tunnel{
 
 	JSONArray position;
-	ImageIcon picture;
+	TUNNELTYP typ;
 
 
-	public Tunnel(JSONArray pos){
+	public Tunnel(JSONArray pos, TUNNELTYP t){
         position = pos;
+        typ = t;
 	}
+
+	public JSONArray getPosition() {
+		return position;
+	};
 
 
 
