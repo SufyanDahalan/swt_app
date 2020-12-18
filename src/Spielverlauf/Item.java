@@ -11,9 +11,9 @@ public abstract class Item {
 		position = pos;
 	}
 
-	public boolean sichtbar() {
-		// TODO - implement Item.sichtbar
-		throw new UnsupportedOperationException();
+	public JSONArray getPosition() {
+		return position;
 	}
+
 
 }

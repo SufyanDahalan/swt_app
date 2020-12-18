@@ -5,12 +5,15 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Map extends JPanel {
 
 	// GUI
 	private int[] panel_size;
+	private Skin skin;
+	private int field_size;
 
 	// Playground
 
@@ -29,11 +32,12 @@ public class Map extends JPanel {
 	private Kirsche kirsche; // TODO: prüfen ob sinnvoll zu speichern
 	// TODO: ggf. JSON simple verwenden
 
-		public Map(JSONObject obj, int[] s){
+		public Map(JSONObject obj, int[] panelSize, Skin sk){
 
 			// Setup GUI
 
-			size = s;
+			panel_size = panelSize;
+			skin = sk;
 
 			// Setup Playground
 
@@ -108,19 +112,25 @@ public class Map extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		for (int i = 0; i < diamanten.size(); i++) {
+		// Zeichne Diamanten
+			BufferedImage unscaledImg = skin.getImage("diamond");
+			// scale by filedsize
 
-			g.drawRect(single_diamant.getInt(1)*field_size, field_size, field_size);
-			g.setColor(Color.RED);
-		}
+			Image img_diamant= unscaledImg.getScaledInstance(field_size, field_size, Image.SCALE_DEFAULT);
 
+			for (int i = 0; i < diamanten.size(); i++) {
+				Diamant single_diamant = diamanten.get(i);
+
+
+				g.drawImage(unscaledImg, single_diamant.getPosition().getInt(0)*field_size, single_diamant.getPosition().getInt(1)*field_size,field_size,field_size,null);
+			}
+		// zeichne....
 
 	}
 
 	@Override
 	public Dimension getPreferredSize() {
 
-		int field_size;
 		int w_temp_size = panel_size[0]/playground_size.getInt(0) ;
 		int h_temp_size = panel_size[1]/playground_size.getInt(1) ;
 

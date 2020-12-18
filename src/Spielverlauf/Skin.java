@@ -1,27 +1,43 @@
 package Spielverlauf;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Skin {
 
-	private int[] grosse;
-	private string url;
+	private String skin_graphic; // Grafikdatei
+	private JSONObject skin_catalog; // Grafikaktalog
 
 	BufferedImage image = getImage( "dig_red_usd" );
 
-	private BufferedImage getImage(String name) {
+	// Load Skin
+	public Skin(File skinDir, String skinname){
+		File skin_graphic_file = new File(skinDir, skinname+".png");
+		File skin_catalog_file = new File(skinDir, skinname+".json");
+		// TODO: fix read FIle not path
 
-		JSONObject obj = null;
 		try {
-			obj = new JSONObject(new String(Files.readAllBytes(Paths.get("katalog.json"))));
+			skin_catalog = new JSONObject(skin_catalog_file.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONArray pic_val= obj.getJSONArray(name);
+	}
 
-		int factor= 1;
+	public BufferedImage getImage(String name) {
+
+		JSONArray pic_val= skin_catalog.getJSONArray(name);
 
 		BufferedImage dest = null;
 		try {
-			dest = ImageIO.read(new File("img_template.png")).getSubimage(pic_val.getInt(0), pic_val.getInt(1), pic_val.getInt(2), pic_val.getInt(3));
+			dest = ImageIO.read(new File(skin_graphic)).getSubimage(pic_val.getInt(0), pic_val.getInt(1), pic_val.getInt(2), pic_val.getInt(3));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
