@@ -22,6 +22,7 @@ public class Map extends JPanel {
 	// Contente
 	private ArrayList<Monster> monster;
 	private JSONArray spawn_monster;
+	private  JSONArray geldsack_pos;
 	private Spieler sp1;
 	private JSONArray spawn_sp1;
 	private Spieler sp2;
@@ -265,7 +266,7 @@ public class Map extends JPanel {
 		// TODO: impl.
 	}
 
-	public void setKirsche(){
+	public void setKirsche(Kirsche k){
 		kirsche.setVisible(true);
 	}
 
@@ -286,5 +287,16 @@ public class Map extends JPanel {
 	public int getMonsterAmmount () {
 		return monster.size();
 	}
+
+
+//TODO: Geldsack
+	public void setGeldsack(Geldsack g) { geldsaecke.add(g); }
+	public JSONArray getGeldsack(){ return geldsack_pos; }
+
+//TODO:Geld
+	public void setGeld(Geld c){}
+
+//TODO: Graben
+public void graben (Spieler sp1, Spieler sp2) {}
 
 }

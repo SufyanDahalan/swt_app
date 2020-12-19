@@ -25,7 +25,7 @@ public class Level extends JPanel{
 		}
 
 		if (temp_kills == 4) { // TODO: Spielverhalten abstimmen udn Bedingung anpassen
-			karte.setKirsche();
+			//karte.setKirsche();
 			temp_kills = 0;
 		}
 
