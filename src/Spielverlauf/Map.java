@@ -195,6 +195,8 @@ public class Map extends JPanel {
 				int x_pixel = x_field*field_size-(diamImg.getWidth()/2)+(field_size/2);
 				int y_pixel = y_field*field_size-(diamImg.getHeight()/2)+(field_size/2);
 
+
+
 				g.drawImage(moneyPodImg, x_pixel, y_pixel,null);
 
 				// for testing purpose
@@ -264,6 +266,7 @@ public class Map extends JPanel {
 
 	public void removeMonster(Monster m) {
 		// TODO: impl.
+		monster.remove(m);
 	}
 
 	public void setKirsche(Kirsche k){
@@ -297,6 +300,6 @@ public class Map extends JPanel {
 	public void setGeld(Geld c){}
 
 //TODO: Graben
-public void graben (Spieler sp1, Spieler sp2) {}
+	public void graben (Spieler sp1, Spieler sp2) {}
 
 }

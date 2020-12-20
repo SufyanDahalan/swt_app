@@ -2,6 +2,8 @@ package Spielverlauf;
 
 import org.json.JSONArray;
 
+import Spielverlauf.*;
+
 import javax.swing.*;
 
 public class Tunnel{

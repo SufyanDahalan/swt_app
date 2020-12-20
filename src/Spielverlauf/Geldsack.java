@@ -1,5 +1,7 @@
 package Spielverlauf;
 import org.json.JSONArray;
+import Spielverlauf.*;
+
 
 public class Geldsack extends Item {
 
