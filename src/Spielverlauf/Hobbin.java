@@ -23,7 +23,7 @@ public class Hobbin extends Monster {
 			else
 				t = new Tunnel(position, TUNNELTYP.HORIZOTAL);
 
-			m.setTunnel(t);
+			m.addTunnel(t);
 			return true;
 		}
 		else

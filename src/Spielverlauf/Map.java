@@ -22,105 +22,100 @@ public class Map extends JPanel {
 	// Contente
 	private ArrayList<Monster> monster;
 	private JSONArray spawn_monster;
-	private  JSONArray geldsack_pos;
 	private Spieler sp1;
 	private JSONArray spawn_sp1;
 	private Spieler sp2;
 	private JSONArray spawn_sp2;
 	private ArrayList<Diamant> diamanten;
 	private ArrayList<Geldsack> geldsaecke;
+	private ArrayList<Geld> geld;
 	private ArrayList<Tunnel> tunnel;
 	private Kirsche kirsche; // TODO: prüfen ob sinnvoll zu speichern
 
-		public Map(JSONObject obj, int[] panelSize, Skin sk){
+	public Map(JSONObject obj, int[] panelSize, Skin sk) {
 
-			// Setup GUI
+		// Setup GUI
 
-			panel_size = panelSize;
-			skin = sk;
+		panel_size = panelSize;
+		skin = sk;
 
-			// Setup Playground
+		// Setup Playground
 
-			playground_size = obj.getJSONArray("pg_size");
+		playground_size = obj.getJSONArray("pg_size");
 
 
-			// Set Content
+		// Set initial Content
 
-			kirsche = new Kirsche(spawn_monster);
+		kirsche = new Kirsche(spawn_monster);
+		monster = new ArrayList<Monster>();
+		geldsaecke = new ArrayList<Geldsack>();
+		geld = new ArrayList<Geld>();
+		diamanten = new ArrayList<Diamant>();
+		tunnel = new ArrayList<Tunnel>();
+		sp1 = null;
+		sp2 = null;
 
-			spawn_monster = obj.getJSONArray("spawn_mon");
-			spawn_sp1 = obj.getJSONArray("spawn_p1");
-			spawn_sp2 = obj.getJSONArray("spawn_p2");
+		spawn_monster = obj.getJSONArray("spawn_mon");
+		spawn_sp1 = obj.getJSONArray("spawn_p1");
+		spawn_sp2 = obj.getJSONArray("spawn_p2");
 
-			// Füge Diamanten ein
+		// Füge initiale Diamanten ein
 
-			diamanten = new ArrayList<Diamant>();
+		JSONArray pos_diam = obj.getJSONArray("pos_diam");
 
-			JSONArray pos_diam = obj.getJSONArray("pos_diam");
+		for (int i = 0; i < pos_diam.length(); i++) {
 
-			for (int i = 0; i < pos_diam.length(); i++) {
+			JSONArray single_item = pos_diam.getJSONArray(i);
 
-				JSONArray single_item = pos_diam.getJSONArray(i);
+			diamanten.add(new Diamant(single_item));
+		}
 
-				diamanten.add( new Diamant( single_item ) );
-			}
+		// Füge initiale Geldsäcke ein
 
-			// Füge Geldsäcke ein
+		JSONArray pos_money = obj.getJSONArray("pos_money");
 
-			geldsaecke = new ArrayList<Geldsack>();
+		for (int i = 0; i < pos_money.length(); i++) {
 
-			JSONArray pos_money = obj.getJSONArray("pos_money");
+			JSONArray single_money = pos_money.getJSONArray(i);
 
-			for (int i = 0; i < pos_money.length(); i++) {
+			geldsaecke.add(new Geldsack(single_money));
+		}
 
-				JSONArray single_money = pos_money.getJSONArray(i);
+		//// Set initial tunnels
 
-				geldsaecke.add( new Geldsack( single_money ) );
-			}
+		JSONObject kind_tun = obj.getJSONObject("pos_tun");
 
-			//// Set initial tunnels
+		// Set vertical tunnel
+		JSONArray pos_tun_vertikal = kind_tun.getJSONArray("vertikal");
 
-			tunnel = new ArrayList<Tunnel>();
+		for (int i = 0; i < pos_tun_vertikal.length(); i++) {
 
-			JSONObject kind_tun = obj.getJSONObject("pos_tun");
+			JSONArray single_tunnel = pos_tun_vertikal.getJSONArray(i);
 
-			// Set vertical tunnel
-			JSONArray pos_tun_vertikal = kind_tun.getJSONArray("vertikal");
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL));
+		}
 
-			for (int i = 0; i < pos_tun_vertikal.length(); i++) {
+		// Set landscape tunnel
+		JSONArray pos_tun_horizontal = kind_tun.getJSONArray("horizontal");
 
-				JSONArray single_tunnel = pos_tun_vertikal.getJSONArray(i);
+		for (int i = 0; i < pos_tun_horizontal.length(); i++) {
 
-				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.VERTICAL) );
-			}
+			JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
 
-			// Set landscape tunnel
-			JSONArray pos_tun_horizontal = kind_tun.getJSONArray("horizontal");
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZOTAL));
+		}
 
-			for (int i = 0; i < pos_tun_horizontal.length(); i++) {
+		// Set holes
+		JSONArray pos_tun_space = kind_tun.getJSONArray("space");
 
-				JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
+		for (int i = 0; i < pos_tun_space.length(); i++) {
 
-				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.HORIZOTAL) );
-			}
+			JSONArray single_tunnel = pos_tun_space.getJSONArray(i);
 
-			// Set holes
-			JSONArray pos_tun_space = kind_tun.getJSONArray("space");
-
-			for (int i = 0; i < pos_tun_space.length(); i++) {
-
-				JSONArray single_tunnel = pos_tun_space.getJSONArray(i);
-
-				tunnel.add( new Tunnel(single_tunnel, TUNNELTYP.SPACE) );
-			}
-
-			System.out.println(pos_tun_space.length());
-			System.out.println(pos_tun_vertikal.length());
-			System.out.println(pos_tun_horizontal.length());
-			System.out.println(tunnel.size());
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE));
+		}
 
 	}
-
 
 	// GUI handling
 
@@ -137,169 +132,247 @@ public class Map extends JPanel {
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 
 		// Zeichne Tunnel
-			BufferedImage horzTunImg = skin.getImage("tunnel_hori");
-			BufferedImage vertTunImg = skin.getImage("tunnel_vert");
-			BufferedImage spacTunImg = skin.getImage("tunnel_space");
+		BufferedImage horzTunImg = skin.getImage("tunnel_hori");
+		BufferedImage vertTunImg = skin.getImage("tunnel_vert");
+		BufferedImage spacTunImg = skin.getImage("tunnel_space");
 
-			for (int i = 0; i < tunnel.size(); i++) {
+		for (int i = 0; i < tunnel.size(); i++) {
 
-				Tunnel single_item = tunnel.get(i);
+			Tunnel single_item = tunnel.get(i);
 
-				BufferedImage unscaledImg;
+			BufferedImage unscaledImg;
 
-				if (single_item.typ.equals(TUNNELTYP.HORIZOTAL))
-					unscaledImg = horzTunImg;
-				else if (single_item.typ.equals(TUNNELTYP.VERTICAL))
-					unscaledImg = vertTunImg;
-				else
-					unscaledImg = spacTunImg;
-				int x_field = single_item.getPosition().getInt(0) - 1;
-				int y_field = single_item.getPosition().getInt(1) - 1;
-				int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2);
-				int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2);
+			if (single_item.typ.equals(TUNNELTYP.HORIZOTAL))
+				unscaledImg = horzTunImg;
+			else if (single_item.typ.equals(TUNNELTYP.VERTICAL))
+				unscaledImg = vertTunImg;
+			else
+				unscaledImg = spacTunImg;
+			int x_field = single_item.getPosition().getInt(0) - 1;
+			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2);
+			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2);
 
-				g.drawImage(unscaledImg, x_pixel, y_pixel,null);
+			g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
-				// for testing purpose
-				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
-				g.setColor(Color.RED);
-			}
+			// for testing purpose
+			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.setColor(Color.RED);
+		}
 
 		// Zeichne Diamanten
-			BufferedImage diamImg = skin.getImage("diamond");
+		BufferedImage diamImg = skin.getImage("diamond");
 
-			for (int i = 0; i < diamanten.size(); i++) {
-				Diamant single_item = diamanten.get(i);
+		for (int i = 0; i < diamanten.size(); i++) {
+			Diamant single_item = diamanten.get(i);
 
-				int x_field = single_item.getPosition().getInt(0)-1;
-				int y_field = single_item.getPosition().getInt(1)-1;
-				int x_pixel = x_field*field_size-(diamImg.getWidth()/2)+(field_size/2);
-				int y_pixel = y_field*field_size-(diamImg.getHeight()/2)+(field_size/2);
+			int x_field = single_item.getPosition().getInt(0) - 1;
+			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2);
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2);
 
-				g.drawImage(diamImg, x_pixel, y_pixel,null);
+			g.drawImage(diamImg, x_pixel, y_pixel, null);
 
-				// for testing purpose
-				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
-				g.setColor(Color.RED);
-			}
+			// for testing purpose
+			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.setColor(Color.RED);
+		}
 
 
 		// Zeichne Geld
-			BufferedImage moneyPodImg = skin.getImage("money_static");
+		BufferedImage moneyPodImg = skin.getImage("money_static");
 
-			for (int i = 0; i < geldsaecke.size(); i++) {
-				Geldsack single_item = geldsaecke.get(i);
+		for (int i = 0; i < geldsaecke.size(); i++) {
+			Geldsack single_item = geldsaecke.get(i);
 
-				int x_field = single_item.getPosition().getInt(0)-1;
-				int y_field = single_item.getPosition().getInt(1)-1;
-				int x_pixel = x_field*field_size-(diamImg.getWidth()/2)+(field_size/2);
-				int y_pixel = y_field*field_size-(diamImg.getHeight()/2)+(field_size/2);
+			int x_field = single_item.getPosition().getInt(0) - 1;
+			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2);
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2);
 
 
+			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
-				g.drawImage(moneyPodImg, x_pixel, y_pixel,null);
-
-				// for testing purpose
-				g.drawRect(x_field*field_size, y_field*field_size, field_size, field_size);
-				g.setColor(Color.RED);
-			}
+			// for testing purpose
+			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.setColor(Color.RED);
+		}
 
 	}
 
 	@Override
 	public Dimension getPreferredSize() {
 
-		int w_temp_size = panel_size[0]/playground_size.getInt(0) ;
-		int h_temp_size = panel_size[1]/playground_size.getInt(1) ;
+		int w_temp_size = panel_size[0] / playground_size.getInt(0);
+		int h_temp_size = panel_size[1] / playground_size.getInt(1);
 
 		if (w_temp_size > h_temp_size)
 			field_size = h_temp_size;
 		else
 			field_size = w_temp_size;
 
-		return new Dimension(playground_size.getInt(0)*field_size, playground_size.getInt(1)*field_size);
+		return new Dimension(playground_size.getInt(0) * field_size, playground_size.getInt(1) * field_size);
 	}
 
-	// Content handling
+	////// Content handling functions
+
+	/// Spieler
 
 	/**
 	 * Setzt einen Spieler in die Map ein.
+	 *
 	 * @param s Spieler der in die Karte eingesetzt wird.
 	 * @return Liefert false, falls bereits ein Spieler in der Karte ist.
 	 */
 	// Singelplayer
-	public boolean spawnSpieler(Spieler s){
+	public boolean spawnSpieler(Spieler s) {
 
-			if( !s.equals(null) ) {
-				sp1 = s;
-				return true;
-			}
-			else
-				return false; // falls Spieler bereits belegt
+		if (!s.equals(null)) {
+			sp1 = s;
+			return true;
+		} else
+			return false; // falls Spieler bereits belegt
 	}
 
 	/**
 	 * Setzt zwei Spieler in die Map ein.
+	 *
 	 * @param s1 Spieler 1 der in die Karte eingesetzt wird.
 	 * @param s2 Spieler 2 der in die Karte eingesetzt wird.
 	 * @return Liefert false, falls bereits ein Spieler in der Karte ist.
 	 */
 	// Multiplayer
-	public boolean spawnSpieler(Spieler s1, Spieler s2){
+	public boolean spawnSpieler(Spieler s1, Spieler s2) {
 
-		if( !s1.equals(null) && !s2.equals(null) ) {
+		if (!s1.equals(null) && !s2.equals(null)) {
 			sp1 = s1;
 			sp2 = s2;
 			return true;
-		}
-		else
+		} else
 			return false; // falls Spieler bereits belegt
 	}
 
+	/// Monster
+
+	// typische getter und setter
+
+	public ArrayList<Monster> getMonster() {
+		return monster;
+	}
+
+	// add and remove
+
 	/**
 	 * Setzt eine Monster in die Map ein.
+	 *
 	 * @param m Monster das in die Karte eingesetzt wird.
 	 */
-	public void spawnMonster(Monster m){
+	public void spawnMonster(Monster m) {
 		monster.add(m);
 	}
 
-	public void removeMonster(Monster m) {
-		// TODO: impl.
-		monster.remove(m);
+	public void removeMonster(int i) {
+		monster.remove(i);
 	}
 
-	public void setKirsche(Kirsche k){
-		kirsche.setVisible(true);
-	}
-
-	public void removeKirsche() {
-		kirsche.setVisible(false);
-	}
-
-	// TODO: Geldsack animation Auswirklung
-
-	public void setTunnel(Tunnel t ) { // ehemals tunnelSetzen
-		tunnel.add(t);
-	}
+	// sonstige
 
 	public JSONArray getSpawn_monster() {
 		return spawn_monster;
 	}
 
-	public int getMonsterAmmount () {
+	public int getMonsterAmmount() {
 		return monster.size();
 	}
 
+	/// Kirsche
 
-//TODO: Geldsack
-	public void setGeldsack(Geldsack g) { geldsaecke.add(g); }
-	public JSONArray getGeldsack(){ return geldsack_pos; }
+	// typische getter und setter
 
-//TODO:Geld
-	public void setGeld(Geld c){}
+	public Kirsche getKirsche() {
+		return kirsche;
+	}
 
-//TODO: Graben
-	public void graben (Spieler sp1, Spieler sp2) {}
+	public void setKirsche(Kirsche k) {
+		kirsche = k;
+	}
+
+	// Kische verstecke/anzeigen
+
+	public void showKirsche() {
+		kirsche.setVisible(true);
+	}
+
+	public void hideKirsche() {
+		kirsche.setVisible(false);
+	}
+
+	/// Tunnel
+
+	// typische getter und setter
+
+	public ArrayList<Tunnel> getTunnel() {
+		return tunnel;
+	}
+
+	public void setTunnel(ArrayList t) {
+		tunnel = t;
+	}
+
+	// Tunnel in Liste einfügen/entfernen
+
+	public void addTunnel(Tunnel t) { // ehemals tunnelSetzen
+		tunnel.add(t);
+	}
+
+	public void removeTunnel(int i) {
+		tunnel.remove(i);
+	}
+
+	//// Geldsäcke
+
+	// getter und setter Geldsäcke
+	public ArrayList<Geldsack> getGeldsaecke() {
+		return geldsaecke;
+	}
+
+	public void setGeldsaecke(ArrayList g) {
+		geldsaecke = g;
+	}
+
+	// add und remove Geldsäcke
+
+	public void addGeldsack(Geldsack g) {
+		geldsaecke.add(g);
+	}
+
+	public Geldsack removeGeldsack(int i) {
+		return geldsaecke.remove(i);
+	}
+
+	//// Geld
+
+	// typische getter und setter
+	public ArrayList<Geld> getGeld() {
+		return geld;
+	}
+
+	public void setGeld(ArrayList g) {
+		geld = g;
+	}
+
+	// add und remove Geld
+
+	public void addGeld(Geld g) {
+		geld.add(g);
+	}
+
+	public Geld removeGeld(int i) {
+		return geld.remove(i);
+	}
+
+	//TODO: Graben
+	public void graben(Spieler sp1, Spieler sp2) {
+	}
 
 }
