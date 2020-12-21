@@ -1,21 +1,26 @@
 package Spielbereitstellug;
 
+import Spielverlauf.Map;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 
 
-public class Lokalsteuerung extends JPanel implements ActionListener, KeyListener {
+public class Lokalsteuerung implements ActionListener, KeyListener {
 
 	Timer t = new Timer(5,this);
-	private double x;
-	private double y;
-	private double velx;
-	private double vely;
+	private int x;
+	private int y;
+	private int velx;
+	private int vely;
+	private Map map;
 
 
-	public Lokalsteuerung(int spx, int spy) {
+	public Lokalsteuerung(int spx, int spy, Map m) {
+
+		map = m;
 
 		x = spx;
 		y = spy;
@@ -23,9 +28,9 @@ public class Lokalsteuerung extends JPanel implements ActionListener, KeyListene
 		vely = 0;
 
 		t.start();
-        addKeyListener(this);
-		setFocusable(true);
-		setFocusTraversalKeysEnabled(false);
+        map.addKeyListener(this);
+		map.setFocusable(true);
+		map.setFocusTraversalKeysEnabled(false);
 
 
 
@@ -36,58 +41,36 @@ public class Lokalsteuerung extends JPanel implements ActionListener, KeyListene
 	}
 
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
-
-	public void paintComponent(Graphics g){
-        //super.paintComponent(g); // Mit dem Befehl: grauer Hintergrund überschreibt Map; Ohne den Befehl: Snake Modus
-			// Problem: paintComponent radiert Inhalt vor dem Neuzeichnen: Hierbei wird auch die ganze Map radiert
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.fill(new RoundRectangle2D.Double(x,y,40,40,3,3));
-
-	}
 	
     public void actionPerformed(ActionEvent e){
-        x+=velx;
-        y+=vely;
+        map.getSP1().addPos(velx,vely);
 
-		repaint();
+		map.repaint();
     }
 
 
 	// TODO: Randbereiche dynamisch auf Fenstergröße anpassen + Exception Cases überlegen
 
 	public void up() {
-		if (y<5){ vely = 0;}
-        else{
-            vely = -2;
-        }
+		vely = -1;
 
 		// throw new UnsupportedOperationException();
 	}
 
 	public void down() {
-		if (y>700){ vely = 0;}
-        else{
-            vely = 2;
-		}
+            vely = 1;
 		
 		// throw new UnsupportedOperationException();
 	}
 
 	public void left() {
-		if (x<5){ velx = 0;}
-        else{
-            velx = -2;
-		}
+		velx = -1;
 		
 		// throw new UnsupportedOperationException();
 	}
 
 	public void right() {
-		if (x>900){ velx = 0;}
-        else{
-            velx = 2;
-		}
+            velx = 1;
 		
 		// throw new UnsupportedOperationException();
 	}

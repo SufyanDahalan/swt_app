@@ -30,4 +30,9 @@ public class Spieler {
 
 	public int[] getPosition(){return position;}
 
+	public void addPos(int x, int y){
+		position[0]+=x;
+		position[1]+=y;
+	}
+
 }

@@ -61,13 +61,11 @@ public class Test {
 
         // Naiv-Testing Area:
 
-        Lokalsteuerung lok = new Lokalsteuerung(500, 500);
+        Lokalsteuerung lok = new Lokalsteuerung(map.getSP1().getPosition()[0], map.getSP1().getPosition()[1], map);
 
 
         frame.add(map);
         frame.pack();
-
-        frame.add(lok);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
