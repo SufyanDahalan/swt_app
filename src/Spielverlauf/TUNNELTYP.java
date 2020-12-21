@@ -1,7 +1,7 @@
 package Spielverlauf;
 
 public enum TUNNELTYP {
-    HORIZOTAL,
+    HORIZONTAL,
     VERTICAL,
     SPACE
 }

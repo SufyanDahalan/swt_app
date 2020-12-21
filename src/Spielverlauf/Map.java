@@ -102,7 +102,7 @@ public class Map extends JPanel {
 
 			JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZOTAL));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL));
 		}
 
 		// Set holes
@@ -351,6 +351,7 @@ public class Map extends JPanel {
 	}
 
 	//// Geld
+
 
 	// typische getter und setter
 	public ArrayList<Geld> getGeld() {

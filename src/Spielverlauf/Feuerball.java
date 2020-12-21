@@ -9,9 +9,10 @@ public class Feuerball {
 	 * @param pos
 	 * @param dir
 	 */
-	public Feuerball(int[] pos, DIRECTION dir) {
-		// TODO - implement Feuerball.Feuerball
-		throw new UnsupportedOperationException();
+	public Feuerball(int[] pos, DIRECTION d) {
+
+		dir = d;
+		position = pos;
 	}
 
 }

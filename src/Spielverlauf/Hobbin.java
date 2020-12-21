@@ -21,7 +21,7 @@ public class Hobbin extends Monster {
 			if(d.equals(DIRECTION.RIGHT) || d.equals(DIRECTION.LEFT))
 				t = new Tunnel(position, TUNNELTYP.VERTICAL);
 			else
-				t = new Tunnel(position, TUNNELTYP.HORIZOTAL);
+				t = new Tunnel(position, TUNNELTYP.HORIZONTAL);
 
 			m.addTunnel(t);
 			return true;
