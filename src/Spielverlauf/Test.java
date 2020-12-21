@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import Spielbereitstellug.Lokalsteuerung;
 import org.json.*;
 
 import Spielverlauf.*;
@@ -45,8 +46,16 @@ public class Test {
 
         Map map = new Map(obj, size ,sk);
 
+        // Naiv-Testing Area:
+
+        Lokalsteuerung lok = new Lokalsteuerung(500, 500);
+
+
         frame.add(map);
         frame.pack();
+
+        frame.add(lok);
+
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
