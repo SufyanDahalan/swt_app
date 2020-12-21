@@ -1,13 +1,16 @@
 package Spielverlauf;
 
+import org.json.JSONArray;
+
 public class Feuerball {
 
 	private int[] position;
+	private DIRECTION dir;
 
 	/**
 	 * 
 	 * @param pos
-	 * @param dir
+	 * @param d
 	 */
 	public Feuerball(int[] pos, DIRECTION d) {
 
@@ -15,4 +18,7 @@ public class Feuerball {
 		position = pos;
 	}
 
+	public int[] getPosition() {
+		return position;
+	}
 }

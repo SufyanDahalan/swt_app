@@ -43,6 +43,21 @@ public class Test {
 
         Map map = new Map(obj, size ,sk);
 
+        // Beispielcontent
+
+        map.spawnMonster();
+
+        JSONArray geld_pos = new JSONArray("[3,10]");
+        map.addGeld(new Geld(geld_pos));
+
+        map.spawnSpieler(new Spieler(map.getSpawnSP1()));
+
+        int[] fb_pos = map.getSP1().getPosition();
+        DIRECTION dir = DIRECTION.RIGHT;
+        map.addFeuerball(new Feuerball(fb_pos, dir));
+
+
+
         frame.add(map);
         frame.pack();
         frame.setLocationRelativeTo(null);

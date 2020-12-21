@@ -21,7 +21,7 @@ public class Level extends JPanel{
 	public void loop() {
 
 		if (karte.getMonsterAmmount() < max_monster ) {
-			karte.spawnMonster(new Nobbin(karte.getSpawn_monster()));
+			// karte.spawnMonster(new Nobbin(karte.getSpawn_monster()));
 		}
 
 		if (temp_kills == 4) { // TODO: Spielverhalten abstimmen udn Bedingung anpassen

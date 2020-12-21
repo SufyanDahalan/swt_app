@@ -21,8 +21,10 @@ public abstract class Monster {
 	abstract public boolean testMove(DIRECTION d);
 
 	public Monster(JSONArray spawn) {
-		// TODO - implement Monster.Monster
-		throw new UnsupportedOperationException();
+		position = spawn;
 	}
 
+	public JSONArray getPosition(){
+		return position;
+	};
 }

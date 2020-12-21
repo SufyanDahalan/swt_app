@@ -1,12 +1,22 @@
 package Spielverlauf;
 
-public abstract class Spieler {
+import org.json.JSONArray;
 
-	protected int x;
-	protected int y;
+import javax.swing.*;
+
+public class Spieler {
+
+	protected int[] position;
 	protected String name;
 	protected int alter;
 	private int leben = 3;
+
+	public Spieler(JSONArray pos) {
+		position = new int[2];
+
+		position[0] = pos.getInt(0);
+		position[1] = pos.getInt(1);
+	}
 
 	public void sterben() {
 		// TODO - implement Spieler.sterben
