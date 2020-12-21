@@ -18,4 +18,6 @@ public abstract class Spieler {
 		throw new UnsupportedOperationException();
 	}
 
+	public int[] getPosition(){return position;}
+
 }

@@ -26,6 +26,7 @@ public class Map extends JPanel {
 	private JSONArray spawn_sp1;
 	private Spieler sp2;
 	private JSONArray spawn_sp2;
+	private ArrayList<Feuerball> feuerball;
 	private ArrayList<Diamant> diamanten;
 	private ArrayList<Geldsack> geldsaecke;
 	private ArrayList<Geld> geld;
@@ -142,7 +143,7 @@ public class Map extends JPanel {
 
 			BufferedImage unscaledImg;
 
-			if (single_item.typ.equals(TUNNELTYP.HORIZOTAL))
+			if (single_item.typ.equals(TUNNELTYP.HORIZONTAL))
 				unscaledImg = horzTunImg;
 			else if (single_item.typ.equals(TUNNELTYP.VERTICAL))
 				unscaledImg = vertTunImg;
@@ -252,6 +253,10 @@ public class Map extends JPanel {
 			return false; // falls Spieler bereits belegt
 	}
 
+	public Spieler getSP1(){ return sp1;}
+	public Spieler getSP2(){ return sp2;}
+	public JSONArray getSpawnSP1(){return spawn_sp1;}
+	public JSONArray getSpwanSP2(){return spawn_sp2;}
 	/// Monster
 
 	// typische getter und setter
@@ -376,4 +381,17 @@ public class Map extends JPanel {
 	public void graben(Spieler sp1, Spieler sp2) {
 	}
 
+	/// Feuerball
+
+	//getter und setter
+	public ArrayList<Feuerball> getFeuerball() {
+		return feuerball;
+	}
+	public void setFeuerball(ArrayList f){
+		feuerball=f;
+	}
+
+	public void addFeuerball(Feuerball f) {
+		feuerball.add(f);
+	}
 }

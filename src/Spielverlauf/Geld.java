@@ -10,4 +10,7 @@ public class Geld extends Item{
         super(pos);
     }
 
+    public JSONArray getPosition(){
+        return position;
+    }
 }

@@ -26,10 +26,8 @@ public class Test {
         JFrame frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-
         File skin_graphic_file = new File("bin/skins");
         Skin sk = new Skin(skin_graphic_file, "original_skin");
-
         String[] levels;
         File f = new File("bin/level/");
         levels = f.list();

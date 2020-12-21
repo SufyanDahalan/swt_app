@@ -42,5 +42,4 @@ public class Skin {
 
 		return dest;
 	}
-
 }
