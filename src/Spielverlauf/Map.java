@@ -31,7 +31,8 @@ public class Map extends JPanel {
 	private ArrayList<Geldsack> geldsaecke;
 	private ArrayList<Geld> geld;
 	private ArrayList<Tunnel> tunnel;
-	private Kirsche kirsche; // TODO: prüfen ob sinnvoll zu speichern
+	private Kirsche kirsche;
+	private double[] border = {0.4, 0.2}; // Wandstärke x,y
 
 	public Map(JSONObject obj, int[] panelSize, Skin sk) {
 
@@ -127,18 +128,23 @@ public class Map extends JPanel {
 
 		super.paintComponent(g);
 
+		// Prepering
+
+		int borderOffsetX = (int)(field_size*border[0]);
+		int borderOffsetY = (int)(field_size*border[1]);
+
 		// Zeichne Hintergrund
 
-		BufferedImage backgroundImg = skin.getImage("backg_typ1");
+		BufferedImage backgroundImg = skin.getImage("backg_typ1", field_size);
 		TexturePaint slatetp = new TexturePaint(backgroundImg, new Rectangle(0, 0, backgroundImg.getWidth(), backgroundImg.getHeight()));
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setPaint(slatetp);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 
 		// Zeichne Tunnel
-		BufferedImage horzTunImg = skin.getImage("tunnel_hori");
-		BufferedImage vertTunImg = skin.getImage("tunnel_vert");
-		BufferedImage spacTunImg = skin.getImage("tunnel_space");
+		BufferedImage horzTunImg = skin.getImage("tunnel_hori", field_size);
+		BufferedImage vertTunImg = skin.getImage("tunnel_vert", field_size);
+		BufferedImage spacTunImg = skin.getImage("tunnel_space", field_size);
 
 		for (int i = 0; i < tunnel.size(); i++) {
 
@@ -154,132 +160,132 @@ public class Map extends JPanel {
 				unscaledImg = spacTunImg;
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 			g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 		// Zeichne Diamanten
-		BufferedImage diamImg = skin.getImage("diamond");
+		BufferedImage diamImg = skin.getImage("diamond", field_size);
 
 		for (int i = 0; i < diamanten.size(); i++) {
 			Diamant single_item = diamanten.get(i);
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 			g.drawImage(diamImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 
 		// Zeichne Geld
-		BufferedImage moneyPodImg = skin.getImage("money_static");
+		BufferedImage moneyPodImg = skin.getImage("money_static", field_size);
 
 		for (int i = 0; i < geldsaecke.size(); i++) {
 			Geldsack single_item = geldsaecke.get(i);
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 
 			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 		// Monster
 
-		BufferedImage monsterImg = skin.getImage("hobbin_left_f1");
+		BufferedImage monsterImg = skin.getImage("hobbin_left_f1", field_size);
 
 		for (int i = 0; i < monster.size(); i++) {
 			Monster single_item = monster.get(i);
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (monsterImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (monsterImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (monsterImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (monsterImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 			// scaling ...
 
 			g.drawImage(monsterImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 		// Feuerball
 
-		BufferedImage feuerballImg = skin.getImage("fireball_red_f1");
+		BufferedImage feuerballImg = skin.getImage("fireball_red_f1", field_size);
 
 		for (int i = 0; i < feuerball.size(); i++) {
 			Feuerball single_item = feuerball.get(i);
 
 			int x_field = single_item.getPosition()[0] - 1;
 			int y_field = single_item.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 			// scaling ...
 
 			g.drawImage(feuerballImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 		// Geld
 
-		BufferedImage geldImg = skin.getImage("money_fall_f6");
+		BufferedImage geldImg = skin.getImage("money_fall_f6", field_size);
 
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
 			// scaling ...
 
 			g.drawImage(geldImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
 		// Spieler
 
 		if(!sp1.equals(null)) {
-			BufferedImage sp1Img = skin.getImage("dig_red_up_f1");
+			BufferedImage sp1Img = skin.getImage("dig_red_up_f1", field_size);
 
 			int x_field = sp1.getPosition()[0] - 1;
 			int y_field = sp1.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (sp1Img.getWidth() / 2) + (field_size / 2);
-			int y_pixel = y_field * field_size - (sp1Img.getHeight() / 2) + (field_size / 2);
+			int x_pixel = x_field * field_size - (sp1Img.getWidth() / 2) + (field_size / 2) + borderOffsetX;
+			int y_pixel = y_field * field_size - (sp1Img.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 			// scaling ...
 
 			g.drawImage(sp1Img, x_pixel, y_pixel, null);
 
 			// for testing purpose
-			g.drawRect(x_field * field_size, y_field * field_size, field_size, field_size);
+			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
 			g.setColor(Color.RED);
 		}
 
@@ -288,15 +294,25 @@ public class Map extends JPanel {
 	@Override
 	public Dimension getPreferredSize() {
 
-		int w_temp_size = panel_size[0] / playground_size.getInt(0);
-		int h_temp_size = panel_size[1] / playground_size.getInt(1);
+		int felderX = playground_size.getInt(0);
+		int felderY = playground_size.getInt(1);
+
+
+		int w_temp_size = panel_size[0] / (int)( felderX + ( 2*border[0]) );
+		int h_temp_size = panel_size[1] / (int)( felderY + ( 2*border[1]) );
+
+		System.out.println(w_temp_size);
+		System.out.println(h_temp_size);
 
 		if (w_temp_size > h_temp_size)
 			field_size = h_temp_size;
 		else
 			field_size = w_temp_size;
 
-		return new Dimension(playground_size.getInt(0) * field_size, playground_size.getInt(1) * field_size);
+		int borderOffsetX = (int)(field_size*border[0]);
+		int borderOffsetY = (int)(field_size*border[1]);
+
+		return new Dimension(playground_size.getInt(0) * field_size + 2* borderOffsetX, playground_size.getInt(1) * field_size + 2* borderOffsetY);
 	}
 
 	////// Content handling functions
