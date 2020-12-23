@@ -97,19 +97,19 @@ public class MainFrame extends JFrame {
                 lok.down();
             }
         });
-        addKeyBinding(this.getRootPane(), "UP", new AbstractAction() {
+        addKeyBinding(map, "UP", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lok.up();
             }
         });
-        addKeyBinding(this.getRootPane(), "LEFT", new AbstractAction() {
+        addKeyBinding(map, "LEFT", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lok.left();
             }
         });
-        addKeyBinding(this.getRootPane(), "RIGHT", new AbstractAction() {
+        addKeyBinding(map, "RIGHT", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lok.right();
