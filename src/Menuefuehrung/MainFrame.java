@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
         MainPanel Panel = new MainPanel();
         prepareMap();
         getContentPane().add(Panel, "panel");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/bin/Images/Logo.png")));
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));
         setUndecorated(true);
         CardLayout layout = (CardLayout)getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
@@ -83,12 +83,12 @@ public class MainFrame extends JFrame {
         map.spawnMonster();
         JSONArray geld_pos = new JSONArray("[3,10]");
         map.addGeld(new Geld(geld_pos));
-        map.spawnSpieler(new Spieler(map.getSpawnSP1()));
+        map.spawnSpieler(false);
         int[] fb_pos = map.getSP1().getPosition();
         DIRECTION dir = DIRECTION.RIGHT;
         map.addFeuerball(new Feuerball(fb_pos, dir));
         // Naiv-Testing Area:
-        Lokalsteuerung lok = new Lokalsteuerung(map.getSP1().getPosition()[0], map.getSP1().getPosition()[1], map);
+        Lokalsteuerung lok = new Lokalsteuerung(map);
         //implemented swing keyBinding instead of awt keyListener because keyListener is a heavyweight awt component and does not work
         //with a swing cardLayout.
         addKeyBinding(map, "DOWN", new AbstractAction() {

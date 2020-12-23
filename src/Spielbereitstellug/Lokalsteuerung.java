@@ -5,19 +5,15 @@ import Spielverlauf.*;
 
 public class Lokalsteuerung {
 
-	private int x;
-	private int y;
 	private int velx;
 	private int vely;
 	private Map map;
+	private int steps = 6;
 
-
-	public Lokalsteuerung(int spx, int spy, Map m) {
+	public Lokalsteuerung(Map m) {
 
 		map = m;
 
-		x = spx;
-		y = spy;
 		velx = 0;
 		vely = 0;
 		map.setFocusTraversalKeysEnabled(false);
@@ -31,8 +27,9 @@ public class Lokalsteuerung {
 
 
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
+	
 	public void render(){
-        map.getSP1().addPos(velx,vely);
+        map.getSP1().addPosOff(velx,vely);
 		map.repaint();
     }
 
@@ -40,28 +37,28 @@ public class Lokalsteuerung {
 	// TODO: Randbereiche dynamisch auf Fenstergröße anpassen + Exception Cases überlegen
 
 	public void up() {
-		vely = -1;
+		vely = -steps;
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void down() {
-		vely = 1;
+		vely = steps;
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void left() {
-		velx = -1;
+		velx = -steps;
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void right() {
-		velx = 1;
+		velx = steps;
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();

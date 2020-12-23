@@ -1,4 +1,5 @@
 .xml
 .iml
 .class
-.iml
+/app.iml
+/.idea/

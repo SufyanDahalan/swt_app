@@ -8,17 +8,17 @@ import javax.swing.*;
 
 public class Tunnel{
 
-	JSONArray position;
+	JSONArray fieldPosition;
 	TUNNELTYP typ;
 
 
-	public Tunnel(JSONArray pos, TUNNELTYP t){
-        position = pos;
+	public Tunnel(JSONArray fp, TUNNELTYP t){
+		fieldPosition = fp;
         typ = t;
 	}
 
 	public JSONArray getPosition() {
-		return position;
+		return fieldPosition;
 	};
 
 
