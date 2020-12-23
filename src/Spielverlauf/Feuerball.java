@@ -1,7 +1,5 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
-
 public class Feuerball {
 
 	private int[] position;

@@ -1,16 +1,10 @@
 package Spielbereitstellug;
 
-import Spielverlauf.Map;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
+import Spielverlauf.*;
 
 
-public class Lokalsteuerung implements ActionListener, KeyListener {
+public class Lokalsteuerung {
 
-	Timer t = new Timer(5,this);
 	private int x;
 	private int y;
 	private int velx;
@@ -26,25 +20,19 @@ public class Lokalsteuerung implements ActionListener, KeyListener {
 		y = spy;
 		velx = 0;
 		vely = 0;
-
-		t.start();
-        map.addKeyListener(this);
-		map.setFocusable(true);
 		map.setFocusTraversalKeysEnabled(false);
 
 
 
-		// setOpaque(false); // macht den Inhalt Transparent, im Prototyp bekommt man damit die Spur weg, aber hier setzt sich die Map dann vor den Spieler
-
+//		 map.setOpaque(false); // macht den Inhalt Transparent, im Prototyp bekommt man damit die Spur weg, aber hier setzt sich die Map dann vor den Spieler
 		// TODO - implement Lokalsteuerung.Lokalsteuerung
 		// throw new UnsupportedOperationException();
 	}
 
-	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
-	
-    public void actionPerformed(ActionEvent e){
-        map.getSP1().addPos(velx,vely);
 
+	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
+	public void render(){
+        map.getSP1().addPos(velx,vely);
 		map.repaint();
     }
 
@@ -53,60 +41,29 @@ public class Lokalsteuerung implements ActionListener, KeyListener {
 
 	public void up() {
 		vely = -1;
-
+		render();
+		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void down() {
-            vely = 1;
-		
+		vely = 1;
+		render();
+		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void left() {
 		velx = -1;
-		
+		render();
+		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void right() {
-            velx = 1;
-		
-		// throw new UnsupportedOperationException();
-	}
-
-	public void keyPressed(KeyEvent e) {
-		int code = e.getKeyCode();
-        if(code == KeyEvent.VK_UP){
-			// TODO: Spielerbewegung
-            up();
-        }
-        if(code == KeyEvent.VK_DOWN){
-
-            down();
-        }
-        if(code == KeyEvent.VK_LEFT){
-            left();
-        }
-        if(code == KeyEvent.VK_RIGHT){
-            right();
-        }
-		else{
-			// Exception triggert bei jeder Richtung außer Reichts, kp warum
-			// throw new UnsupportedOperationException();
-		}
-	}
-
-	public void keyTyped(KeyEvent e) {
-		// TODO - implement Lokalsteuerung.keyTyped
-		// throw new UnsupportedOperationException();
-	}
-
-	public void keyReleased(KeyEvent e) {
-		velx = 0;
-		vely = 0;
-
-		// TODO - implement Lokalsteuerung.keyReleased
+		velx = 1;
+		render();
+		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
