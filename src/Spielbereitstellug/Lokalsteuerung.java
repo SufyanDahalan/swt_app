@@ -8,7 +8,7 @@ public class Lokalsteuerung {
 	private int velx;
 	private int vely;
 	private Map map;
-
+	private int steps = 6;
 
 	public Lokalsteuerung(Map m) {
 
@@ -37,28 +37,28 @@ public class Lokalsteuerung {
 	// TODO: Randbereiche dynamisch auf Fenstergröße anpassen + Exception Cases überlegen
 
 	public void up() {
-		vely = -1;
+		vely = -steps;
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void down() {
-		vely = 1;
+		vely = steps;
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void left() {
-		velx = -1;
+		velx = -steps;
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
 	}
 
 	public void right() {
-		velx = 1;
+		velx = steps;
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();

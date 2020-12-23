@@ -8,7 +8,7 @@ public class Dialog extends JDialog{
     Dialog(Container frame){
         setTitle("Digger");
         setResizable(false);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/bin/Images/Logo.png")));
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/bin/Images/Logo.png")));
         getContentPane().setBackground(Color.BLACK);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         button b1 = new button("Multiplayer", 25);
