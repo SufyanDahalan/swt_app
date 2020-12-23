@@ -51,7 +51,7 @@ public class Test {
         JSONArray geld_pos = new JSONArray("[3,10]");
         map.addGeld(new Geld(geld_pos));
 
-        map.spawnSpieler(new Spieler(map.getSpawnSP1()));
+        map.spawnSpieler(false);
 
         int[] fb_pos = map.getSP1().getPosition();
         DIRECTION dir = DIRECTION.RIGHT;
@@ -61,7 +61,7 @@ public class Test {
 
         // Naiv-Testing Area:
 
-        Lokalsteuerung lok = new Lokalsteuerung(map.getSP1().getPosition()[0], map.getSP1().getPosition()[1], map);
+        Lokalsteuerung lok = new Lokalsteuerung(map);
 
 
         frame.add(map);

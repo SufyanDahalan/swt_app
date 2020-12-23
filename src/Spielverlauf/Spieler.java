@@ -11,11 +11,12 @@ public class Spieler {
 	protected int alter;
 	private int leben = 3;
 
-	public Spieler(JSONArray pos) {
+	public Spieler(int x_pixel, int y_pixel) {
+
 		position = new int[2];
 
-		position[0] = pos.getInt(0);
-		position[1] = pos.getInt(1);
+		position[0] = x_pixel;
+		position[1] = y_pixel;
 	}
 
 	public void sterben() {
@@ -30,7 +31,7 @@ public class Spieler {
 
 	public int[] getPosition(){return position;}
 
-	public void addPos(int x, int y){
+	public void addPosOff(int x, int y){
 		position[0]+=x;
 		position[1]+=y;
 	}

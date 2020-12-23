@@ -9,8 +9,4 @@ public class Geld extends Item{
     public Geld(JSONArray pos){
         super(pos);
     }
-
-    public JSONArray getPosition(){
-        return position;
-    }
 }

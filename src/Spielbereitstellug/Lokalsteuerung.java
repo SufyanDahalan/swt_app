@@ -18,12 +18,10 @@ public class Lokalsteuerung implements ActionListener, KeyListener {
 	private Map map;
 
 
-	public Lokalsteuerung(int spx, int spy, Map m) {
+	public Lokalsteuerung(Map m) {
 
 		map = m;
 
-		x = spx;
-		y = spy;
 		velx = 0;
 		vely = 0;
 
@@ -43,7 +41,7 @@ public class Lokalsteuerung implements ActionListener, KeyListener {
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
 	
     public void actionPerformed(ActionEvent e){
-        map.getSP1().addPos(velx,vely);
+        map.getSP1().addPosOff(velx,vely);
 
 		map.repaint();
     }

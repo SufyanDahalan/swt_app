@@ -4,15 +4,20 @@ import org.json.JSONArray;
 
 public abstract class Item {
 
-	protected JSONArray position;
+	protected JSONArray field;
+	protected int[] position;
 	protected int wertung;
 
-	public Item(JSONArray pos) {
-		position = pos;
+	public Item(JSONArray fp) {
+		field = fp;
+		position = null;
 	}
 
-	public JSONArray getPosition() {
+	public int[] getPosition() {
 		return position;
+	}
+	public JSONArray getField() {
+		return field;
 	}
 
 

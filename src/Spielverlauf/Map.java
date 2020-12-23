@@ -1,5 +1,6 @@
 package Spielverlauf;
 
+import Spielbereitstellug.Spiel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,6 +46,16 @@ public class Map extends JPanel {
 
 		playground_size = obj.getJSONArray("pg_size");
 
+		int felderX = playground_size.getInt(0);
+		int felderY = playground_size.getInt(1);
+
+		int w_temp_size = panel_size[0] / (int)( felderX + ( 2*border[0]) );
+		int h_temp_size = panel_size[1] / (int)( felderY + ( 2*border[1]) );
+
+		if (w_temp_size > h_temp_size)
+			field_size = h_temp_size;
+		else
+			field_size = w_temp_size;
 
 		// Set initial Content
 
@@ -176,8 +187,8 @@ public class Map extends JPanel {
 		for (int i = 0; i < diamanten.size(); i++) {
 			Diamant single_item = diamanten.get(i);
 
-			int x_field = single_item.getPosition().getInt(0) - 1;
-			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_field = single_item.getField().getInt(0) - 1;
+			int y_field = single_item.getField().getInt(1) - 1;
 			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
 			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
@@ -195,8 +206,8 @@ public class Map extends JPanel {
 		for (int i = 0; i < geldsaecke.size(); i++) {
 			Geldsack single_item = geldsaecke.get(i);
 
-			int x_field = single_item.getPosition().getInt(0) - 1;
-			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_field = single_item.getField().getInt(0) - 1;
+			int y_field = single_item.getField().getInt(1) - 1;
 			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
 			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
@@ -241,8 +252,6 @@ public class Map extends JPanel {
 			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
 			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
-			// scaling ...
-
 			g.drawImage(feuerballImg, x_pixel, y_pixel, null);
 
 			// for testing purpose
@@ -257,8 +266,8 @@ public class Map extends JPanel {
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
 
-			int x_field = single_item.getPosition().getInt(0) - 1;
-			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_field = single_item.getField().getInt(0) - 1;
+			int y_field = single_item.getField().getInt(1) - 1;
 			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
 			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
 
@@ -276,38 +285,17 @@ public class Map extends JPanel {
 		if(!sp1.equals(null)) {
 			BufferedImage sp1Img = skin.getImage("dig_red_up_f1", field_size);
 
-			int x_field = sp1.getPosition()[0] - 1;
-			int y_field = sp1.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (sp1Img.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (sp1Img.getHeight() / 2) + (field_size / 2) + borderOffsetY;
-			// scaling ...
+			int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+			int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
 
 			g.drawImage(sp1Img, x_pixel, y_pixel, null);
 
-			// for testing purpose
-			g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
-			g.setColor(Color.RED);
 		}
 
 	}
 
 	@Override
 	public Dimension getPreferredSize() {
-
-		int felderX = playground_size.getInt(0);
-		int felderY = playground_size.getInt(1);
-
-
-		int w_temp_size = panel_size[0] / (int)( felderX + ( 2*border[0]) );
-		int h_temp_size = panel_size[1] / (int)( felderY + ( 2*border[1]) );
-
-		System.out.println(w_temp_size);
-		System.out.println(h_temp_size);
-
-		if (w_temp_size > h_temp_size)
-			field_size = h_temp_size;
-		else
-			field_size = w_temp_size;
 
 		int borderOffsetX = (int)(field_size*border[0]);
 		int borderOffsetY = (int)(field_size*border[1]);
@@ -319,38 +307,30 @@ public class Map extends JPanel {
 
 	/// Spieler
 
-	/**
-	 * Setzt einen Spieler in die Map ein.
-	 *
-	 * @param s Spieler der in die Karte eingesetzt wird.
-	 * @return Liefert false, falls bereits ein Spieler in der Karte ist.
-	 */
-	// Singelplayer
-	public boolean spawnSpieler(Spieler s) {
+	public void spawnSpieler(boolean isMultiplayer) {
 
-		if (!s.equals(null)) {
-			sp1 = s;
-			return true;
-		} else
-			return false; // falls Spieler bereits belegt
-	}
+		int x_field = spawn_sp1.getInt(0) - 1;
+		int y_field = spawn_sp1.getInt(1) - 1;
 
-	/**
-	 * Setzt zwei Spieler in die Map ein.
-	 *
-	 * @param s1 Spieler 1 der in die Karte eingesetzt wird.
-	 * @param s2 Spieler 2 der in die Karte eingesetzt wird.
-	 * @return Liefert false, falls bereits ein Spieler in der Karte ist.
-	 */
-	// Multiplayer
-	public boolean spawnSpieler(Spieler s1, Spieler s2) {
+		int borderOffsetX = (int)(field_size*border[0]);
+		int borderOffsetY = (int)(field_size*border[1]);
 
-		if (!s1.equals(null) && !s2.equals(null)) {
-			sp1 = s1;
-			sp2 = s2;
-			return true;
-		} else
-			return false; // falls Spieler bereits belegt
+		int x_pixel = x_field * field_size + (field_size / 2) + borderOffsetX;
+		int y_pixel = y_field * field_size + (field_size / 2) + borderOffsetY;
+
+		System.out.println(field_size);
+
+		sp1 = new Spieler(x_pixel, y_pixel);
+
+		if(isMultiplayer)
+			x_field = spawn_sp2.getInt(0) - 1;
+			y_field = spawn_sp2.getInt(1) - 1;
+
+			x_pixel = x_field * field_size + (field_size / 2) + borderOffsetX;
+			y_pixel = y_field * field_size + (field_size / 2) + borderOffsetY;
+
+			sp2 = new Spieler(x_pixel, y_pixel);
+
 	}
 
 	public Spieler getSP1(){ return sp1;}
