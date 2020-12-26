@@ -4,18 +4,25 @@ import javax.swing.*;
 
 public class Level extends JPanel{
 
-	private int geschwindigkeit;
-	private int regeneration_feuer;
-	private Map karte;
+	// Eigenschaften abhängig von Level-Stufe
+
+	private final int geschwindigkeit;
+	private final int regeneration_feuer;
+	private final int max_monster; // Anzahl der gleichzeitig möglichen Monster
+
+	// Konstanten
+
+	private final Map karte;
+
+	// temp. Attr.
+
 	private int temp_kills = 0;
-	private int max_monster;
 
-	public Level(int max_mon){
-		max_monster = max_mon;
-	}
-
-	public void setGeschwindigkeit(int g){
-		geschwindigkeit = g;
+	public Level(int gesch, int reg_feu, int max_mon, Map m) {
+		karte = m; // TODO: Anpassen
+		max_monster = max_mon; // TODO: Anpassen
+		geschwindigkeit = gesch; // TODO: Anpassen
+		regeneration_feuer = reg_feu; // TODO: Anpassen
 	}
 
 	public void loop() {
@@ -29,9 +36,22 @@ public class Level extends JPanel{
 			temp_kills = 0;
 		}
 
-
 	}
 
 
+	public int getSpeed() {
+	return geschwindigkeit;
+	}
 
+	public int getRegenTime() {
+		return regeneration_feuer;
+	}
+
+	public int getMaxMonster() {
+		return max_monster;
+	}
+
+	public Map getMap() {
+		return karte;
+	}
 }
