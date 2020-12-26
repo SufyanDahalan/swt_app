@@ -133,7 +133,7 @@ public class Spiel {
 		int new_s = aktuelles_level.getSpeed() + 1;
 		int new_r = aktuelles_level.getRegenTime() + 1;
 		int new_mm = aktuelles_level.getMaxMonster() + 1;
-		Map nextMap; // nächste Map als KOPIE!!! einsetzen. Sonst wird die Mapchain manipuliert und Folgelevel sind verändert.
+		Map nextMap = null; // nächste Map als KOPIE!!! einsetzen. Sonst wird die Mapchain manipuliert und Folgelevel sind verändert.
 
 		return new Level(new_s,new_r,new_mm, nextMap); // Maps have to be cloned!!! otherwise we override the initial mapchain
 	}
