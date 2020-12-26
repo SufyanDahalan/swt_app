@@ -13,12 +13,13 @@ public class Map extends JPanel {
 
 	// GUI
 	private int[] panel_size;
-	private Skin skin;
+	private final Skin skin;
 	private int field_size;
 
 	// Playground
 
 	private JSONArray playground_size;
+	private final double[] border = {0.4, 0.2}; // Wandstärke x,y
 
 	// Contente
 	private ArrayList<Monster> monster;
@@ -33,7 +34,6 @@ public class Map extends JPanel {
 	private ArrayList<Geld> geld;
 	private ArrayList<Tunnel> tunnel;
 	private Kirsche kirsche;
-	private double[] border = {0.4, 0.2}; // Wandstärke x,y
 
 	public Map(JSONObject obj, int[] panelSize, Skin sk) {
 
@@ -474,4 +474,13 @@ public class Map extends JPanel {
 	public void addFeuerball(Feuerball f) {
 		feuerball.add(f);
 	}
+
+	/// Diamanten
+
+	//getter und setter
+
+	public ArrayList<Diamant> getDiamonds() {
+		return diamanten;
+	}
+
 }
