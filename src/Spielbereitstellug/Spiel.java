@@ -1,7 +1,6 @@
 package Spielbereitstellug;
 
 import Spielverlauf.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -11,6 +10,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ListIterator;
 
@@ -92,19 +92,15 @@ public class Spiel extends JPanel implements Runnable {
 		// TESTING
 
 
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
-		aktuelles_level.getMap().spawnMonster();
+		ArrayList<Monster> monster = aktuelles_level.getMap().getMonster();
 
-		JSONArray pos = new JSONArray("[1,1]");
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
 
-		aktuelles_level.getMap().setzeHobbin(pos);
-		aktuelles_level.getMap().setzeHobbin(pos);
-		aktuelles_level.getMap().setzeHobbin(pos);
+
+		int[] pos = {1,1};
+
 		aktuelles_level.getMap().setzeHobbin(pos);
 
 		System.out.println("Anzahl Nobbins: " + aktuelles_level.getMap().getNobbins().size());
@@ -113,8 +109,8 @@ public class Spiel extends JPanel implements Runnable {
 	}
 
 	private void refreshFS(int[] panel_size) {
-		int felderX = aktuelles_level.getMap().getPGSize().getInt(0);
-		int felderY = aktuelles_level.getMap().getPGSize().getInt(1);
+		int felderX = aktuelles_level.getMap().getPGSize()[0];
+		int felderY = aktuelles_level.getMap().getPGSize()[1];
 
 		int w_temp_size = (int)((double)panel_size[0] / ( (double)felderX + ( 2*border[0]) ));
 		int h_temp_size = (int)((double)panel_size[1] / ( (double)felderY + ( 2*border[1]) ));
@@ -125,16 +121,16 @@ public class Spiel extends JPanel implements Runnable {
 			field_size = w_temp_size;
 	}
 
-	public JSONArray getSPField(Spieler s){
+	public int[] getFieldOf(int[] pos){
 
 		int[] borderOffest = getBorderOffset();
 
-		int x = ((s.getPosition()[0]-borderOffest[0])/field_size) + 1;
-		int y = ((s.getPosition()[1]-borderOffest[1])/field_size) + 1;
+		int[] fp = new int[2];
 
-		JSONArray pos = new JSONArray("[" + x + "," + y + "]");
+		fp[0] = ((pos[0]-borderOffest[0])/field_size) + 1;
+		fp[1] = ((pos[1]-borderOffest[1])/field_size) + 1;
 
-		return pos;
+		return fp;
 	}
 
 	/**
@@ -180,19 +176,27 @@ public class Spiel extends JPanel implements Runnable {
 
 		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext();) {
 			Diamant single_item = iterator.next();
-			if(single_item.getField().similar( getSPField(sp1) )) {
+			if(Arrays.equals(single_item.getField(),getFieldOf(sp1.getPosition()))) {
 				iterator.remove();
 			}
 		}
 
+		/*
 		// Spieler trifft Monster
 		ArrayList<Monster> monsters= aktuelles_level.getMap().getMonster();
-		for(Monster m: monsters){
-			if(m.getPosition().equals(sp1.getPosition())){
-				sp1.sterben();
+		for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
+			Monster m = iterator.next();
+			if(getFieldOf(m.getPosition()).similar( getFieldOf(sp1.getPosition()) )){
+				if(sp1.isAlive()) {
+					sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+					//System.out.println(sp1.getLeben());
+				}
+				else
+					System.out.println("Ende");
 			}
 			//sp2 üp
 		}
+		*/
 
 		// Spieler trifft Boden
 
@@ -202,15 +206,15 @@ public class Spiel extends JPanel implements Runnable {
 		for(ListIterator<Tunnel> iterator = tunnels.listIterator(); iterator.hasNext()&&setTunnel;) {
 			Tunnel t = iterator.next();
 
-			if ( t.getField().similar(getSPField(sp1)) )
+			if ( Arrays.equals(t.getField(),getFieldOf(sp1.getPosition())) )
 				setTunnel = false;
 		}
 
 		if(setTunnel) {
 			if (sp1.getMoveDir() == DIRECTION.RIGHT || sp1.getMoveDir() == DIRECTION.LEFT)
-				aktuelles_level.getMap().addTunnel(new Tunnel(getSPField(sp1), TUNNELTYP.HORIZONTAL));
+				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.HORIZONTAL));
 			else if (sp1.getMoveDir() == DIRECTION.UP || sp1.getMoveDir() == DIRECTION.DOWN)
-				aktuelles_level.getMap().addTunnel(new Tunnel(getSPField(sp1), TUNNELTYP.VERTICAL));
+				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.VERTICAL));
 		}
 
 
@@ -218,10 +222,10 @@ public class Spiel extends JPanel implements Runnable {
 		ArrayList<Geldsack> geldsacke= aktuelles_level.getMap().getGeldsaecke();
 		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
 			Geldsack g = iterator.next();
-			if (g.getField().similar(getSPField(sp1))) {
+			if (Arrays.equals(g.getField(),getFieldOf(sp1.getPosition()))) {
 				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
 					System.out.println("push right");
-					g.setField(getSPField(sp1));
+					g.setField(getFieldOf(sp1.getPosition()));
 				} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
 					System.out.println("push left");
 				}
@@ -264,10 +268,10 @@ public class Spiel extends JPanel implements Runnable {
 
 	}
 
-	private int[] getCenterOf(JSONArray fp) {
+	private int[] getCenterOf(int[] fp) {
 
-		int x_field = aktuelles_level.getMap().getSpawn_SP1().getInt(0) - 1;
-		int y_field = aktuelles_level.getMap().getSpawn_SP1().getInt(1) - 1;
+		int x_field = aktuelles_level.getMap().getSpawn_SP1()[0] - 1;
+		int y_field = aktuelles_level.getMap().getSpawn_SP1()[1] - 1;
 
 		int[] borderOffset = getBorderOffset();
 
@@ -372,8 +376,8 @@ public class Spiel extends JPanel implements Runnable {
 				unscaledImg = vertTunImg;
 			else
 				unscaledImg = spacTunImg;
-			int x_field = single_item.getField().getInt(0) - 1;
-			int y_field = single_item.getField().getInt(1) - 1;
+			int x_field = single_item.getField()[0] - 1;
+			int y_field = single_item.getField()[1] - 1;
 			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
 			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
@@ -393,8 +397,8 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < diamanten.size(); i++) {
 			Diamant single_item = diamanten.get(i);
 
-			int x_field = single_item.getField().getInt(0) - 1;
-			int y_field = single_item.getField().getInt(1) - 1;
+			int x_field = single_item.getField()[0] - 1;
+			int y_field = single_item.getField()[1] - 1;
 			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
 			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
@@ -415,8 +419,8 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < geldsaecke.size(); i++) {
 			Geldsack single_item = geldsaecke.get(i);
 
-			int x_field = single_item.getField().getInt(0) - 1;
-			int y_field = single_item.getField().getInt(1) - 1;
+			int x_field = single_item.getField()[0] - 1;
+			int y_field = single_item.getField()[1] - 1;
 			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
 			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
@@ -438,17 +442,13 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < hobbins.size(); i++) {
 			Hobbin single_item = hobbins.get(i);
 
-			int x_field = single_item.getPosition().getInt(0) - 1;
-			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (hobbinImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (hobbinImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
+			int[] field = getFieldOf(single_item.getPosition());
 
-			// scaling ...
 
-			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
+			g.drawImage(hobbinImg, single_item.getPosition()[0], single_item.getPosition()[1], null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -460,8 +460,8 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < nobbins.size(); i++) {
 			Nobbin single_item = nobbins.get(i);
 
-			int x_field = single_item.getPosition().getInt(0) - 1;
-			int y_field = single_item.getPosition().getInt(1) - 1;
+			int x_field = single_item.getPosition()[0] - 1;
+			int y_field = single_item.getPosition()[1] - 1;
 			int x_pixel = x_field * field_size - (nobbinImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
 			int y_pixel = y_field * field_size - (nobbinImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
@@ -506,8 +506,8 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
 
-			int x_field = single_item.getField().getInt(0) - 1;
-			int y_field = single_item.getField().getInt(1) - 1;
+			int x_field = single_item.getField()[0] - 1;
+			int y_field = single_item.getField()[1] - 1;
 			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
 			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
@@ -524,17 +524,29 @@ public class Spiel extends JPanel implements Runnable {
 		// Spieler
 
 		if(sp1 != null) {
-			BufferedImage sp1Img = current_skin.getImage("dig_red_up_f1", field_size);
-
-			int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-			int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-
-			g.drawImage(sp1Img, x_pixel, y_pixel, null);
-
-			if(devFrames) {
-				g.drawRect(sp1.getPosition()[0], sp1.getPosition()[1], 1, 1);
-				g.drawRect(x_pixel, y_pixel, sp1Img.getHeight(), sp1Img.getWidth());
-				g.setColor(Color.RED);
+			BufferedImage sp1Img1 = current_skin.getImage("dig_red_rgt_f1", field_size);
+			BufferedImage sp1Img2 = current_skin.getImage("dig_red_lft_f1", field_size);
+			BufferedImage sp1Img3 = current_skin.getImage("dig_red_up_f1", field_size);
+			BufferedImage sp1Img4 = current_skin.getImage("dig_red_dow_f1", field_size);
+			if(sp1.getMoveDir()==DIRECTION.RIGHT) {
+				int x_pixel = sp1.getPosition()[0] - (sp1Img1.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img1.getHeight() / 2);
+				g.drawImage(sp1Img1, x_pixel, y_pixel, null);
+			}
+			if(sp1.getMoveDir()==DIRECTION.LEFT) {
+				int x_pixel = sp1.getPosition()[0] - (sp1Img2.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img2.getHeight() / 2);
+				g.drawImage(sp1Img2, x_pixel, y_pixel, null);
+			}
+			if(sp1.getMoveDir()==DIRECTION.UP) {
+				int x_pixel = sp1.getPosition()[0] - (sp1Img3.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img3.getHeight() / 2);
+				g.drawImage(sp1Img3, x_pixel, y_pixel, null);
+			}
+			if(sp1.getMoveDir()==DIRECTION.DOWN) {
+				int x_pixel = sp1.getPosition()[0] - (sp1Img4.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img4.getHeight() / 2);
+				g.drawImage(sp1Img4, x_pixel, y_pixel, null);
 			}
 
 		}
@@ -571,9 +583,9 @@ public class Spiel extends JPanel implements Runnable {
 
 		int[] borderOffset = getBorderOffset();
 
-		JSONArray playground_size = aktuelles_level.getMap().getPGSize();
+		int[] playground_size = aktuelles_level.getMap().getPGSize();
 
-		Dimension d = new Dimension(playground_size.getInt(0) * field_size + 2* borderOffset[0], playground_size.getInt(1) * field_size + 2* borderOffset[1]);
+		Dimension d = new Dimension(playground_size[0] * field_size + 2* borderOffset[0], playground_size[1] * field_size + 2* borderOffset[1]);
 
 		System.out.println(d);
 

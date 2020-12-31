@@ -1,14 +1,12 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
-
 public abstract class Item {
 
-	protected JSONArray field;
+	protected int[] field;
 	protected int[] position;
 	protected int wertung;
 
-	public Item(JSONArray fp) {
+	public Item(int[] fp) {
 		field = fp;
 		position = null;
 	}
@@ -16,10 +14,10 @@ public abstract class Item {
 	public int[] getPosition() {
 		return position;
 	}
-	public JSONArray getField() {
+	public int[] getField() {
 		return field;
 	}
-	public void setField(JSONArray i){
+	public void setField(int[] i){
 		i=field;
 	}
 

@@ -8,7 +8,7 @@ public class Geldsack extends Item {
 	//private int wertung = 500;
 	private DIRECTION moveDir;
 
-	public Geldsack(JSONArray pos) {
+	public Geldsack(int[] pos) {
 		super(pos);
 	}
 

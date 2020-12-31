@@ -4,8 +4,7 @@ import org.json.JSONArray;
 
 public abstract class Monster {
 
-	protected JSONArray position;
-	protected JSONArray field;
+	protected int[] position;
 	protected int wertung = 250;
 	protected boolean graben;
 
@@ -21,17 +20,13 @@ public abstract class Monster {
 
 	abstract public boolean testMove(DIRECTION d);
 
-	public Monster(JSONArray spawn) {
-		position = spawn;
-		field=spawn;
+	public Monster(int[] pos) {
+		position = pos;
 	}
 
-	public JSONArray getPosition(){
+	public int[] getPosition(){
 		return position;
 	};
 
-	public JSONArray getField(){
-		return field;
-	}
 
 }

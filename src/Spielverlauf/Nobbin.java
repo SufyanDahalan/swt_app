@@ -1,10 +1,8 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
-
 public class Nobbin extends Monster {
 
-	public Nobbin(JSONArray spawn_monster) {
+	public Nobbin(int[] spawn_monster) {
 		super(spawn_monster);
 	}
 

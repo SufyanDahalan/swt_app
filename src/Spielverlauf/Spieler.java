@@ -57,4 +57,8 @@ public class Spieler {
 	public void setPosition(int[] pos) {
 		position = pos;
 	}
+
+	public int getLeben() {
+		return leben;
+	}
 }

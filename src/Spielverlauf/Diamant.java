@@ -7,7 +7,7 @@ public class Diamant extends Item {
 
 	private int wertung = 25;
 
-	public Diamant(JSONArray pos){
+	public Diamant(int[] pos){
 		super(pos);
 	}
 

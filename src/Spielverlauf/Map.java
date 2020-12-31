@@ -9,13 +9,13 @@ public class Map {
 
 	// Playground
 
-	private JSONArray playground_size;
+	private int[] playground_size;
 
 	// Contente
 	private ArrayList<Monster> monster;
-	private JSONArray spawn_monster;
-	private JSONArray spawn_sp1;
-	private JSONArray spawn_sp2;
+	private int[] spawn_monster;
+	private int[] spawn_sp1;
+	private int[] spawn_sp2;
 	private ArrayList<Feuerball> feuerball;
 	private ArrayList<Diamant> diamanten;
 	private ArrayList<Geldsack> geldsaecke;
@@ -27,7 +27,7 @@ public class Map {
 
 		// Set initial Content
 
-		playground_size = obj.getJSONArray("pg_size");
+		playground_size = toArray(obj.getJSONArray("pg_size"));
 
 		geldsaecke = new ArrayList<Geldsack>();
 		diamanten = new ArrayList<Diamant>();
@@ -39,9 +39,9 @@ public class Map {
 
 		monster = new ArrayList<Monster>();
 
-		spawn_monster = obj.getJSONArray("spawn_mon");
-		spawn_sp1 = obj.getJSONArray("spawn_p1");
-		spawn_sp2 = obj.getJSONArray("spawn_p2");
+		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
+		spawn_sp1 = toArray(obj.getJSONArray("spawn_p1"));
+		spawn_sp2 = toArray(obj.getJSONArray("spawn_p2"));
 
 		// Füge initiale Diamanten ein
 
@@ -49,7 +49,7 @@ public class Map {
 
 		for (int i = 0; i < pos_diam.length(); i++) {
 
-			JSONArray single_item = pos_diam.getJSONArray(i);
+			int[] single_item = toArray(pos_diam.getJSONArray(i));
 
 			diamanten.add(new Diamant(single_item));
 		}
@@ -60,7 +60,7 @@ public class Map {
 
 		for (int i = 0; i < pos_money.length(); i++) {
 
-			JSONArray single_money = pos_money.getJSONArray(i);
+			int[] single_money = toArray(pos_money.getJSONArray(i));
 
 			geldsaecke.add(new Geldsack(single_money));
 		}
@@ -74,7 +74,7 @@ public class Map {
 
 		for (int i = 0; i < pos_tun_vertikal.length(); i++) {
 
-			JSONArray single_tunnel = pos_tun_vertikal.getJSONArray(i);
+			int[] single_tunnel = toArray(pos_tun_vertikal.getJSONArray(i));
 
 			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL));
 		}
@@ -84,7 +84,7 @@ public class Map {
 
 		for (int i = 0; i < pos_tun_horizontal.length(); i++) {
 
-			JSONArray single_tunnel = pos_tun_horizontal.getJSONArray(i);
+			int[] single_tunnel = toArray(pos_tun_horizontal.getJSONArray(i));
 
 			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL));
 		}
@@ -94,7 +94,7 @@ public class Map {
 
 		for (int i = 0; i < pos_tun_space.length(); i++) {
 
-			JSONArray single_tunnel = pos_tun_space.getJSONArray(i);
+			int[] single_tunnel = toArray(pos_tun_space.getJSONArray(i));
 
 			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE));
 		}
@@ -103,12 +103,12 @@ public class Map {
 
 	public Map(Map m) {
 
-		playground_size = new JSONArray(m.playground_size);
+		playground_size = m.playground_size.clone();
 
 		monster = new ArrayList<Monster>(m.monster);
-		spawn_monster = new JSONArray(m.spawn_monster);
-		spawn_sp1 = new JSONArray(m.spawn_sp1);
-		spawn_sp2 = new JSONArray(m.spawn_sp2);
+		spawn_monster = m.spawn_monster.clone();
+		spawn_sp1 = m.spawn_sp1.clone();
+		spawn_sp2 = m.spawn_sp2.clone();
 		feuerball = new ArrayList<Feuerball>(m.feuerball);
 		diamanten = new ArrayList<Diamant>(m.diamanten);
 		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
@@ -159,10 +159,6 @@ public class Map {
 	 * Setzt eine Monster in die Map ein.
 	 *
 	 */
-	public void spawnMonster() {
-		Monster m = new Nobbin(spawn_monster);
-		monster.add(m);
-	}
 
 	public void removeMonster(int i) {
 		monster.remove(i);
@@ -170,7 +166,7 @@ public class Map {
 
 	// sonstige
 
-	public JSONArray getSpawn_monster() {
+	public int[] getSpawn_monster() {
 		return spawn_monster;
 	}
 
@@ -293,15 +289,25 @@ public class Map {
 
 	/// Others
 
-	public JSONArray getPGSize() {
+	public int[] getPGSize() {
 		return playground_size;
 	}
 
-	public JSONArray getSpawn_SP1(){return spawn_sp1;}
-	public JSONArray getSpawn_SP2(){return spawn_sp2;}
+	public int[] getSpawn_SP1(){return spawn_sp1;}
+	public int[] getSpawn_SP2(){return spawn_sp2;}
 
-	public void setzeHobbin(JSONArray pos) {
+	public void setzeHobbin(int[] pos) {
 
 		monster.add( new Hobbin(pos) );
+	}
+
+	private int[] toArray(JSONArray ja){
+
+		int[] ia = new int[2];
+
+		ia[0] = ja.getInt(0);
+		ia[1] = ja.getInt(1);
+
+		return ia;
 	}
 }

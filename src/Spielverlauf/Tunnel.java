@@ -1,19 +1,17 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
-
 public class Tunnel{
 
-	JSONArray fieldPosition;
+	int[] fieldPosition;
 	TUNNELTYP typ;
 
 
-	public Tunnel(JSONArray fp, TUNNELTYP t){
+	public Tunnel(int[] fp, TUNNELTYP t){
 		fieldPosition = fp;
 		typ = t;
 	}
 
-	public JSONArray getPosition() {
+	public int[] getPosition() {
 		return null;
 	};
 
@@ -22,7 +20,7 @@ public class Tunnel{
 	}
 
 
-	public JSONArray getField() {
+	public int[] getField() {
 		return fieldPosition;
 	}
 }

@@ -17,20 +17,20 @@ public class Hobbin extends Monster {
 		if( testMove(d) ) {
 
 			Tunnel t;
-
+			/*
 			if(d.equals(DIRECTION.RIGHT) || d.equals(DIRECTION.LEFT))
 				t = new Tunnel(position, TUNNELTYP.VERTICAL);
 			else
 				t = new Tunnel(position, TUNNELTYP.HORIZONTAL);
-
 			m.addTunnel(t);
+			*/
 			return true;
 		}
 		else
 			return false; // wenn Bewegng nicht erlaubt
 	}
 
-	public Hobbin(JSONArray spawn_monster){
+	public Hobbin(int[] spawn_monster){
 		super(spawn_monster);
 	}
 
