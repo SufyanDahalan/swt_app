@@ -7,11 +7,11 @@ public class Kirsche extends Item {
 	private int wertung = 1000;
 	private boolean visible = false;
 
-	public Kirsche(JSONArray pos) {
-		super(pos);
+	public Kirsche(JSONArray fp) {
+		super(fp);
 	}
 
-	public void setVisible(boolean v) {
+    public void setVisible(boolean v) {
 		visible = v;
 	}
 }
