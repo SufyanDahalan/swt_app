@@ -2,14 +2,13 @@ package Spielverlauf;
 
 import org.json.JSONArray;
 
-import javax.swing.*;
-
 public class Spieler {
 
-	protected int[] position;
-	protected String name;
-	protected int alter;
+	private int[] position;
+	private String name;
+	private int alter;
 	private int leben = 3;
+	private DIRECTION moveDir;
 
 	public Spieler(int x_pixel, int y_pixel) {
 
@@ -17,6 +16,8 @@ public class Spieler {
 
 		position[0] = x_pixel;
 		position[1] = y_pixel;
+
+		moveDir = DIRECTION.LEFT;
 	}
 
 	public void sterben() {
@@ -36,4 +37,24 @@ public class Spieler {
 		position[1]+=y;
 	}
 
+
+
+	public boolean isAlive() {
+		if(leben > 0)
+			return true;
+		else
+			return false;
+	}
+
+    public DIRECTION getMoveDir() {
+        return moveDir;
+    }
+
+	public void setMoveDir(DIRECTION d) {
+		moveDir = d;
+	}
+
+	public void setPosition(int[] pos) {
+		position = pos;
+	}
 }
