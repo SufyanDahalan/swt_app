@@ -6,8 +6,17 @@ import Spielverlauf.*;
 public class Geldsack extends Item {
 
 	//private int wertung = 500;
+	private DIRECTION moveDir;
 
 	public Geldsack(JSONArray pos) {
 		super(pos);
+	}
+
+	public DIRECTION getMoveDir() {
+		return moveDir;
+	}
+
+	public void setMoveDir(DIRECTION d) {
+		moveDir = d;
 	}
 }

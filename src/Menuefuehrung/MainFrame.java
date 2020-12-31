@@ -35,8 +35,6 @@ public class MainFrame extends JFrame {
         MainPanel Panel = new MainPanel();
         getContentPane().add(Panel, "panel");
 
-        System.out.println(getContentPane().getPreferredSize());
-
         prepareMap();
 
         //setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));

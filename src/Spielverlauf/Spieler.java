@@ -20,7 +20,7 @@ public class Spieler {
 		moveDir = DIRECTION.LEFT;
 	}
 
-	public void sterben() {
+	public JSONArray sterben() {
 		// TODO - implement Spieler.sterben
 		throw new UnsupportedOperationException();
 	}

@@ -28,7 +28,6 @@ public class Spiel extends JPanel implements Runnable {
 	private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
 
 	// static content
-
 	private Skin current_skin;
 	private ArrayList<Map> mapChain;
 	int current_map = 0;
@@ -214,6 +213,18 @@ public class Spiel extends JPanel implements Runnable {
 
 
 		// Spieler trifft Geldsack
+		ArrayList<Geldsack> geldsacke= aktuelles_level.getMap().getGeldsaecke();
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
+			Geldsack g = iterator.next();
+			if (g.getField().similar(getSPField(sp1))) {
+				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
+					System.out.println("push right");
+					g.setField(getSPField(sp1));
+				} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
+					System.out.println("push left");
+				}
+			}
+		}
 		// Spieler trifft Geld
 		// Spieler trifft Wand
 		// Spieler trifft Kirsche -> Bonsmodus aktivieren
