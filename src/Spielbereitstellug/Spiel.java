@@ -19,7 +19,7 @@ public class Spiel extends JPanel implements Runnable {
 
 	//dev stuff
 
-	boolean devFrames = false;
+	boolean devFrames = true;
 
 	// System-/ Filestructure
 
@@ -127,8 +127,10 @@ public class Spiel extends JPanel implements Runnable {
 
 	public JSONArray getSPField(Spieler s){
 
-		int x = (s.getPosition()[0]/field_size) + 1;
-		int y = (s.getPosition()[1]/field_size) + 1;
+		int[] borderOffest = getBorderOffset();
+
+		int x = ((s.getPosition()[0]-borderOffest[0])/field_size) + 1;
+		int y = ((s.getPosition()[1]-borderOffest[1])/field_size) + 1;
 
 		JSONArray pos = new JSONArray("[" + x + "," + y + "]");
 
@@ -267,13 +269,12 @@ public class Spiel extends JPanel implements Runnable {
 		int x_field = aktuelles_level.getMap().getSpawn_SP1().getInt(0) - 1;
 		int y_field = aktuelles_level.getMap().getSpawn_SP1().getInt(1) - 1;
 
-		int borderOffsetX = (int)(field_size*border[0]);
-		int borderOffsetY = (int)(field_size*border[1]);
+		int[] borderOffset = getBorderOffset();
 
 		int[] pixelPos = new int[2];
 
-		pixelPos[0] = x_field * field_size + (field_size / 2) + borderOffsetX;
-		pixelPos[1] = y_field * field_size + (field_size / 2) + borderOffsetY;
+		pixelPos[0] = x_field * field_size + (field_size / 2) + borderOffset[0];
+		pixelPos[1] = y_field * field_size + (field_size / 2) + borderOffset[1];
 
 		return pixelPos;
 	}
@@ -342,8 +343,7 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Prepering
 
-		int borderOffsetX = (int)(field_size*border[0]);
-		int borderOffsetY = (int)(field_size*border[1]);
+		int[] borderOffset = getBorderOffset();
 
 		// Zeichne Hintergrund
 
@@ -374,13 +374,13 @@ public class Spiel extends JPanel implements Runnable {
 				unscaledImg = spacTunImg;
 			int x_field = single_item.getField().getInt(0) - 1;
 			int y_field = single_item.getField().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -395,13 +395,13 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getField().getInt(0) - 1;
 			int y_field = single_item.getField().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			g.drawImage(diamImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -417,14 +417,14 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getField().getInt(0) - 1;
 			int y_field = single_item.getField().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 
 			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -440,15 +440,15 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (hobbinImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (hobbinImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (hobbinImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (hobbinImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			// scaling ...
 
 			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -462,15 +462,15 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getPosition().getInt(0) - 1;
 			int y_field = single_item.getPosition().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (nobbinImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (nobbinImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (nobbinImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (nobbinImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			// scaling ...
 
 			g.drawImage(nobbinImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -486,13 +486,13 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getPosition()[0] - 1;
 			int y_field = single_item.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			g.drawImage(feuerballImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -508,15 +508,15 @@ public class Spiel extends JPanel implements Runnable {
 
 			int x_field = single_item.getField().getInt(0) - 1;
 			int y_field = single_item.getField().getInt(1) - 1;
-			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffsetX;
-			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffsetY;
+			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
+			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
 
 			// scaling ...
 
 			g.drawImage(geldImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffsetX, y_field * field_size + borderOffsetY, field_size, field_size);
+				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -530,6 +530,12 @@ public class Spiel extends JPanel implements Runnable {
 			int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
 
 			g.drawImage(sp1Img, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				g.drawRect(sp1.getPosition()[0], sp1.getPosition()[1], 1, 1);
+				g.drawRect(x_pixel, y_pixel, sp1Img.getHeight(), sp1Img.getWidth());
+				g.setColor(Color.RED);
+			}
 
 		}
 
@@ -545,6 +551,16 @@ public class Spiel extends JPanel implements Runnable {
 
 	}
 
+	private int[] getBorderOffset(){
+
+		int[] borderOffset = new int[2];
+		borderOffset[0] = (int)(field_size*border[0]);
+		borderOffset[1] = (int)(field_size*border[1]);
+
+		return borderOffset;
+	}
+
+
 	@Override
 	public void run() {
 		while(loop());
@@ -553,12 +569,11 @@ public class Spiel extends JPanel implements Runnable {
 	@Override
 	public Dimension getPreferredSize() {
 
-		int borderOffsetX = (int)(field_size*border[0]);
-		int borderOffsetY = (int)(field_size*border[1]);
+		int[] borderOffset = getBorderOffset();
 
 		JSONArray playground_size = aktuelles_level.getMap().getPGSize();
 
-		Dimension d = new Dimension(playground_size.getInt(0) * field_size + 2* borderOffsetX, playground_size.getInt(1) * field_size + 2* borderOffsetY);
+		Dimension d = new Dimension(playground_size.getInt(0) * field_size + 2* borderOffset[0], playground_size.getInt(1) * field_size + 2* borderOffset[1]);
 
 		System.out.println(d);
 
