@@ -1,8 +1,6 @@
 package Spielverlauf;
 
-import javax.swing.*;
-
-public class Level extends JPanel{
+public class Level {
 
 	// Eigenschaften abhängig von Level-Stufe
 
@@ -40,7 +38,7 @@ public class Level extends JPanel{
 
 
 	public int getSpeed() {
-	return geschwindigkeit;
+		return geschwindigkeit;
 	}
 
 	public int getRegenTime() {
