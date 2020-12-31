@@ -1,16 +1,16 @@
 package Spielbereitstellug;
 
-import Spielverlauf.*;
+import Spielverlauf.DIRECTION;
 
 
 public class Lokalsteuerung {
 
 	private int velx;
 	private int vely;
-	private Map map;
+	private Spiel map;
 	private int steps = 6;
 
-	public Lokalsteuerung(Map m) {
+	public Lokalsteuerung(Spiel m) {
 
 		map = m;
 
@@ -27,17 +27,18 @@ public class Lokalsteuerung {
 
 
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
-	
+
 	public void render(){
-        map.getSP1().addPosOff(velx,vely);
+		map.getSP1().addPosOff(velx,vely);
 		map.repaint();
-    }
+	}
 
 
 	// TODO: Randbereiche dynamisch auf Fenstergröße anpassen + Exception Cases überlegen
 
 	public void up() {
 		vely = -steps;
+		map.getSP1().setMoveDir(DIRECTION.UP);
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
@@ -45,6 +46,7 @@ public class Lokalsteuerung {
 
 	public void down() {
 		vely = steps;
+		map.getSP1().setMoveDir(DIRECTION.DOWN);
 		render();
 		vely = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
@@ -52,6 +54,7 @@ public class Lokalsteuerung {
 
 	public void left() {
 		velx = -steps;
+		map.getSP1().setMoveDir(DIRECTION.LEFT);
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();
@@ -59,6 +62,7 @@ public class Lokalsteuerung {
 
 	public void right() {
 		velx = steps;
+		map.getSP1().setMoveDir(DIRECTION.RIGHT);
 		render();
 		velx = 0;//Nullify direction vector
 		// throw new UnsupportedOperationException();

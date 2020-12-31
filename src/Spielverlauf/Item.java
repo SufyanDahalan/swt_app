@@ -19,6 +19,8 @@ public abstract class Item {
 	public JSONArray getField() {
 		return field;
 	}
-
+	public void setField(JSONArray i){
+		i=field;
+	}
 
 }
