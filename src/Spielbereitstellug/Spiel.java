@@ -215,10 +215,9 @@ public class Spiel extends JPanel implements Runnable {
 		if(setTunnel) {
 			if (sp1.getMoveDir() == DIRECTION.RIGHT || sp1.getMoveDir() == DIRECTION.LEFT)
 				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.HORIZONTAL));
-			else if (sp1.getMoveDir() == DIRECTION.UP || sp1.getMoveDir() == DIRECTION.DOWN)
+			else if ((sp1.getMoveDir() == DIRECTION.UP || sp1.getMoveDir() == DIRECTION.DOWN))
 				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.VERTICAL));
 		}
-
 
 		// Spieler trifft Geldsack
 		ArrayList<Geldsack> geldsacke= aktuelles_level.getMap().getGeldsaecke();
@@ -227,15 +226,27 @@ public class Spiel extends JPanel implements Runnable {
 			if (Arrays.equals(g.getField(),getFieldOf(sp1.getPosition()))) {
 				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
 					System.out.println("push right");
-					g.setField(getFieldOf(sp1.getPosition()));
 				} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
 					System.out.println("push left");
 				}
 			}
 		}
 		// Spieler trifft Geld
+		ArrayList<Geld> gelds= aktuelles_level.getMap().getGeld();
+		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
+			Geld gd = iterator.next();
+			if (Arrays.equals(gd.getField(), getFieldOf(sp1.getPosition()))) {
+				iterator.remove();
+			}
+		}
+
 		// Spieler trifft Wand
 		// Spieler trifft Kirsche -> Bonsmodus aktivieren
+		if (aktuelles_level.getMap().getKirsche().getVisible()) {
+			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
+				aktuelles_level.getMap().getKirsche().setVisible(false);
+			}
+		}
 		// Hobbin trifft Diamant
 		// Hobbin trifft Boden
 

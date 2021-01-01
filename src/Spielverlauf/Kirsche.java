@@ -13,4 +13,7 @@ public class Kirsche extends Item {
     public void setVisible(boolean v) {
 		visible = v;
 	}
+	public boolean getVisible() {
+		 return visible;
+	}
 }
