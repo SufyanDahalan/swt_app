@@ -40,7 +40,7 @@ public class Spieler {
 
 
 	public boolean isAlive() {
-		if(leben > 0)
+		if(leben > 1)
 			return true;
 		else
 			return false;
@@ -60,5 +60,9 @@ public class Spieler {
 
 	public int getLeben() {
 		return leben;
+	}
+
+    public void decrementLife() {
+    	leben -= 1;
 	}
 }

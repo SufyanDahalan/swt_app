@@ -99,7 +99,8 @@ public class Spiel extends JPanel implements Runnable {
 		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
 
 
-		int[] pos = {1,1};
+		int[] fp = {1,1};
+		int[] pos = getCenterOf(fp);
 
 		aktuelles_level.getMap().setzeHobbin(pos);
 
@@ -181,13 +182,14 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-		/*
+
 		// Spieler trifft Monster
 		ArrayList<Monster> monsters= aktuelles_level.getMap().getMonster();
 		for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 			Monster m = iterator.next();
-			if(getFieldOf(m.getPosition()).similar( getFieldOf(sp1.getPosition()) )){
+			if(Arrays.equals(getFieldOf(m.getPosition()),( getFieldOf(sp1.getPosition())))){
 				if(sp1.isAlive()) {
+					sp1.decrementLife();
 					sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 					//System.out.println(sp1.getLeben());
 				}
@@ -196,7 +198,7 @@ public class Spiel extends JPanel implements Runnable {
 			}
 			//sp2 üp
 		}
-		*/
+
 
 		// Spieler trifft Boden
 
@@ -268,10 +270,10 @@ public class Spiel extends JPanel implements Runnable {
 
 	}
 
-	private int[] getCenterOf(int[] fp) {
+	int[] getCenterOf(int[] fp) {
 
-		int x_field = aktuelles_level.getMap().getSpawn_SP1()[0] - 1;
-		int y_field = aktuelles_level.getMap().getSpawn_SP1()[1] - 1;
+		int x_field = fp[0] - 1;
+		int y_field = fp[1] - 1;
 
 		int[] borderOffset = getBorderOffset();
 
@@ -376,15 +378,16 @@ public class Spiel extends JPanel implements Runnable {
 				unscaledImg = vertTunImg;
 			else
 				unscaledImg = spacTunImg;
-			int x_field = single_item.getField()[0] - 1;
-			int y_field = single_item.getField()[1] - 1;
-			int x_pixel = x_field * field_size - (unscaledImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (unscaledImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
+
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (unscaledImg.getWidth() / 2);
+			int y_pixel = middle[1] - (unscaledImg.getHeight() / 2);
 
 			g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -397,15 +400,15 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < diamanten.size(); i++) {
 			Diamant single_item = diamanten.get(i);
 
-			int x_field = single_item.getField()[0] - 1;
-			int y_field = single_item.getField()[1] - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (diamImg.getWidth() / 2);
+			int y_pixel = middle[1] - (diamImg.getHeight() / 2);
 
 			g.drawImage(diamImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -419,16 +422,15 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < geldsaecke.size(); i++) {
 			Geldsack single_item = geldsaecke.get(i);
 
-			int x_field = single_item.getField()[0] - 1;
-			int y_field = single_item.getField()[1] - 1;
-			int x_pixel = x_field * field_size - (diamImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (diamImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
-
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
+			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
 
 			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -442,12 +444,13 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < hobbins.size(); i++) {
 			Hobbin single_item = hobbins.get(i);
 
-			int[] field = getFieldOf(single_item.getPosition());
+			int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
+			int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);
 
-
-			g.drawImage(hobbinImg, single_item.getPosition()[0], single_item.getPosition()[1], null);
+			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
+				int[] field = getFieldOf(single_item.getPosition());
 				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
@@ -460,17 +463,14 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < nobbins.size(); i++) {
 			Nobbin single_item = nobbins.get(i);
 
-			int x_field = single_item.getPosition()[0] - 1;
-			int y_field = single_item.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (nobbinImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (nobbinImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
-
-			// scaling ...
+			int x_pixel = single_item.getPosition()[0] - (nobbinImg.getWidth() / 2);
+			int y_pixel = single_item.getPosition()[1] - (nobbinImg.getHeight() / 2);
 
 			g.drawImage(nobbinImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				int[] field = getFieldOf(single_item.getPosition());
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -593,4 +593,7 @@ public class Spiel extends JPanel implements Runnable {
 	}
 
 
+	public int getFieldSize() {
+		return field_size;
+	}
 }

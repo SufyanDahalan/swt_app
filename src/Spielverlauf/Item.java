@@ -10,10 +10,6 @@ public abstract class Item {
 		field = fp;
 		position = null;
 	}
-
-	public int[] getPosition() {
-		return position;
-	}
 	public int[] getField() {
 		return field;
 	}
