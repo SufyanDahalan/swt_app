@@ -35,7 +35,7 @@ public class Lokalsteuerung {
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
 
 	public void render(){
-		spiel.getSP1().addPosOff(velx,vely);
+		spiel.moveSP(velx,vely);
 		spiel.repaint();
 	}
 
@@ -89,6 +89,7 @@ public class Lokalsteuerung {
 		DIRECTION latestDir = spiel.getSP1().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.RIGHT || latestDir == DIRECTION.LEFT) {
 			spiel.getSP1().setMoveDir(DIRECTION.RIGHT);
+
 			velx = steps;
 		}
 		else

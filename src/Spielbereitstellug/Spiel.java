@@ -92,6 +92,7 @@ public class Spiel extends JPanel implements Runnable {
 		// TESTING
 
 
+		// setze Monster ein
 		ArrayList<Monster> monster = aktuelles_level.getMap().getMonster();
 
 		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
@@ -104,6 +105,16 @@ public class Spiel extends JPanel implements Runnable {
 
 		aktuelles_level.getMap().setzeHobbin(pos);
 
+		// setze Kirsche ein
+
+		aktuelles_level.getMap().showKirsche();
+
+		// setze Geld ein
+
+		int[] gfp = {3,3};
+		aktuelles_level.getMap().addGeld( new Geld(gfp) );
+
+		// Ausgaben, Infos
 		System.out.println("Anzahl Nobbins: " + aktuelles_level.getMap().getNobbins().size());
 		System.out.println("Anzahl Hobbins: " + aktuelles_level.getMap().getHobbins().size());
 
@@ -128,8 +139,15 @@ public class Spiel extends JPanel implements Runnable {
 
 		int[] fp = new int[2];
 
-		fp[0] = ((pos[0]-borderOffest[0])/field_size) + 1;
-		fp[1] = ((pos[1]-borderOffest[1])/field_size) + 1;
+		if((pos[0]-borderOffest[0]) < 0)
+			fp[0] = -1;
+		else
+			fp[0] = ((pos[0]-borderOffest[0])/field_size) + 1;
+
+		if((pos[1]-borderOffest[1]) < 0)
+			fp[1] = -1;
+		else
+			fp[1] = ((pos[1]-borderOffest[1])/field_size) + 1;
 
 		return fp;
 	}
@@ -253,11 +271,11 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-		// Spieler trifft Wand
+		// Erzeuge Kirsche (durch töten von X Monstern)
 		// Spieler trifft Kirsche -> Bonsmodus aktivieren
 		if (aktuelles_level.getMap().getKirsche().getVisible()) {
 			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
-				aktuelles_level.getMap().getKirsche().setVisible(false);
+				aktuelles_level.getMap().hideKirsche();
 			}
 		}
 		// Hobbin trifft Diamant
@@ -637,5 +655,19 @@ public class Spiel extends JPanel implements Runnable {
 
 	public int getFieldSize() {
 		return field_size;
+	}
+
+	public void moveSP(int velx, int vely) {
+		int[] spPos = sp1.getPosition().clone();
+
+		spPos[0] += velx;
+		spPos[1] += vely;
+
+		int[] newField = getFieldOf(spPos);
+		int[] pgSize = aktuelles_level.getMap().getPGSize();
+
+		if(0 < newField[0] && newField[0] <= pgSize[0] && 0 < newField[1] && newField[1] <= pgSize[1])
+			sp1.addPosOff(velx,vely);
+
 	}
 }
