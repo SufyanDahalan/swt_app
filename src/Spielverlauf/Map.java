@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Map {
 
@@ -28,20 +29,20 @@ public class Map {
 		// Set initial Content
 
 		playground_size = toArray(obj.getJSONArray("pg_size"));
+		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
+		spawn_sp1 = toArray(obj.getJSONArray("spawn_p1"));
+		spawn_sp2 = toArray(obj.getJSONArray("spawn_p2"));
 
 		geldsaecke = new ArrayList<Geldsack>();
 		diamanten = new ArrayList<Diamant>();
 		tunnel = new ArrayList<Tunnel>();
 
-		kirsche = new Kirsche(spawn_monster);
+		kirsche = new Kirsche(toArray(obj.getJSONArray("spawn_cherry")));
 		geld = new ArrayList<Geld>();
 		feuerball= new ArrayList<Feuerball>();
 
 		monster = new ArrayList<Monster>();
 
-		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
-		spawn_sp1 = toArray(obj.getJSONArray("spawn_p1"));
-		spawn_sp2 = toArray(obj.getJSONArray("spawn_p2"));
 
 		// Füge initiale Diamanten ein
 
@@ -114,7 +115,7 @@ public class Map {
 		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
 		geld = new ArrayList<Geld>(m.geld);
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
-		kirsche = new Kirsche(m.spawn_monster);
+		kirsche = new Kirsche(m.kirsche.field);
 	}
 
 	////// Content handling functions

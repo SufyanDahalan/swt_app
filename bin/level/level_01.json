@@ -4,6 +4,7 @@
     "spawn_p1": [8,10],
     "spawn_p2": [9,10],
     "spawn_mon": [15,1],
+    "spawn_cherry": [15,1],
     "pos_diam": [
         [1,9],[1,10],
         [2,10],
