@@ -204,6 +204,17 @@ public class Map {
 		return tunnel;
 	}
 
+	public ArrayList<Tunnel> getTunnel(int[] fp){
+
+		ArrayList<Tunnel> tunneltreffer = new ArrayList<Tunnel>();
+
+		for(Tunnel t: tunnel){
+			if( Arrays.equals(t.getField(), fp) )
+				tunneltreffer.add(t);
+		}
+		return tunneltreffer;
+	}
+
 	public void setTunnel(ArrayList t) {
 		tunnel = t;
 	}

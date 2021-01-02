@@ -40,7 +40,7 @@ public class Spieler {
 
 
 	public boolean isAlive() {
-		if(leben > 1)
+		if(leben > 0)
 			return true;
 		else
 			return false;

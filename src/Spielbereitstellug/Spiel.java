@@ -19,7 +19,7 @@ public class Spiel extends JPanel implements Runnable {
 
 	//dev stuff
 
-	boolean devFrames = true;
+	boolean devFrames = false;
 
 	// System-/ Filestructure
 
@@ -202,22 +202,35 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Spieler trifft Boden
 
-		ArrayList<Tunnel> tunnels = aktuelles_level.getMap().getTunnel();
-		boolean setTunnel = true;
+		int[] fpSp = getFieldOf(sp1.getPosition());
+		DIRECTION dirSp = sp1.getMoveDir();
 
-		for(ListIterator<Tunnel> iterator = tunnels.listIterator(); iterator.hasNext()&&setTunnel;) {
-			Tunnel t = iterator.next();
+		ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fpSp);
 
-			if ( Arrays.equals(t.getField(),getFieldOf(sp1.getPosition())) )
-				setTunnel = false;
+		if(tt.size() == 1){
+			TUNNELTYP ttyp = tt.get(0).getTyp();
+
+
+			if( ((dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN) && ttyp == TUNNELTYP.HORIZONTAL) ||
+				((dirSp == DIRECTION.RIGHT || dirSp == DIRECTION.LEFT) && ttyp == TUNNELTYP.VERTICAL) ){
+
+				TUNNELTYP arrangement;
+
+				if(dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN)
+					arrangement = TUNNELTYP.VERTICAL;
+				else
+					arrangement = TUNNELTYP.HORIZONTAL;
+
+				aktuelles_level.getMap().addTunnel( new Tunnel(fpSp, arrangement) );
+			}
+		}
+		else if (tt.size() == 0){
+			if (dirSp == DIRECTION.RIGHT || dirSp == DIRECTION.LEFT)
+				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.HORIZONTAL));
+			else if (dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN)
+				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL));
 		}
 
-		if(setTunnel) {
-			if (sp1.getMoveDir() == DIRECTION.RIGHT || sp1.getMoveDir() == DIRECTION.LEFT)
-				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.HORIZONTAL));
-			else if ((sp1.getMoveDir() == DIRECTION.UP || sp1.getMoveDir() == DIRECTION.DOWN))
-				aktuelles_level.getMap().addTunnel(new Tunnel(getFieldOf(sp1.getPosition()), TUNNELTYP.VERTICAL));
-		}
 
 		// Spieler trifft Geldsack
 		ArrayList<Geldsack> geldsacke= aktuelles_level.getMap().getGeldsaecke();
@@ -528,6 +541,24 @@ public class Spiel extends JPanel implements Runnable {
 
 			if(devFrames) {
 				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		// Kirsche
+		if(aktuelles_level.getMap().getKirsche().getVisible()){
+			BufferedImage kirscheImg = current_skin.getImage("cherry", field_size);
+
+			int[] field = aktuelles_level.getMap().getKirsche().getField();
+
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (kirscheImg.getWidth() / 2);
+			int y_pixel = middle[1] - (kirscheImg.getHeight() / 2);
+
+			g.drawImage(kirscheImg, x_pixel, y_pixel, null);
+
+			if (devFrames) {
+				g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
