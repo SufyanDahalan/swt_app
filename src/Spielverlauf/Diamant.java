@@ -11,4 +11,8 @@ public class Diamant extends Item {
 		super(pos);
 	}
 
+	@Override
+	public int getValue() {
+		return wertung;
+	}
 }

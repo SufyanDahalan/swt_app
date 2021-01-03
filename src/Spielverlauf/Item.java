@@ -17,4 +17,5 @@ public abstract class Item {
 		i=field;
 	}
 
+    public abstract int getValue();
 }

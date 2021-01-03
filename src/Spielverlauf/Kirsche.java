@@ -16,4 +16,9 @@ public class Kirsche extends Item {
 	public boolean getVisible() {
 		 return visible;
 	}
+
+	@Override
+	public int getValue() {
+		return wertung;
+	}
 }

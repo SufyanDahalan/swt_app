@@ -7,4 +7,9 @@ public class Geld extends Item{
     public Geld(int[] pos){
         super(pos);
     }
+
+    @Override
+    public int getValue() {
+        return wertung;
+    }
 }
