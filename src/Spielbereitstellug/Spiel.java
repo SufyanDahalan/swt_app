@@ -4,15 +4,16 @@ import Spielverlauf.*;
 import org.json.JSONObject;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.ListIterator;
 
 
 public class Spiel extends JPanel implements Runnable {
@@ -32,6 +33,7 @@ public class Spiel extends JPanel implements Runnable {
 	private ArrayList<Map> mapChain;
 	int current_map = 0;
 	private final double[] border = {0.4, 0.2}; // Wandstärke x,y
+	private final double topbarHeight = 1; // Faktor von Feldgröße
 
 	// temp. Att.
 
@@ -125,12 +127,16 @@ public class Spiel extends JPanel implements Runnable {
 		int felderY = aktuelles_level.getMap().getPGSize()[1];
 
 		int w_temp_size = (int)((double)panel_size[0] / ( (double)felderX + ( 2*border[0]) ));
-		int h_temp_size = (int)((double)panel_size[1] / ( (double)felderY + ( 2*border[1]) ));
+		int h_temp_size = (int)((double)panel_size[1] / ( (double)felderY + ( 2*border[1]) + topbarHeight ));
 
 		if (w_temp_size > h_temp_size)
 			field_size = h_temp_size;
 		else
 			field_size = w_temp_size;
+	}
+
+	private int getTopBarHeight(){
+		return (int)(field_size*topbarHeight);
 	}
 
 	public int[] getFieldOf(int[] pos){
@@ -144,10 +150,10 @@ public class Spiel extends JPanel implements Runnable {
 		else
 			fp[0] = ((pos[0]-borderOffest[0])/field_size) + 1;
 
-		if((pos[1]-borderOffest[1]) < 0)
+		if((pos[1]-borderOffest[1]-getTopBarHeight()) < 0)
 			fp[1] = -1;
 		else
-			fp[1] = ((pos[1]-borderOffest[1])/field_size) + 1;
+			fp[1] = ((pos[1]-borderOffest[1]-getTopBarHeight())/field_size) + 1;
 
 		return fp;
 	}
@@ -197,6 +203,7 @@ public class Spiel extends JPanel implements Runnable {
 			Diamant single_item = iterator.next();
 			if(Arrays.equals(single_item.getField(),getFieldOf(sp1.getPosition()))) {
 				iterator.remove();
+				spielstand += single_item.getValue();
 			}
 		}
 
@@ -209,7 +216,6 @@ public class Spiel extends JPanel implements Runnable {
 				if(sp1.isAlive()) {
 					sp1.decrementLife();
 					sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
-					//System.out.println(sp1.getLeben());
 				}
 				else
 					System.out.println("Ende");
@@ -268,6 +274,7 @@ public class Spiel extends JPanel implements Runnable {
 			Geld gd = iterator.next();
 			if (Arrays.equals(gd.getField(), getFieldOf(sp1.getPosition()))) {
 				iterator.remove();
+				spielstand += gd.getValue();
 			}
 		}
 
@@ -276,6 +283,7 @@ public class Spiel extends JPanel implements Runnable {
 		if (aktuelles_level.getMap().getKirsche().getVisible()) {
 			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
 				aktuelles_level.getMap().hideKirsche();
+				spielstand += aktuelles_level.getMap().getKirsche().getValue();
 			}
 		}
 		// Hobbin trifft Diamant
@@ -322,7 +330,7 @@ public class Spiel extends JPanel implements Runnable {
 		int[] pixelPos = new int[2];
 
 		pixelPos[0] = x_field * field_size + (field_size / 2) + borderOffset[0];
-		pixelPos[1] = y_field * field_size + (field_size / 2) + borderOffset[1];
+		pixelPos[1] = y_field * field_size + (field_size / 2) + borderOffset[1] + getTopBarHeight();
 
 		return pixelPos;
 	}
@@ -395,11 +403,13 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Zeichne Hintergrund
 
+		setBackground(Color.black);
 		BufferedImage backgroundImg = current_skin.getImage("backg_typ1", field_size);
 		TexturePaint slatetp = new TexturePaint(backgroundImg, new Rectangle(0, 0, backgroundImg.getWidth(), backgroundImg.getHeight()));
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setPaint(slatetp);
-		g2d.fillRect(0, 0, getWidth(), getHeight());
+		int[] pg_size = aktuelles_level.getMap().getPGSize();
+		g2d.fillRect(0, getTopBarHeight(), field_size*pg_size[0]+borderOffset[0]*2, field_size*pg_size[1]+borderOffset[1]*2);
 
 		// Zeichne Tunnel
 		BufferedImage horzTunImg = current_skin.getImage("tunnel_hori", field_size);
@@ -584,31 +594,39 @@ public class Spiel extends JPanel implements Runnable {
 		// Spieler
 
 		if(sp1 != null) {
-			BufferedImage sp1Img1 = current_skin.getImage("dig_red_rgt_f1", field_size);
-			BufferedImage sp1Img2 = current_skin.getImage("dig_red_lft_f1", field_size);
-			BufferedImage sp1Img3 = current_skin.getImage("dig_red_up_f1", field_size);
-			BufferedImage sp1Img4 = current_skin.getImage("dig_red_dow_f1", field_size);
-			if(sp1.getMoveDir()==DIRECTION.RIGHT) {
-				int x_pixel = sp1.getPosition()[0] - (sp1Img1.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img1.getHeight() / 2);
-				g.drawImage(sp1Img1, x_pixel, y_pixel, null);
+			if(sp1.isAlive()) {
+				BufferedImage sp1Img1 = current_skin.getImage("dig_red_rgt_f1", field_size);
+				BufferedImage sp1Img2 = current_skin.getImage("dig_red_lft_f1", field_size);
+				BufferedImage sp1Img3 = current_skin.getImage("dig_red_up_f1", field_size);
+				BufferedImage sp1Img4 = current_skin.getImage("dig_red_dow_f1", field_size);
+				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
+					int x_pixel = sp1.getPosition()[0] - (sp1Img1.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img1.getHeight() / 2);
+					g.drawImage(sp1Img1, x_pixel, y_pixel, null);
+				}
+				if (sp1.getMoveDir() == DIRECTION.LEFT) {
+					int x_pixel = sp1.getPosition()[0] - (sp1Img2.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img2.getHeight() / 2);
+					g.drawImage(sp1Img2, x_pixel, y_pixel, null);
+				}
+				if (sp1.getMoveDir() == DIRECTION.UP) {
+					int x_pixel = sp1.getPosition()[0] - (sp1Img3.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img3.getHeight() / 2);
+					g.drawImage(sp1Img3, x_pixel, y_pixel, null);
+				}
+				if (sp1.getMoveDir() == DIRECTION.DOWN) {
+					int x_pixel = sp1.getPosition()[0] - (sp1Img4.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img4.getHeight() / 2);
+					g.drawImage(sp1Img4, x_pixel, y_pixel, null);
+				}
 			}
-			if(sp1.getMoveDir()==DIRECTION.LEFT) {
-				int x_pixel = sp1.getPosition()[0] - (sp1Img2.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img2.getHeight() / 2);
-				g.drawImage(sp1Img2, x_pixel, y_pixel, null);
+			else {
+				// gegen Geist ersetzen
+				BufferedImage sp1Img = current_skin.getImage("grave_f5", field_size);
+				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+				g.drawImage(sp1Img, x_pixel, y_pixel, null);
 			}
-			if(sp1.getMoveDir()==DIRECTION.UP) {
-				int x_pixel = sp1.getPosition()[0] - (sp1Img3.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img3.getHeight() / 2);
-				g.drawImage(sp1Img3, x_pixel, y_pixel, null);
-			}
-			if(sp1.getMoveDir()==DIRECTION.DOWN) {
-				int x_pixel = sp1.getPosition()[0] - (sp1Img4.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img4.getHeight() / 2);
-				g.drawImage(sp1Img4, x_pixel, y_pixel, null);
-			}
-
 		}
 
 		if(sp2 != null) {
@@ -620,6 +638,38 @@ public class Spiel extends JPanel implements Runnable {
 			g.drawImage(sp2Img, x_pixel, y_pixel, null);
 
 		}
+
+		// Zeichne Score
+		int margin_y = field_size/4;
+		int margin_x = field_size/2;
+
+		int fontSize = field_size/2;
+		g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
+		g.setColor(Color.white);
+		g.drawString(String.format("%05d", spielstand), margin_x, margin_y+fontSize);
+
+		// Zeichne Leben
+
+
+		// Zeichne Leben von SP1
+		BufferedImage sp1Img =current_skin.getImage("statusbar_digger_MP_red", field_size);
+		margin_x = 3*field_size;
+		for(int i = sp1.getLeben(); i > 0; i--) {
+			g.drawImage(sp1Img, margin_x, margin_y, null);
+			margin_x += sp1Img.getWidth();
+		}
+
+		// Zeichene auch leben von SP2
+		if(sp2 != null) {
+			margin_x = 9*field_size;
+			BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
+			for(int i = sp2.getLeben(); i > 0; i--) {
+				g.drawImage(sp2Img, margin_x, margin_y, null);
+				margin_x -= sp1Img.getWidth();
+			}
+
+		}
+
 
 	}
 
@@ -645,7 +695,7 @@ public class Spiel extends JPanel implements Runnable {
 
 		int[] playground_size = aktuelles_level.getMap().getPGSize();
 
-		Dimension d = new Dimension(playground_size[0] * field_size + 2* borderOffset[0], playground_size[1] * field_size + 2* borderOffset[1]);
+		Dimension d = new Dimension(playground_size[0] * field_size + 2* borderOffset[0], playground_size[1] * field_size + 2* borderOffset[1] + getTopBarHeight());
 
 		System.out.println(d);
 
