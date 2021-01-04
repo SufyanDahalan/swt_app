@@ -71,7 +71,7 @@ public class MainFrame extends JFrame {
 
         Spiel spiel = new Spiel(size);
 
-        spiel.spawnSpieler(false);
+        spiel.spawnSpieler(true);
 
         Runnable runnable = (Runnable)spiel; // or an anonymous class, or lambda...
 

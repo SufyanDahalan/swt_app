@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ public class Spiel extends JPanel implements Runnable {
 	private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
 
 	// static content
-	private Skin current_skin;
-	private ArrayList<Map> mapChain;
+	private final Skin current_skin;
+	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 	private final double[] border = {0.4, 0.2}; // Wandstärke x,y
 	private final double topbarHeight = 1; // Faktor von Feldgröße
@@ -41,6 +40,7 @@ public class Spiel extends JPanel implements Runnable {
 	private int spielstand;
 
 	private int field_size;
+	private int old_field_size;
 
 	// Spieler
 
@@ -61,14 +61,14 @@ public class Spiel extends JPanel implements Runnable {
 
 		System.out.println("Anzahl der gelesenen Karten: " + maps.length);
 
-		mapChain = new ArrayList<Map>();
+		mapChain = new ArrayList<>();
 
-		for(int i=0; i<maps.length; i++) {
+		for (String map : maps) {
 
 			// read Level-File
 			JSONObject obj = null;
 			try {
-				obj = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + maps[i]))));
+				obj = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -88,7 +88,7 @@ public class Spiel extends JPanel implements Runnable {
 
 		// refresh sizing
 
-		refreshFS(panel_size);
+		refreshSizing();
 
 
 		// TESTING
@@ -122,17 +122,44 @@ public class Spiel extends JPanel implements Runnable {
 
 	}
 
-	private void refreshFS(int[] panel_size) {
+	private void refreshSizing() {
+
+		// Speichere Änderung
+		old_field_size = field_size;
+
+		// setze Feldgröße
+
+		Dimension d = this.getSize();
+
 		int felderX = aktuelles_level.getMap().getPGSize()[0];
 		int felderY = aktuelles_level.getMap().getPGSize()[1];
 
-		int w_temp_size = (int)((double)panel_size[0] / ( (double)felderX + ( 2*border[0]) ));
-		int h_temp_size = (int)((double)panel_size[1] / ( (double)felderY + ( 2*border[1]) + topbarHeight ));
+		if(d.width == 0 || d.height == 0)
+			d = new Dimension(500, 500);
 
-		if (w_temp_size > h_temp_size)
-			field_size = h_temp_size;
-		else
-			field_size = w_temp_size;
+		int w_temp_size = (int)((double)d.width / ( (double)felderX + ( 2*border[0]) ));
+		int h_temp_size = (int)((double)d.height / ( (double)felderY + ( 2*border[1]) + topbarHeight ));
+
+		field_size = Math.min(w_temp_size, h_temp_size);
+
+		// berechne neue Pixelpositionen
+
+		if(field_size != old_field_size && old_field_size != 0) {
+			double factor = (double) field_size / (double) old_field_size;
+
+			if(sp1 != null)
+				for (int i = 0; i <= sp1.getPosition().length - 1; i++)
+					sp1.getPosition()[i] *= factor;
+
+			if(sp2 != null)
+				for (int i = 0; i <= sp2.getPosition().length - 1; i++)
+					sp2.getPosition()[i] *= factor;
+
+			for (Monster m : aktuelles_level.getMap().getMonster())
+				for (int i = 0; i <= m.getPosition().length - 1; i++)
+					m.getPosition()[i] *= factor;
+		}
+
 	}
 
 	private int getTopBarHeight(){
@@ -272,13 +299,15 @@ public class Spiel extends JPanel implements Runnable {
 		ArrayList<Geld> gelds= aktuelles_level.getMap().getGeld();
 		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
 			Geld gd = iterator.next();
+
 			if (Arrays.equals(gd.getField(), getFieldOf(sp1.getPosition()))) {
+
 				iterator.remove();
 				spielstand += gd.getValue();
 			}
 		}
 
-		// Erzeuge Kirsche (durch töten von X Monstern)
+		// Create Cherry (by killing X Monster)
 		// Spieler trifft Kirsche -> Bonsmodus aktivieren
 		if (aktuelles_level.getMap().getKirsche().getVisible()) {
 			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
@@ -397,6 +426,8 @@ public class Spiel extends JPanel implements Runnable {
 
 		super.paintComponent(g);
 
+		refreshSizing();
+
 		// Prepering
 
 		int[] borderOffset = getBorderOffset();
@@ -466,7 +497,7 @@ public class Spiel extends JPanel implements Runnable {
 		}
 
 
-		// Zeichne Geld
+		// Zeichne Geldsäcke
 		BufferedImage moneyPodImg = current_skin.getImage("money_static", field_size);
 
 		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
@@ -536,15 +567,15 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < feuerball.size(); i++) {
 			Feuerball single_item = feuerball.get(i);
 
-			int x_field = single_item.getPosition()[0] - 1;
-			int y_field = single_item.getPosition()[1] - 1;
-			int x_pixel = x_field * field_size - (feuerballImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (feuerballImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
+			int[] pos = single_item.getPosition();
+			int x_pixel = pos[0] - (moneyPodImg.getWidth() / 2);
+			int y_pixel = pos[1] - (moneyPodImg.getHeight() / 2);
 
 			g.drawImage(feuerballImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				int[] field = getFieldOf(single_item.getPosition());
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -558,17 +589,17 @@ public class Spiel extends JPanel implements Runnable {
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
 
-			int x_field = single_item.getField()[0] - 1;
-			int y_field = single_item.getField()[1] - 1;
-			int x_pixel = x_field * field_size - (geldImg.getWidth() / 2) + (field_size / 2) + borderOffset[0];
-			int y_pixel = y_field * field_size - (geldImg.getHeight() / 2) + (field_size / 2) + borderOffset[1];
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
+			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
 
 			// scaling ...
 
 			g.drawImage(geldImg, x_pixel, y_pixel, null);
 
 			if(devFrames) {
-				g.drawRect(x_field * field_size + borderOffset[0], y_field * field_size + borderOffset[1], field_size, field_size);
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -669,7 +700,6 @@ public class Spiel extends JPanel implements Runnable {
 			}
 
 		}
-
 
 	}
 

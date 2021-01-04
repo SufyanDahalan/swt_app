@@ -10,12 +10,10 @@ public class Lokalsteuerung {
 	private int velx;
 	private int vely;
 	private Spiel spiel;
-	private int steps;
 
 	public Lokalsteuerung(Spiel m) {
 
 		spiel = m;
-		refreshSteps();
 
 		velx = 0;
 		vely = 0;
@@ -28,8 +26,8 @@ public class Lokalsteuerung {
 		// throw new UnsupportedOperationException();
 	}
 
-	public void refreshSteps(){
-		steps = spiel.getFieldSize()/10;
+	public int getSteps(){
+		return spiel.getFieldSize()/10;
 	}
 
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
@@ -47,7 +45,7 @@ public class Lokalsteuerung {
 		DIRECTION latestDir = spiel.getSP1().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.UP || latestDir == DIRECTION.DOWN) {
 			spiel.getSP1().setMoveDir(DIRECTION.UP);
-			vely = -steps;
+			vely = -getSteps();
 		}
 		else
 			repeatLastMove();
@@ -61,7 +59,7 @@ public class Lokalsteuerung {
 		DIRECTION latestDir = spiel.getSP1().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.DOWN || latestDir == DIRECTION.UP) {
 			spiel.getSP1().setMoveDir(DIRECTION.DOWN);
-			vely = steps;
+			vely = getSteps();
 		}
 		else
 			repeatLastMove();
@@ -75,7 +73,7 @@ public class Lokalsteuerung {
 		DIRECTION latestDir = spiel.getSP1().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.LEFT || latestDir == DIRECTION.RIGHT) {
 			spiel.getSP1().setMoveDir(DIRECTION.LEFT);
-			velx = -steps;
+			velx = -getSteps();
 		}
 		else
 			repeatLastMove();
@@ -90,7 +88,7 @@ public class Lokalsteuerung {
 		if (isOnCrossroad() || latestDir == DIRECTION.RIGHT || latestDir == DIRECTION.LEFT) {
 			spiel.getSP1().setMoveDir(DIRECTION.RIGHT);
 
-			velx = steps;
+			velx = getSteps();
 		}
 		else
 			repeatLastMove();
@@ -101,7 +99,7 @@ public class Lokalsteuerung {
 
 	private boolean isOnCrossroad() {
 
-		int tolerance = steps/2;
+		int tolerance = getSteps()/2;
 		int[] field_middle = spiel.getCenterOf(spiel.getFieldOf(spiel.getSP1().getPosition()));
 		int[] sp_pos = spiel.getSP1().getPosition();
 
