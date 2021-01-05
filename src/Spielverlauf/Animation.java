@@ -4,18 +4,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Animation {
-    private int speed;
     private int frames;
     private Skin s;
 
     private int index = 0;
     private int count = 0;
+    long DELAY_PERIOD;
+    long beginTime = System.currentTimeMillis();
 
     private BufferedImage[] images;
     private BufferedImage currentImg;
 
     public Animation(int speed, BufferedImage[] bi, Skin sk) {
-        this.speed = speed;
+        DELAY_PERIOD = speed;
         images = bi;
         frames = bi.length;
         s = sk;
@@ -31,10 +32,17 @@ public class Animation {
     }*/
 
     public BufferedImage nextFrame(int fs) {
+        long beginTime = System.currentTimeMillis();
+        long timeTaken = System.currentTimeMillis() - beginTime;
+        long sleepTime = DELAY_PERIOD - timeTaken;
 
-        count = (count+1)%frames;
+        if (sleepTime >= 0) {
+            try{Thread.sleep(sleepTime);
+                count = (count+1)%frames;
+            } catch(InterruptedException e){}
+        }
 
-        return s.scale(images[count-1], fs);
+        return s.scale(images[count], fs);
     }
 /*
     public void drawAnimation(Graphics g, int x, int y) {

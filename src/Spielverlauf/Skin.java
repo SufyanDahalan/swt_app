@@ -91,18 +91,47 @@ public class Skin {
 
 	private void createAnimations() {
 
-		BufferedImage[] bilder = new BufferedImage[6];
+		BufferedImage[] rbilder = new BufferedImage[6];
 
-		bilder[0] = getImage("dig_red_rgt_f1");
-		bilder[1] = getImage("dig_red_rgt_f2");
-		bilder[2] = getImage("dig_red_rgt_f3");
-		bilder[3] = getImage("dig_red_rgt_f4");
-		bilder[4] = getImage("dig_red_rgt_f5");
-		bilder[5] = getImage("dig_red_rgt_f6");
+		rbilder[0] = getImage("dig_red_rgt_f1");
+		rbilder[1] = getImage("dig_red_rgt_f2");
+		rbilder[2] = getImage("dig_red_rgt_f3");
+		rbilder[3] = getImage("dig_red_rgt_f4");
+		rbilder[4] = getImage("dig_red_rgt_f5");
+		rbilder[5] = getImage("dig_red_rgt_f6");
 
-		Animation a = new Animation(2, bilder, this);
-
+		Animation a = new Animation(50, rbilder, this);
 		animations.put("digger_red_right", a);
+
+		BufferedImage[] lbilder = new BufferedImage[6];
+		lbilder[0] = getImage("dig_red_lft_f1");
+		lbilder[1] = getImage("dig_red_lft_f2");
+		lbilder[2] = getImage("dig_red_lft_f3");
+		lbilder[3] = getImage("dig_red_lft_f4");
+		lbilder[4] = getImage("dig_red_lft_f5");
+		lbilder[5] = getImage("dig_red_lft_f6");
+		Animation b = new Animation(50, lbilder, this);
+		animations.put("digger_red_left", b);
+
+		BufferedImage[] ubilder = new BufferedImage[6];
+		ubilder[0] = getImage("dig_red_up_f1");
+		ubilder[1] = getImage("dig_red_up_f2");
+		ubilder[2] = getImage("dig_red_up_f3");
+		ubilder[3] = getImage("dig_red_up_f4");
+		ubilder[4] = getImage("dig_red_up_f5");
+		ubilder[5] = getImage("dig_red_up_f6");
+		Animation c = new Animation(50, ubilder, this);
+		animations.put("digger_red_up", c);
+
+		BufferedImage[] dbilder = new BufferedImage[6];
+		dbilder[0] = getImage("dig_red_dow_f1");
+		dbilder[1] = getImage("dig_red_dow_f2");
+		dbilder[2] = getImage("dig_red_dow_f3");
+		dbilder[3] = getImage("dig_red_dow_f4");
+		dbilder[4] = getImage("dig_red_dow_f5");
+		dbilder[5] = getImage("dig_red_dow_f6");
+		Animation d = new Animation(50, dbilder, this);
+		animations.put("digger_red_down", d);
 	}
 
 	public BufferedImage getImage(String name, int fs) {

@@ -652,10 +652,10 @@ public class Spiel extends JPanel implements Runnable {
 		if(sp1 != null) {
 			if(sp1.isAlive()) {
 
-				//Animation ani_left = current_skin.getAnimation("digger_red_left");
+				Animation ani_left = current_skin.getAnimation("digger_red_left");
 				Animation ani_right = current_skin.getAnimation("digger_red_right");
-				//Animation ani_up = current_skin.getAnimation("digger_red_up");
-				//Animation ani_down = current_skin.getAnimation("digger_red_down");
+				Animation ani_up = current_skin.getAnimation("digger_red_up");
+				Animation ani_down = current_skin.getAnimation("digger_red_down");
 
 				BufferedImage sp1Img = null;
 
@@ -663,13 +663,13 @@ public class Spiel extends JPanel implements Runnable {
 					sp1Img = ani_right.nextFrame(field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.LEFT) {
-					sp1Img = current_skin.getImage("dig_red_rgt_f1", field_size);
+					sp1Img = ani_left.nextFrame(field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.UP) {
-					sp1Img =  current_skin.getImage("dig_red_rgt_f1", field_size);
+					sp1Img = ani_up.nextFrame(field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.DOWN) {
-					sp1Img =  current_skin.getImage("dig_red_rgt_f1", field_size);
+					sp1Img = ani_down.nextFrame(field_size);
 				}
 
 
