@@ -24,6 +24,9 @@ public class Game extends JPanel implements ActionListener, KeyListener{
         repaint();
         x+=velx;
         y+=vely;
+        velx = 0;
+        vely = 0;
+
     }
     public void up(){
         if (y<5){ vely = 0;}
