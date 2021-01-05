@@ -688,11 +688,16 @@ public class Spiel extends JPanel implements Runnable {
 		}
 
 		if(sp2 != null) {
-			BufferedImage sp2Img = current_skin.getImage("dig_gre_up_f1", field_size);
+			Animation gre_ani_left = current_skin.getAnimation("digger_gre_left");
+			Animation gre_ani_right = current_skin.getAnimation("digger_gre_right");
+			Animation gre_ani_up = current_skin.getAnimation("digger_gre_up");
+			Animation gre_ani_down = current_skin.getAnimation("digger_gre_down");
+
+			BufferedImage sp2Img = null;
+			sp2Img = gre_ani_right.nextFrame(field_size);
 
 			int x_pixel = sp2.getPosition()[0] - (sp2Img.getWidth() / 2);
 			int y_pixel = sp2.getPosition()[1] - (sp2Img.getHeight() / 2);
-
 			g.drawImage(sp2Img, x_pixel, y_pixel, null);
 
 		}

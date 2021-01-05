@@ -90,7 +90,7 @@ public class Skin {
 	}
 
 	private void createAnimations() {
-
+//Spieler 1
 		BufferedImage[] rbilder = new BufferedImage[6];
 
 		rbilder[0] = getImage("dig_red_rgt_f1");
@@ -132,6 +132,49 @@ public class Skin {
 		dbilder[5] = getImage("dig_red_dow_f6");
 		Animation d = new Animation(50, dbilder, this);
 		animations.put("digger_red_down", d);
+
+		//Spieler 2
+		BufferedImage[] gre_rbilder = new BufferedImage[6];
+
+		gre_rbilder[0] = getImage("dig_gre_rgt_f1");
+		gre_rbilder[1] = getImage("dig_gre_rgt_f2");
+		gre_rbilder[2] = getImage("dig_gre_rgt_f3");
+		gre_rbilder[3] = getImage("dig_gre_rgt_f4");
+		gre_rbilder[4] = getImage("dig_gre_rgt_f5");
+		gre_rbilder[5] = getImage("dig_gre_rgt_f6");
+
+		Animation e = new Animation(50, gre_rbilder, this);
+		animations.put("digger_gre_right", e);
+
+		BufferedImage[] gre_lbilder = new BufferedImage[6];
+		gre_lbilder[0] = getImage("dig_gre_lft_f1");
+		gre_lbilder[1] = getImage("dig_gre_lft_f2");
+		gre_lbilder[2] = getImage("dig_gre_lft_f3");
+		gre_lbilder[3] = getImage("dig_gre_lft_f4");
+		gre_lbilder[4] = getImage("dig_gre_lft_f5");
+		gre_lbilder[5] = getImage("dig_gre_lft_f6");
+		Animation f = new Animation(50, gre_lbilder, this);
+		animations.put("digger_gre_left", f);
+
+		BufferedImage[] gre_ubilder = new BufferedImage[6];
+		gre_ubilder[0] = getImage("dig_gre_up_f1");
+		gre_ubilder[1] = getImage("dig_gre_up_f2");
+		gre_ubilder[2] = getImage("dig_gre_up_f3");
+		gre_ubilder[3] = getImage("dig_gre_up_f4");
+		gre_ubilder[4] = getImage("dig_gre_up_f5");
+		gre_ubilder[5] = getImage("dig_gre_up_f6");
+		Animation g = new Animation(50, gre_ubilder, this);
+		animations.put("digger_gre_up", g);
+
+		BufferedImage[] gre_dbilder = new BufferedImage[6];
+		gre_dbilder[0] = getImage("dig_gre_dow_f1");
+		gre_dbilder[1] = getImage("dig_gre_dow_f2");
+		gre_dbilder[2] = getImage("dig_gre_dow_f3");
+		gre_dbilder[3] = getImage("dig_gre_dow_f4");
+		gre_dbilder[4] = getImage("dig_gre_dow_f5");
+		gre_dbilder[5] = getImage("dig_gre_dow_f6");
+		Animation h = new Animation(50, gre_dbilder, this);
+		animations.put("digger_gre_down", h);
 	}
 
 	public BufferedImage getImage(String name, int fs) {
