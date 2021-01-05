@@ -19,4 +19,5 @@ public class Feuerball {
 	public int[] getPosition() {
 		return position;
 	}
+
 }

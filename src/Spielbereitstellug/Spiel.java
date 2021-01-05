@@ -47,6 +47,10 @@ public class Spiel extends JPanel implements Runnable {
 	private Spieler sp1;
 	private Spieler sp2;
 
+	// Feurball
+
+	private Feuerball feuerball_sp1;
+
 
 	public Spiel(int[] panel_size) {
 
@@ -82,6 +86,8 @@ public class Spiel extends JPanel implements Runnable {
 		sp1 = null;
 		sp2 = null;
 
+
+		feuerball_sp1 = null;
 
 
 		aktuelles_level = createNextLevel();
@@ -382,6 +388,12 @@ public class Spiel extends JPanel implements Runnable {
 		return sp1;
 	}
 
+	public void spawnFeuerball(DIRECTION dir, int[] pos) {
+		feuerball_sp1 = new Feuerball(pos, dir);
+	}
+
+	public Feuerball getFeuerball_sp1(){ return feuerball_sp1; }
+
 	// creates next Level, increases speed and decrease regtime
 
 	private Level createNextLevel() {
@@ -563,6 +575,7 @@ public class Spiel extends JPanel implements Runnable {
 		BufferedImage feuerballImg = current_skin.getImage("fireball_red_f1", field_size);
 
 		ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
+
 
 		for (int i = 0; i < feuerball.size(); i++) {
 			Feuerball single_item = feuerball.get(i);

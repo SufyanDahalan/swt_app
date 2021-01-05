@@ -97,6 +97,20 @@ public class Lokalsteuerung {
 		nullifyDirVector();
 	}
 
+	// Methode zum Abfeuern eines Feuerballs
+
+	public void shoot(){
+
+		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+
+		spiel.spawnFeuerball(latestDir, spiel.getSP1().getPosition() );
+
+		// System.out.println("FEUEEEEEER!"); // System.out.println( spiel.getFeuerball_sp1().getPosition()[0] );
+
+		render();
+
+	}
+
 	private boolean isOnCrossroad() {
 
 		int tolerance = getSteps()/2;

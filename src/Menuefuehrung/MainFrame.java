@@ -106,6 +106,12 @@ public class MainFrame extends JFrame {
                 lok.right();
             }
         });
+        addKeyBinding(spiel, "SPACE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lok.shoot();
+            }
+        });
         getContentPane().add(spiel, "game");
     }
 }
