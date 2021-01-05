@@ -34,7 +34,6 @@ public class Lokalsteuerung {
 
 	public void render(){
 		spiel.moveSP(velx,vely);
-		spiel.repaint();
 	}
 
 

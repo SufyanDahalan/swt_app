@@ -198,7 +198,7 @@ public class Spiel extends JPanel implements Runnable {
 
 	private boolean loop(){
 
-		long DELAY_PERIOD = 100;
+		long DELAY_PERIOD = 10;
 		long beginTime = System.currentTimeMillis();
 
 		/// Prüfroutinen
@@ -350,7 +350,7 @@ public class Spiel extends JPanel implements Runnable {
 		if (sleepTime >= 0) {
 			try{Thread.sleep(sleepTime);} catch(InterruptedException e){}
 		}
-
+		this.repaint();
 		return true;
 
 	}
