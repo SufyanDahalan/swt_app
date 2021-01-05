@@ -28,5 +28,15 @@ public abstract class Monster {
 		return position;
 	};
 
+	public void setPosition(int[] pos) {
+		position = pos;
+	}
+
+	public void addPosOff(int x, int y){
+		position[0]+=x;
+		position[1]+=y;
+	}
+
+
 
 }

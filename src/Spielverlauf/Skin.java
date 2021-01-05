@@ -1,5 +1,6 @@
 package Spielverlauf;
 
+import Spielverlauf.Animation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,6 +18,7 @@ import java.util.Iterator;
 public class Skin {
 
 	private HashMap<String, BufferedImage> images;
+	private HashMap<String, Animation> animations;
 	private BufferedImage[] numbers;
 	private BufferedImage[] letters;
 	private Font font;
@@ -39,6 +41,7 @@ public class Skin {
 		}
 
 		images = new HashMap<>();
+		animations = new HashMap<>();
 		numbers = new BufferedImage[10];
 		letters = new BufferedImage[26];
 
@@ -71,7 +74,11 @@ public class Skin {
 			}
 
 			images.put(key, dest);
+
+
 		}
+
+		createAnimations();
 
 		try{
 			font = Font.createFont(Font.TRUETYPE_FONT, new File(skinDir, skinname+".ttf"));
@@ -82,6 +89,22 @@ public class Skin {
 
 	}
 
+	private void createAnimations() {
+
+		BufferedImage[] bilder = new BufferedImage[6];
+
+		bilder[0] = getImage("dig_red_rgt_f1");
+		bilder[1] = getImage("dig_red_rgt_f2");
+		bilder[2] = getImage("dig_red_rgt_f3");
+		bilder[3] = getImage("dig_red_rgt_f4");
+		bilder[4] = getImage("dig_red_rgt_f5");
+		bilder[5] = getImage("dig_red_rgt_f6");
+
+		Animation a = new Animation(2, bilder, this);
+
+		animations.put("digger_red_right", a);
+	}
+
 	public BufferedImage getImage(String name, int fs) {
 
 		BufferedImage dest = images.get(name);
@@ -89,7 +112,14 @@ public class Skin {
 
 	}
 
-	private BufferedImage scale(BufferedImage bi, int fs){
+	public BufferedImage getImage(String name) {
+
+		BufferedImage dest = images.get(name);
+		return images.get(name);
+
+	}
+
+	public BufferedImage scale(BufferedImage bi, int fs){
 
 		BufferedImage dest = bi;
 
@@ -111,4 +141,8 @@ public class Skin {
 	public Font getFont() {
 		return font;
 	}
+
+    public Animation getAnimation(String bez) {
+        return animations.get(bez);
+    }
 }

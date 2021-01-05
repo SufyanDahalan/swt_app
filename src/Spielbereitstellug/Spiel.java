@@ -51,6 +51,11 @@ public class Spiel extends JPanel implements Runnable {
 
 	private Feuerball feuerball_sp1;
 
+	// Testing
+
+	private int way = 5;
+	private boolean down = true;
+
 
 	public Spiel(int[] panel_size) {
 
@@ -336,6 +341,10 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Nobbin trifft Geldsack (liegend oder fallend unterscheiden)
 		// Nobbin trifft Geld
+
+		aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
+		aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
+
 
 		// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
 		/// in jedem Fall wir true zurückgegeben. Andernfalls beendet sich die loop() und das spiel gilt als beendet. Darauf folgt dann die eintragung der ergebnisse ect.
@@ -639,30 +648,32 @@ public class Spiel extends JPanel implements Runnable {
 
 		if(sp1 != null) {
 			if(sp1.isAlive()) {
-				BufferedImage sp1Img1 = current_skin.getImage("dig_red_rgt_f1", field_size);
-				BufferedImage sp1Img2 = current_skin.getImage("dig_red_lft_f1", field_size);
-				BufferedImage sp1Img3 = current_skin.getImage("dig_red_up_f1", field_size);
-				BufferedImage sp1Img4 = current_skin.getImage("dig_red_dow_f1", field_size);
+
+				//Animation ani_left = current_skin.getAnimation("digger_red_left");
+				Animation ani_right = current_skin.getAnimation("digger_red_right");
+				//Animation ani_up = current_skin.getAnimation("digger_red_up");
+				//Animation ani_down = current_skin.getAnimation("digger_red_down");
+
+				BufferedImage sp1Img = null;
+
 				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-					int x_pixel = sp1.getPosition()[0] - (sp1Img1.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img1.getHeight() / 2);
-					g.drawImage(sp1Img1, x_pixel, y_pixel, null);
+					sp1Img = ani_right.nextFrame(field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.LEFT) {
-					int x_pixel = sp1.getPosition()[0] - (sp1Img2.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img2.getHeight() / 2);
-					g.drawImage(sp1Img2, x_pixel, y_pixel, null);
+					sp1Img = current_skin.getImage("dig_red_rgt_f1", field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.UP) {
-					int x_pixel = sp1.getPosition()[0] - (sp1Img3.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img3.getHeight() / 2);
-					g.drawImage(sp1Img3, x_pixel, y_pixel, null);
+					sp1Img =  current_skin.getImage("dig_red_rgt_f1", field_size);
 				}
 				if (sp1.getMoveDir() == DIRECTION.DOWN) {
-					int x_pixel = sp1.getPosition()[0] - (sp1Img4.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img4.getHeight() / 2);
-					g.drawImage(sp1Img4, x_pixel, y_pixel, null);
+					sp1Img =  current_skin.getImage("dig_red_rgt_f1", field_size);
 				}
+
+
+				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+				g.drawImage(sp1Img, x_pixel, y_pixel, null);
+
 			}
 			else {
 				// gegen Geist ersetzen
