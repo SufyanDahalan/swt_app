@@ -298,14 +298,17 @@ public class Spiel extends JPanel implements Runnable {
 		ArrayList<Geldsack> geldsacke= aktuelles_level.getMap().getGeldsaecke();
 		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
 			Geldsack g = iterator.next();
-			if (Arrays.equals(g.getField(),getFieldOf(sp1.getPosition()))) {
+			if (Arrays.equals(g.getPosition(),getFieldOf(sp1.getPosition()))) {
 				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
 					System.out.println("push right");
+					g.addPosOff(1,0);
 				} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
 					System.out.println("push left");
+					g.addPosOff(-1,0);
 				}
 			}
 		}
+
 		// Spieler trifft Geld
 		ArrayList<Geld> gelds= aktuelles_level.getMap().getGeld();
 		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
