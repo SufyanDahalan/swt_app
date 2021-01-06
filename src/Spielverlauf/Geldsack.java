@@ -25,9 +25,4 @@ public class Geldsack extends Item {
 		return wertung;
 	}
 
-	public void addPosOff(int x, int y){
-		position[0]+=x;
-		position[1]+=y;
-	}
-
 }

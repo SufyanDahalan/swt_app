@@ -8,7 +8,7 @@ public abstract class Item {
 
 	public Item(int[] fp) {
 		field = fp;
-		position = fp;
+		position = null;
 	}
 	public int[] getField() {
 		return field;
@@ -20,4 +20,9 @@ public abstract class Item {
     public abstract int getValue();
 
     public int[] getPosition(){return position;}
+
+	public void addPosOff(int x, int y){
+		field[0]+=x;
+		field[1]+=y;
+	}
 }
