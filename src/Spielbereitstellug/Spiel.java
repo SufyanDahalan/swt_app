@@ -247,6 +247,7 @@ public class Spiel extends JPanel implements Runnable {
 
 
 		// Spieler trifft Monster
+		/*
 		ArrayList<Monster> monsters= aktuelles_level.getMap().getMonster();
 		for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 			Monster m = iterator.next();
@@ -260,7 +261,7 @@ public class Spiel extends JPanel implements Runnable {
 			}
 			//sp2 üp
 		}
-
+		*/
 
 		// Spieler trifft Boden
 
@@ -345,6 +346,42 @@ public class Spiel extends JPanel implements Runnable {
 				spielstand += aktuelles_level.getMap().getKirsche().getValue();
 			}
 		}
+
+		/*
+		ArrayList<Tunnel> tunnels=aktuelles_level.getMap().getTunnel();
+		for(Iterator<Tunnel> iterator = tunnels.iterator(); iterator.hasNext();) {
+			Tunnel t = iterator.next();
+			for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
+				Monster m = it.next();
+				if(Arrays.equals(t.getField(),getFieldOf(m.getPosition()))){
+					if(t.getTyp()==TUNNELTYP.VERTICAL) {
+						m.addPosOff(0, 1);
+					}else
+							m.addPosOff(-1,0);
+					}
+				}
+			}
+		*/
+
+		//Monster verfolgt Spieler
+		Monster m = aktuelles_level.getMap().getMonster().get(0);
+		int[] m_pos = m.getPosition();
+		int[] s_pos = sp1.getPosition();
+		int x_off = 0;
+		int y_off = 0;
+
+		if (m_pos[0] > s_pos[0])
+			x_off = -1;
+		else
+			x_off = 1;
+
+		if (m_pos[1] > s_pos[1])
+			y_off = -1;
+		else
+			y_off = 1;
+
+		m.addPosOff(x_off, y_off);
+
 		// Hobbin trifft Diamant
 		// Hobbin trifft Boden
 
@@ -361,8 +398,10 @@ public class Spiel extends JPanel implements Runnable {
 		// Nobbin trifft Geldsack (liegend oder fallend unterscheiden)
 		// Nobbin trifft Geld
 
-		aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
-		aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
+
+		//test
+		//aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
+		//aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
 
 
 		// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
