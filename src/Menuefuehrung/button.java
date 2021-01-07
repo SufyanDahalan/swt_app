@@ -3,6 +3,9 @@ package Menuefuehrung;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.Toolkit.getDefaultToolkit;
+
+
 public class button extends JButton {
     button(String Name, int Size){
                 super(Name);
@@ -12,6 +15,8 @@ public class button extends JButton {
                 setForeground(Color.RED);
                 setFocusable(false);
                 setFont(new Font("Serif", Font.PLAIN, Size));
-                setPreferredSize(new Dimension(200,150));
+        Dimension screenSize = getDefaultToolkit().getScreenSize();
+        int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
+        setPreferredSize(new Dimension(Width/7,Height/7));
             }
     }

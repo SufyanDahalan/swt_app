@@ -6,6 +6,7 @@ import Spielbereitstellug.Spiel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.sound.sampled.*;
 
 
 public class MainFrame extends JFrame {
@@ -114,4 +115,5 @@ public class MainFrame extends JFrame {
         });
         getContentPane().add(spiel, "game");
     }
+
 }
