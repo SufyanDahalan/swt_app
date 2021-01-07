@@ -19,11 +19,27 @@ public class Options extends JPanel{
         button b2 = new button("Options", 20);
         button b3 = new button("Quit", 20);
         b1.addActionListener((event) ->{
-            new Dialog(getParent().getParent());//sends a reference of MainFrame to Dialog
+            button b4 = new button("Singleplayer", 20);
+            button b5 = new button("Multiplayer", 20);
+            Container frame = getParent().getParent();
+            CardLayout layout = (CardLayout) frame.getLayout();
+            b4.addActionListener(e->{
+                layout.show(frame, "game");//Singleplayer mode
+            });
+            b5.addActionListener(e->{
+                layout.show(frame, "game");
+            });
+            remove(b1);
+            remove(b2);
+            remove(b3);
+            add(b4);
+            add(b5);
+            add(b2);
+            add(b3);
+            frame.repaint();
+            frame.revalidate();
         });
         b3.addActionListener(e -> System.exit(0));
-
-        b2.setPreferredSize(new Dimension(200,200));
         add(b1);
         add(b2);
         add(b3);
