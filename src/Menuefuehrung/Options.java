@@ -7,7 +7,7 @@ import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Options extends JPanel{
     Options(){
-        setLayout(new FlowLayout(FlowLayout.CENTER, 500, 50));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
