@@ -21,12 +21,4 @@ public abstract class Item {
 
 	public abstract int getValue();
 
-	public int[] getPosition() {
-		return position;
-	}
-
-	public void addFieldPosOff(int x, int y) {
-		field[0] += x;
-		field[1] += y;
-	}
 }

@@ -3,17 +3,18 @@ import org.json.JSONArray;
 import Spielverlauf.*;
 
 
-public class Geldsack extends Item {
-
-	private int wertung = 0;
+public class Geldsack{
+	private int[] position;
+	private int[] field;
 	private DIRECTION moveDir;
 	private boolean falling;
 	private int fallHeight;
 
 	public Geldsack(int[] pos) {
-		super(pos);
+		position=pos;
 		falling = false;
 		fallHeight = 0;
+		field=pos;
 	}
 
 	public DIRECTION getMoveDir() {
@@ -24,12 +25,31 @@ public class Geldsack extends Item {
 		moveDir = d;
 	}
 
-	@Override
-	public int getValue() {
-		return wertung;
+	public void setPosition(int[] pos) {
+		position = pos;
 	}
 
-    public void setFalling(boolean f) {
+	public int[] getPosition(){return position;}
+
+	public void addPosOff(int x, int y){
+		position[0]+=x;
+		position[1]+=y;
+	}
+
+	public int[] getField() {
+		return field;
+	}
+
+	public void setField(int[] i) {
+		i = field;
+	}
+
+	public void addFieldPosOff(int x, int y) {
+		field[0] += x;
+		field[1] += y;
+	}
+
+	public void setFalling(boolean f) {
 		falling = f;
     }
 

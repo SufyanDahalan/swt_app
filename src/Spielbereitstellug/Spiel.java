@@ -301,10 +301,8 @@ public class Spiel extends JPanel implements Runnable {
 			Geldsack g = iterator.next();
 				if (Arrays.equals(g.getField(), getFieldOf(sp1.getPosition()))) {
 					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-						System.out.println("push right");
 						g.addFieldPosOff(1, 0);
 					} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
-						System.out.println("push left");
 						g.addFieldPosOff(-1, 0);
 					}
 				}
