@@ -302,30 +302,41 @@ public class Spiel extends JPanel implements Runnable {
 				if (Arrays.equals(g.getField(), getFieldOf(sp1.getPosition()))) {
 					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
 						System.out.println("push right");
-						g.addPosOff(1, 0);
+						g.addFieldPosOff(1, 0);
 					} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
 						System.out.println("push left");
-						g.addPosOff(-1, 0);
+						g.addFieldPosOff(-1, 0);
 					}
 				}
 			}
 
 		//Geldsack trifft Tunnel
 		ArrayList<Geld> gelds= aktuelles_level.getMap().getGeld();
-		ArrayList<Tunnel> tunnels = aktuelles_level.getMap().getTunnel();
-		for (Iterator<Tunnel> it = tunnels.iterator(); it.hasNext(); ) {
-			Tunnel t = it.next();
-			for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-				Geldsack g = iterator.next();
-					if (Arrays.equals(g.getField(), t.getField())) {
-						g.addPosOff(0, 1);
-						if(g.getField()[1]>4){
-							aktuelles_level.getMap().addGeld(new Geld(g.getField()));
-							iterator.remove();
-						}
-					}
-				}
+
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
+			Geldsack gs = iterator.next();
+
+			int[] current_field = gs.getField();
+			int[] check_field = current_field.clone();
+			check_field[1]++;
+
+			if (aktuelles_level.getMap().getTunnel(check_field).size() > 0){
+				gs.addFieldPosOff(0, 1);
+				gs.setFalling(true);
+				gs.incFallHeight();
 			}
+			else
+				if(gs.getFalling()) {
+					if (gs.getFallHeight() > 1) {
+						aktuelles_level.getMap().addGeld(new Geld(gs.getField()));
+						iterator.remove();
+					}
+					else
+						gs.resetFallHeight();
+				}
+
+		}
+
 
 		// Spieler trifft Geld
 		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
@@ -618,7 +629,8 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-		BufferedImage nobbinImg = current_skin.getImage("nobbin_f1", field_size);
+		Animation ani_nobbin = current_skin.getAnimation("nobbin");
+		BufferedImage nobbinImg = ani_nobbin.nextFrame(field_size);
 
 		ArrayList<Nobbin> nobbins = aktuelles_level.getMap().getNobbins();
 
@@ -743,18 +755,32 @@ public class Spiel extends JPanel implements Runnable {
 		}
 
 		if(sp2 != null) {
-			Animation gre_ani_left = current_skin.getAnimation("digger_gre_left");
-			Animation gre_ani_right = current_skin.getAnimation("digger_gre_right");
-			Animation gre_ani_up = current_skin.getAnimation("digger_gre_up");
-			Animation gre_ani_down = current_skin.getAnimation("digger_gre_down");
+			if(sp2.isAlive()) {
+				Animation ani_left = current_skin.getAnimation("digger_gre_left");
+				Animation ani_right = current_skin.getAnimation("digger_gre_right");
+				Animation ani_up = current_skin.getAnimation("digger_gre_up");
+				Animation ani_down = current_skin.getAnimation("digger_gre_down");
 
-			BufferedImage sp2Img = null;
-			sp2Img = gre_ani_right.nextFrame(field_size);
+				BufferedImage spImg = null;
 
-			int x_pixel = sp2.getPosition()[0] - (sp2Img.getWidth() / 2);
-			int y_pixel = sp2.getPosition()[1] - (sp2Img.getHeight() / 2);
-			g.drawImage(sp2Img, x_pixel, y_pixel, null);
+				if (sp2.getMoveDir() == DIRECTION.RIGHT) {
+					spImg = ani_right.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.LEFT) {
+					spImg = ani_left.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.UP) {
+					spImg = ani_up.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.DOWN) {
+					spImg = ani_down.nextFrame(field_size);
+				}
 
+
+				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
+				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+				g.drawImage(spImg, x_pixel, y_pixel, null);
+			}
 		}
 
 		// Zeichne Score
