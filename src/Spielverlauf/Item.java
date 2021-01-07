@@ -8,16 +8,25 @@ public abstract class Item {
 
 	public Item(int[] fp) {
 		field = fp;
-		position = fp;
+		position = null;
 	}
+
 	public int[] getField() {
 		return field;
 	}
-	public void setField(int[] i){
-		i=field;
+
+	public void setField(int[] i) {
+		i = field;
 	}
 
-    public abstract int getValue();
+	public abstract int getValue();
 
-    public int[] getPosition(){return position;}
+	public int[] getPosition() {
+		return position;
+	}
+
+	public void addFieldPosOff(int x, int y) {
+		field[0] += x;
+		field[1] += y;
+	}
 }

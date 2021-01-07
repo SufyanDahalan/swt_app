@@ -19,12 +19,12 @@ public class Skin {
 
 	private HashMap<String, BufferedImage> images;
 	private HashMap<String, Animation> animations;
-	private BufferedImage[] numbers;
-	private BufferedImage[] letters;
 	private Font font;
 
 	private String name;
 	private int reference;
+
+	private final int animation_measure = 10;
 
 	// Load Skin
 	public Skin(File skinDir, String skinname){
@@ -42,8 +42,6 @@ public class Skin {
 
 		images = new HashMap<>();
 		animations = new HashMap<>();
-		numbers = new BufferedImage[10];
-		letters = new BufferedImage[26];
 
 		name = obj.getString("name");
 		reference = obj.getInt("reference");
@@ -100,7 +98,7 @@ public class Skin {
 		rbilder[4] = getImage("dig_red_rgt_f5");
 		rbilder[5] = getImage("dig_red_rgt_f6");
 
-		Animation a = new Animation(50, rbilder, this);
+		Animation a = new Animation(animation_measure, rbilder, this);
 		animations.put("digger_red_right", a);
 
 		BufferedImage[] lbilder = new BufferedImage[6];
@@ -110,7 +108,7 @@ public class Skin {
 		lbilder[3] = getImage("dig_red_lft_f4");
 		lbilder[4] = getImage("dig_red_lft_f5");
 		lbilder[5] = getImage("dig_red_lft_f6");
-		Animation b = new Animation(50, lbilder, this);
+		Animation b = new Animation(animation_measure, lbilder, this);
 		animations.put("digger_red_left", b);
 
 		BufferedImage[] ubilder = new BufferedImage[6];
@@ -120,7 +118,7 @@ public class Skin {
 		ubilder[3] = getImage("dig_red_up_f4");
 		ubilder[4] = getImage("dig_red_up_f5");
 		ubilder[5] = getImage("dig_red_up_f6");
-		Animation c = new Animation(50, ubilder, this);
+		Animation c = new Animation(animation_measure, ubilder, this);
 		animations.put("digger_red_up", c);
 
 		BufferedImage[] dbilder = new BufferedImage[6];
@@ -130,7 +128,7 @@ public class Skin {
 		dbilder[3] = getImage("dig_red_dow_f4");
 		dbilder[4] = getImage("dig_red_dow_f5");
 		dbilder[5] = getImage("dig_red_dow_f6");
-		Animation d = new Animation(50, dbilder, this);
+		Animation d = new Animation(animation_measure, dbilder, this);
 		animations.put("digger_red_down", d);
 
 		//Spieler 2
@@ -142,9 +140,7 @@ public class Skin {
 		gre_rbilder[3] = getImage("dig_gre_rgt_f4");
 		gre_rbilder[4] = getImage("dig_gre_rgt_f5");
 		gre_rbilder[5] = getImage("dig_gre_rgt_f6");
-
-		Animation e = new Animation(50, gre_rbilder, this);
-		animations.put("digger_gre_right", e);
+		animations.put("digger_gre_right", new Animation(animation_measure, gre_rbilder, this));
 
 		BufferedImage[] gre_lbilder = new BufferedImage[6];
 		gre_lbilder[0] = getImage("dig_gre_lft_f1");
@@ -153,8 +149,7 @@ public class Skin {
 		gre_lbilder[3] = getImage("dig_gre_lft_f4");
 		gre_lbilder[4] = getImage("dig_gre_lft_f5");
 		gre_lbilder[5] = getImage("dig_gre_lft_f6");
-		Animation f = new Animation(50, gre_lbilder, this);
-		animations.put("digger_gre_left", f);
+		animations.put("digger_gre_left", new Animation(animation_measure, gre_lbilder, this));
 
 		BufferedImage[] gre_ubilder = new BufferedImage[6];
 		gre_ubilder[0] = getImage("dig_gre_up_f1");
@@ -163,18 +158,28 @@ public class Skin {
 		gre_ubilder[3] = getImage("dig_gre_up_f4");
 		gre_ubilder[4] = getImage("dig_gre_up_f5");
 		gre_ubilder[5] = getImage("dig_gre_up_f6");
-		Animation g = new Animation(50, gre_ubilder, this);
-		animations.put("digger_gre_up", g);
+		animations.put("digger_gre_up", new Animation(animation_measure, gre_ubilder, this));
 
-		BufferedImage[] gre_dbilder = new BufferedImage[6];
-		gre_dbilder[0] = getImage("dig_gre_dow_f1");
-		gre_dbilder[1] = getImage("dig_gre_dow_f2");
-		gre_dbilder[2] = getImage("dig_gre_dow_f3");
-		gre_dbilder[3] = getImage("dig_gre_dow_f4");
-		gre_dbilder[4] = getImage("dig_gre_dow_f5");
-		gre_dbilder[5] = getImage("dig_gre_dow_f6");
-		Animation h = new Animation(50, gre_dbilder, this);
-		animations.put("digger_gre_down", h);
+		BufferedImage[] hob_left_bilder = new BufferedImage[4];
+		hob_left_bilder[0] = getImage("hobbin_left_f1");
+		hob_left_bilder[1] = getImage("hobbin_left_f2");
+		hob_left_bilder[2] = getImage("hobbin_left_f3");
+		hob_left_bilder[3] = getImage("hobbin_left_f4");
+		animations.put("hobbin_left", new Animation(animation_measure, hob_left_bilder, this));
+
+		BufferedImage[] hob_right_bilder = new BufferedImage[4];
+		hob_right_bilder[0] = getImage("hobbin_right_f1");
+		hob_right_bilder[1] = getImage("hobbin_right_f2");
+		hob_right_bilder[2] = getImage("hobbin_right_f3");
+		hob_right_bilder[3] = getImage("hobbin_right_f4");
+		animations.put("hobbin_right", new Animation(animation_measure, hob_right_bilder, this));
+
+		BufferedImage[] nob_bilder = new BufferedImage[4];
+		nob_bilder[0] = getImage("nobbin_f1");
+		nob_bilder[1] = getImage("nobbin_f2");
+		nob_bilder[2] = getImage("nobbin_f3");
+		nob_bilder[3] = getImage("nobbin_f4");
+		animations.put("nobbin", new Animation(animation_measure, nob_bilder, this));
 	}
 
 	public BufferedImage getImage(String name, int fs) {
