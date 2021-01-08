@@ -161,25 +161,78 @@ public class Skin {
 		animations.put("digger_gre_up", new Animation(animation_measure, gre_ubilder, this));
 
 		BufferedImage[] hob_left_bilder = new BufferedImage[4];
-		hob_left_bilder[0] = getImage("hobbin_left_f1");
-		hob_left_bilder[1] = getImage("hobbin_left_f2");
-		hob_left_bilder[2] = getImage("hobbin_left_f3");
-		hob_left_bilder[3] = getImage("hobbin_left_f4");
-		animations.put("hobbin_left", new Animation(animation_measure, hob_left_bilder, this));
+		hob_left_bilder[0] = getImage("hobbin_right_f1");
+		hob_left_bilder[1] = getImage("hobbin_right_f2");
+		hob_left_bilder[2] = getImage("hobbin_right_f3");
+		hob_left_bilder[3] = getImage("hobbin_right_f4");
+		animations.put("hobbin_right", new Animation(animation_measure, hob_left_bilder, this));
 
 		BufferedImage[] hob_right_bilder = new BufferedImage[4];
-		hob_right_bilder[0] = getImage("hobbin_right_f1");
-		hob_right_bilder[1] = getImage("hobbin_right_f2");
-		hob_right_bilder[2] = getImage("hobbin_right_f3");
-		hob_right_bilder[3] = getImage("hobbin_right_f4");
-		animations.put("hobbin_right", new Animation(animation_measure, hob_right_bilder, this));
+		hob_right_bilder[0] = getImage("hobbin_left_f1");
+		hob_right_bilder[1] = getImage("hobbin_left_f2");
+		hob_right_bilder[2] = getImage("hobbin_left_f3");
+		hob_right_bilder[3] = getImage("hobbin_left_f4");
+		animations.put("hobbin_left", new Animation(animation_measure, hob_right_bilder, this));
 
-		BufferedImage[] nob_bilder = new BufferedImage[4];
-		nob_bilder[0] = getImage("nobbin_f1");
-		nob_bilder[1] = getImage("nobbin_f2");
-		nob_bilder[2] = getImage("nobbin_f3");
-		nob_bilder[3] = getImage("nobbin_f4");
-		animations.put("nobbin", new Animation(animation_measure, nob_bilder, this));
+		BufferedImage[] hob_bilder = new BufferedImage[4];
+		hob_bilder[0] = getImage("nobbin_f1");
+		hob_bilder[1] = getImage("nobbin_f2");
+		hob_bilder[2] = getImage("nobbin_f3");
+		hob_bilder[3] = getImage("nobbin_f4");
+		animations.put("nobbin", new Animation(animation_measure, hob_bilder, this));
+
+		BufferedImage[] fb_red_bilder = new BufferedImage[6];
+		fb_red_bilder[0] = getImage("fireball_red_f1");
+		fb_red_bilder[1] = getImage("fireball_red_f2");
+		fb_red_bilder[2] = getImage("fireball_red_f3");
+		fb_red_bilder[3] = getImage("fireball_red_f4");
+		fb_red_bilder[4] = getImage("fireball_red_f5");
+		fb_red_bilder[5] = getImage("fireball_red_f6");
+
+		animations.put("fb_red", new Animation(animation_measure, fb_red_bilder, this));
+
+		BufferedImage[] fb_gre_bilder = new BufferedImage[6];
+		fb_gre_bilder[0] = getImage("fireball_gre_f1");
+		fb_gre_bilder[1] = getImage("fireball_gre_f2");
+		fb_gre_bilder[2] = getImage("fireball_gre_f3");
+		fb_gre_bilder[3] = getImage("fireball_gre_f4");
+		fb_gre_bilder[4] = getImage("fireball_gre_f5");
+		fb_gre_bilder[5] = getImage("fireball_gre_f6");
+
+		animations.put("fb_gre", new Animation(animation_measure, fb_gre_bilder, this));
+
+		BufferedImage[] gs_bilder = new BufferedImage[8];
+		gs_bilder[0] = getImage("backg_typ1");
+		gs_bilder[1] = getImage("backg_typ2");
+		gs_bilder[2] = getImage("backg_typ3");
+		gs_bilder[3] = getImage("backg_typ4");
+		gs_bilder[4] = getImage("backg_typ5");
+		gs_bilder[5] = getImage("backg_typ6");
+		gs_bilder[6] = getImage("backg_typ7");
+		gs_bilder[7] = getImage("backg_typ8");
+
+		animations.put("Geldscak", new Animation(animation_measure, gs_bilder, this));
+
+		BufferedImage[] grave_bilder = new BufferedImage[5];
+		grave_bilder[0] = getImage("grave_f1");
+		grave_bilder[1] = getImage("grave_f2");
+		grave_bilder[2] = getImage("grave_f3");
+		grave_bilder[3] = getImage("grave_f4");
+		grave_bilder[4] = getImage("grave_f5");
+
+		animations.put("Grave", new Animation(animation_measure, grave_bilder, this));
+
+
+		BufferedImage[] geld_bilder = new BufferedImage[1];
+		//geld_bilder[0] = getImage("money_fall_f1");
+		//geld_bilder[1] = getImage("money_fall_f2");
+		//geld_bilder[2] = getImage("money_fall_f3");
+		//geld_bilder[3] = getImage("money_fall_f4");
+		//geld_bilder[4] = getImage("money_fall_f5");
+		geld_bilder[0] = getImage("money_fall_f6");
+
+		animations.put("Geld", new Animation(animation_measure, geld_bilder, this));
+
 	}
 
 	public BufferedImage getImage(String name, int fs) {
