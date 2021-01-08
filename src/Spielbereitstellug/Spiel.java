@@ -449,6 +449,11 @@ public class Spiel extends JPanel implements Runnable {
 		// Hobbin trifft Wand
 		// Hobbin trifft Hobbin
 		// Hobbin trifft Kirsche
+		/*if (aktuelles_level.getMap().getKirsche().getVisible()) {
+			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(h.getPosition()))) {
+				aktuelles_level.getMap().hideKirsche();
+			}
+		} */
 
 
 		//test
