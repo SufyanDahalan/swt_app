@@ -477,6 +477,24 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		} */
 
+		// Nobbin trifft Goldsack (liegend oder fallend unterscheiden)
+
+
+		/*
+		
+
+		Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
+		int[] n_pos = n.getPosition();          
+        for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
+			geldsacke g = iterator.next();
+
+			if (Arrays.equals(g.getField(), getFieldOf(n.getPosition()))) {
+
+				iterator.remove();
+				n.toeten();
+			}
+		}  */
+
 
 		//test
 		aktuelles_level.getMap().getMonster().get(1).addPosOff(-1,0);
