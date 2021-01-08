@@ -445,6 +445,28 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Hobbin trifft Nobbin
 		// Hobbin trifft Boden
+		/*int[] fph = getFieldOf(h.getPosition());
+		DIRECTION dirHp = h.getMoveDirMo();
+
+		ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fph);
+
+		if(tt.size() == 1){
+			TUNNELTYP ttyp = tt.get(0).getTyp();
+
+
+			if( ((dirHp == DIRECTION.UP || dirHp == DIRECTION.DOWN) && ttyp == TUNNELTYP.HORIZONTAL) ||
+				((dirHp == DIRECTION.RIGHT || dirHp == DIRECTION.LEFT) && ttyp == TUNNELTYP.VERTICAL) ){
+
+				TUNNELTYP arrangement;
+
+				if(dirHp == DIRECTION.UP || dirHp == DIRECTION.DOWN)
+					arrangement = TUNNELTYP.VERTICAL;
+				else
+					arrangement = TUNNELTYP.HORIZONTAL;
+
+				aktuelles_level.getMap().addTunnel( new Tunnel(fph, arrangement) );
+			}
+		}   */
 		// Nobbin trifft Boden
 		// Hobbin trifft Wand
 		// Hobbin trifft Hobbin
