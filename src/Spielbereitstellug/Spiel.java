@@ -446,7 +446,7 @@ public class Spiel extends JPanel implements Runnable {
 		// Hobbin trifft Nobbin
 		// Hobbin trifft Boden
 		/*int[] fph = getFieldOf(h.getPosition());
-		DIRECTION dirHp = h.getMoveDirMo();
+		DIRECTION dirHp = h.getMoveDir();
 
 		ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fph);
 
@@ -471,7 +471,8 @@ public class Spiel extends JPanel implements Runnable {
 		// Hobbin trifft Wand
 		// Hobbin trifft Hobbin
 		// Hobbin trifft Kirsche
-		/*if (aktuelles_level.getMap().getKirsche().getVisible()) {
+		/*Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
+		  if (aktuelles_level.getMap().getKirsche().getVisible()) {
 			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(h.getPosition()))) {
 				aktuelles_level.getMap().hideKirsche();
 			}
