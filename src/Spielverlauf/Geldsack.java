@@ -10,9 +10,10 @@ public class Geldsack{
 	private int[] field;
 	private boolean falling;
 	private int fallHeight;
+	private BufferedImage bild;
 
-	public Geldsack(int[] pos) {
-		position=pos;
+	public Geldsack(int[] fp, Skin sk) {
+		position=null;
 		falling = false;
 		fallHeight = 0;
 		field=fp;
@@ -21,6 +22,7 @@ public class Geldsack{
 
 	public void setPosition(int[] pos) {
 		position = pos;
+
 	}
 
 	public int[] getPosition(){return position;}

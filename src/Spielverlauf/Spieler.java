@@ -2,6 +2,8 @@ package Spielverlauf;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
+
 public class Spieler {
 
 	private int[] position;

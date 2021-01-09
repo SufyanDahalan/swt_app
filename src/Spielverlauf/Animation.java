@@ -10,15 +10,17 @@ public class Animation {
     private int count = 0;
     final int DELAY_PERIOD;
     int remaining;
-
+    private DIRECTION richtung;
+    private boolean repeatale;
+    private boolean again;
 
 
     private BufferedImage[] images;
 
-    public Animation(int loss, BufferedImage[] bi, Skin sk) {
+    public Animation(int loss, BufferedImage[] bi, Skin sk, DIRECTION r, boolean rp) {
         DELAY_PERIOD = loss;
         remaining = loss;
-
+        richtung= r;
         images = bi;
         s = sk;
         repeatale = rp;
