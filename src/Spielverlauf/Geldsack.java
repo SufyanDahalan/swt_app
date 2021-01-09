@@ -6,7 +6,6 @@ import Spielverlauf.*;
 public class Geldsack{
 	private int[] position;
 	private int[] field;
-	private DIRECTION moveDir;
 	private boolean falling;
 	private int fallHeight;
 
@@ -15,14 +14,6 @@ public class Geldsack{
 		falling = false;
 		fallHeight = 0;
 		field=pos;
-	}
-
-	public DIRECTION getMoveDir() {
-		return moveDir;
-	}
-
-	public void setMoveDir(DIRECTION d) {
-		moveDir = d;
 	}
 
 	public void setPosition(int[] pos) {
