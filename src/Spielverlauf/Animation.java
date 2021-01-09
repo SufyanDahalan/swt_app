@@ -21,18 +21,39 @@ public class Animation {
 
         images = bi;
         s = sk;
+        repeatale = rp;
+        again = true;
+    }
+
+    public Animation(Animation g) {
+        DELAY_PERIOD = g.DELAY_PERIOD;
+        remaining = g.remaining;
+        richtung= g.richtung;
+        images = g.images;
+        s = g.s;
+        repeatale = g.repeatale;
+        again = true;
     }
 
     public BufferedImage nextFrame(int fs) {
 
-        if(remaining>0) {
-            remaining--;
-        }
-        else{
-            count = (count + 1) % images.length;
-            remaining = DELAY_PERIOD;
+        if(again){
+            if (remaining > 0) {
+                remaining--;
+            } else {
+                count = (count + 1) % images.length;
+                remaining = DELAY_PERIOD;
+
+                if (count == images.length-1 && !repeatale) {
+                    again = false;
+                }
+            }
         }
 
         return s.scale(images[count], fs);
+    }
+
+    public DIRECTION getDir() {
+        return richtung;
     }
 }
