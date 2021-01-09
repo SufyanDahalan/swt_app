@@ -493,17 +493,19 @@ public class Spiel extends JPanel implements Runnable {
 		/*
 		
 
-		Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
-		int[] n_pos = n.getPosition();          
-        for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
-			geldsacke g = iterator.next();
+		for (Iterator<Nobbin> it = nobbins.iterator(); it.hasNext();){
+				Nobbin n = it.next();
 
-			if (Arrays.equals(g.getField(), getFieldOf(n.getPosition()))) {
+				int[] n_pos = n.getPosition();
+				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
 
-				iterator.remove();
-				n.toeten();
+			        Geldsack g = iterator.next();
+
+			        if (Arrays.equals(g.getField(), getFieldOf(n.getPosition()))) {
+			        	iterator.remove();
+				        n.toeten();
 			}
-		}  */
+		}} */
 
 		// Spieler trifft Kirsche -> Bonsmodus aktivieren
 		if (aktuelles_level.getMap().getKirsche().getVisible()) {
