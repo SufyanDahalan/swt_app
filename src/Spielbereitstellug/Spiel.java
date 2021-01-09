@@ -334,9 +334,9 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 // Geldsack trifft Monster
-		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-			Geldsack gs = iterator.next();
+		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1
+			for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
+				Geldsack gs = iterator.next();
 				int[] current_field = gs.getField();
 				int[] check_field = current_field.clone();
 				check_field[1]++;
@@ -345,18 +345,6 @@ public class Spiel extends JPanel implements Runnable {
 					gs.addFieldPosOff(0, 1);
 					gs.setFalling(true);
 					gs.incFallHeight();
-					if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
-						if (sp1.isAlive()) {
-							sp1.decrementLife();
-							sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
-						}
-					}
-					for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
-						Monster m = it.next();
-						if (Arrays.equals(getFieldOf(m.getPosition()), gs.getField())) {
-							it.remove();
-						}
-					}
 				} else if (gs.getFalling()) {
 					if (gs.getFallHeight() > 1) {
 						aktuelles_level.getMap().addGeld(new Geld(gs.getField()));
@@ -364,9 +352,13 @@ public class Spiel extends JPanel implements Runnable {
 					} else
 						gs.resetFallHeight();
 				}
-
+				if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
+					if (sp1.isAlive()) {
+						sp1.decrementLife();
+						sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+					}
+				}
 			}
-
 		// Spieler trifft Geld
 		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
 			Geld gd = iterator.next();
@@ -383,7 +375,7 @@ public class Spiel extends JPanel implements Runnable {
 		//Monster verfolgt Spieler
 		//for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 		//	Monster m =iterator.next();
-		/*	Monster m = aktuelles_level.getMap().getMonster().get(0);
+			Monster m = aktuelles_level.getMap().getMonster().get(0);
 			int[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
 			int x_off = 0;
@@ -399,7 +391,7 @@ public class Spiel extends JPanel implements Runnable {
 			else
 				y_off = 1;
 
-			m.addPosOff(x_off, y_off);*/
+			m.addPosOff(x_off, y_off);
 		//}
 
 		// Hobbin trifft Diamant
