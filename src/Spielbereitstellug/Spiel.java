@@ -451,10 +451,13 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Hobbin trifft Nobbin
 		// Hobbin trifft Boden
-		/*int[] fph = getFieldOf(h.getPosition());
+		/*for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
+				Hobbin h = it.next();
+
+		     int[] fph = getFieldOf(h.getPosition());
 		DIRECTION dirHp = h.getMoveDir();
 
-		ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fph);
+		//ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fph);
 
 		if(tt.size() == 1){
 			TUNNELTYP ttyp = tt.get(0).getTyp();
@@ -472,7 +475,7 @@ public class Spiel extends JPanel implements Runnable {
 
 				aktuelles_level.getMap().addTunnel( new Tunnel(fph, arrangement) );
 			}
-		}   */
+		}}*/
 		// Nobbin trifft Boden
 		// Hobbin trifft Wand
 		// Hobbin trifft Hobbin
