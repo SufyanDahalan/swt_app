@@ -61,7 +61,7 @@ public class Options extends JPanel{
             CardLayout layout = (CardLayout) frame.getLayout();
             b6.addActionListener(e->{
 
-                layout.show(frame, "game");
+                layout.show(frame, "editor");
             });
 
             //add(b1);
