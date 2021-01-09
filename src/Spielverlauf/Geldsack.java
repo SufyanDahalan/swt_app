@@ -2,6 +2,8 @@ package Spielverlauf;
 import org.json.JSONArray;
 import Spielverlauf.*;
 
+import java.awt.image.BufferedImage;
+
 
 public class Geldsack{
 	private int[] position;
@@ -13,7 +15,8 @@ public class Geldsack{
 		position=pos;
 		falling = false;
 		fallHeight = 0;
-		field=pos;
+		field=fp;
+		bild=sk.getImage("money_static");
 	}
 
 	public void setPosition(int[] pos) {

@@ -1,8 +1,18 @@
 package Spielverlauf;
-
-import org.json.JSONArray;
+import java.util.ArrayList;
 
 public class Hobbin extends Monster {
+
+	ArrayList<Animation> animations;
+
+	public Hobbin(int[] spawn_monster, Skin sk){
+		super(spawn_monster);
+
+		animations = new ArrayList<>();
+
+		animations.add(sk.getAnimation("hobbin_right"));
+		animations.add(sk.getAnimation("hobbin_left"));
+	}
 
 	@Override
 	public boolean testMove(DIRECTION d){
@@ -30,8 +40,18 @@ public class Hobbin extends Monster {
 			return false; // wenn Bewegng nicht erlaubt
 	}
 
-	public Hobbin(int[] spawn_monster){
-		super(spawn_monster);
+	@Override
+	public Animation getAnimation() {
+
+		Animation an = null;
+
+		for (Animation a : animations)
+			if (a.getDir() == moveDir){
+				an = a;
+				break;
+			}
+
+		return an;
 	}
 
 }

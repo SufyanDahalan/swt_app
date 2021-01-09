@@ -83,7 +83,7 @@ public class Spiel extends JPanel implements Runnable {
 			}
 
 			// create Map and add to chain
-			mapChain.add(new Map(obj));
+			mapChain.add(new Map(obj, current_skin));
 		}
 
 		// add Player
@@ -108,9 +108,9 @@ public class Spiel extends JPanel implements Runnable {
 		// setze Monster ein
 		ArrayList<Monster> monster = aktuelles_level.getMap().getMonster();
 
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
+		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
 
 
 		int[] fp = {1,1};
@@ -278,7 +278,6 @@ public class Spiel extends JPanel implements Runnable {
 		if (tt.size() == 1) {
 			TUNNELTYP ttyp = tt.get(0).getTyp();
 
-
 			if (((dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN) && ttyp == TUNNELTYP.HORIZONTAL) ||
 					((dirSp == DIRECTION.RIGHT || dirSp == DIRECTION.LEFT) && ttyp == TUNNELTYP.VERTICAL)) {
 
@@ -289,13 +288,13 @@ public class Spiel extends JPanel implements Runnable {
 				else
 					arrangement = TUNNELTYP.HORIZONTAL;
 
-				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, arrangement));
+				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, arrangement, current_skin));
 			}
 		} else if (tt.size() == 0) {
 			if (dirSp == DIRECTION.RIGHT || dirSp == DIRECTION.LEFT)
-				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.HORIZONTAL));
+				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.HORIZONTAL, current_skin));
 			else if (dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN)
-				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL));
+				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL, current_skin));
 		}
 
 		// Spieler trifft Geldsack
@@ -563,8 +562,14 @@ public class Spiel extends JPanel implements Runnable {
 		sp1 = new Spieler(pixelPos[0], pixelPos[1]);
 
 		if(isMultiplayer) {
+			an.clear();
+			an.add(current_skin.getAnimation("digger_gre_right"));
+			an.add(current_skin.getAnimation("digger_gre_left"));
+			an.add(current_skin.getAnimation("digger_gre_up"));
+			an.add(current_skin.getAnimation("digger_gre_down"));
+
 			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
-			sp2 = new Spieler(pixelPos[0], pixelPos[1]);
+			sp2 = new Spieler(pixelPos[0], pixelPos[1], an);
 		}
 
 	}
@@ -650,14 +655,7 @@ public class Spiel extends JPanel implements Runnable {
 
 			Tunnel single_item = tunnel.get(i);
 
-			BufferedImage unscaledImg;
-
-			if (single_item.getTyp().equals(TUNNELTYP.HORIZONTAL))
-				unscaledImg = horzTunImg;
-			else if (single_item.getTyp().equals(TUNNELTYP.VERTICAL))
-				unscaledImg = vertTunImg;
-			else
-				unscaledImg = spacTunImg;
+			BufferedImage unscaledImg = current_skin.scale(single_item.getImage(), field_size);
 
 			int[] field = single_item.getField();
 			int[] middle = getCenterOf(field);
@@ -766,10 +764,8 @@ public class Spiel extends JPanel implements Runnable {
 
 		// Feuerball
 
-		Animation ani_fb_red = current_skin.getAnimation("fb_red");
-		BufferedImage fb_red_Img = ani_fb_red.nextFrame(field_size);
+		BufferedImage fb_red_Img = current_skin.getImage("fireball_red_f6");
 		ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
-
 
 		for (int i = 0; i < feuerball.size(); i++) {
 			Feuerball single_item = feuerball.get(i);
@@ -788,18 +784,19 @@ public class Spiel extends JPanel implements Runnable {
 		}
 
 		// Geld
-		Animation ani_geld = current_skin.getAnimation("Geld");
-		BufferedImage geldImg = ani_geld.nextFrame(field_size);
 
 		ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
 
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
+			Animation a = single_item.getAnimation();
+
+			BufferedImage geldImg = a.nextFrame(field_size);
 
 			int[] field = single_item.getField();
 			int[] middle = getCenterOf(field);
-			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
-			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
+			int x_pixel = middle[0] - (geldImg.getWidth() / 2);
+			int y_pixel = middle[1] - (geldImg.getHeight() / 2);
 
 			// scaling ...
 

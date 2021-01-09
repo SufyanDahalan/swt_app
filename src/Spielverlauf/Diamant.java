@@ -1,14 +1,14 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
+import java.awt.image.BufferedImage;
 
 
 public class Diamant extends Item {
 
 	private int wertung = 25;
 
-	public Diamant(int[] pos){
-		super(pos);
+	public Diamant(int[] fp, Skin sk) {
+		super(fp, sk.getImage("diamond"));
 	}
 
 	@Override

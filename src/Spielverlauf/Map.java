@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 public class Map {
 
+	private Skin skin;
+
 	// Playground
 
 	private int[] playground_size;
@@ -24,9 +26,11 @@ public class Map {
 	private ArrayList<Tunnel> tunnel;
 	private Kirsche kirsche;
 
-	public Map(JSONObject obj) {
+	public Map(JSONObject obj, Skin sk) {
 
 		// Set initial Content
+
+		skin = sk;
 
 		playground_size = toArray(obj.getJSONArray("pg_size"));
 		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
@@ -37,7 +41,7 @@ public class Map {
 		diamanten = new ArrayList<Diamant>();
 		tunnel = new ArrayList<Tunnel>();
 
-		kirsche = new Kirsche(toArray(obj.getJSONArray("spawn_cherry")));
+		kirsche = new Kirsche( toArray(obj.getJSONArray("spawn_cherry")), sk);
 		geld = new ArrayList<Geld>();
 		feuerball= new ArrayList<Feuerball>();
 
@@ -50,9 +54,9 @@ public class Map {
 
 		for (int i = 0; i < pos_diam.length(); i++) {
 
-			int[] single_item = toArray(pos_diam.getJSONArray(i));
+			int[] item_pos = toArray(pos_diam.getJSONArray(i));
 
-			diamanten.add(new Diamant(single_item));
+			diamanten.add(new Diamant(item_pos, sk));
 		}
 
 		// Füge initiale Geldsäcke ein
@@ -61,9 +65,9 @@ public class Map {
 
 		for (int i = 0; i < pos_money.length(); i++) {
 
-			int[] single_money = toArray(pos_money.getJSONArray(i));
+			int[] item_pos = toArray(pos_money.getJSONArray(i));
 
-			geldsaecke.add(new Geldsack(single_money));
+			geldsaecke.add(new Geldsack(item_pos, sk));
 		}
 
 		//// Set initial tunnels
@@ -77,7 +81,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_vertikal.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL, sk));
 		}
 
 		// Set landscape tunnel
@@ -87,7 +91,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_horizontal.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL, sk));
 		}
 
 		// Set holes
@@ -97,7 +101,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_space.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE, sk));
 		}
 
 	}
@@ -115,7 +119,8 @@ public class Map {
 		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
 		geld = new ArrayList<Geld>(m.geld);
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
-		kirsche = new Kirsche(m.kirsche.field);
+		kirsche = new Kirsche(m.kirsche.field, m.skin);
+		skin = m.skin;
 	}
 
 	////// Content handling functions
@@ -309,8 +314,7 @@ public class Map {
 	public int[] getSpawn_SP2(){return spawn_sp2;}
 
 	public void setzeHobbin(int[] pos) {
-
-		monster.add( new Hobbin(pos) );
+		monster.add( new Hobbin(pos, skin) );
 	}
 
 	private int[] toArray(JSONArray ja){

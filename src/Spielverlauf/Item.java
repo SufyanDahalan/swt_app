@@ -1,14 +1,21 @@
 package Spielverlauf;
 
+import java.awt.image.BufferedImage;
+
 public abstract class Item {
 
 	protected int[] field;
-	protected int[] position;
 	protected int wertung;
+	protected BufferedImage bild;
+
+	public Item(int[] fp, BufferedImage bi) {
+		field = fp;
+		bild = bi;
+	}
 
 	public Item(int[] fp) {
 		field = fp;
-		position = null;
+		bild = null;
 	}
 
 	public int[] getField() {

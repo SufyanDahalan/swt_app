@@ -5,29 +5,23 @@ import org.json.JSONArray;
 public class Spieler {
 
 	private int[] position;
-	private String name;
-	private int alter;
+	// private String name; wird nicht benötigt, da Daten erst am Ende eines Spiels gebraucht werden und dann direkt in den Skore gespeichert werden.
+	// private int alter;
 	private int leben = 3;
 	private DIRECTION moveDir;
+	private ArrayList<Animation> animations;
 
-	public Spieler(int x_pixel, int y_pixel) {
+	public Spieler(int x_pixel, int y_pixel, ArrayList<Animation> as) {
 
+		// Position
 		position = new int[2];
-
 		position[0] = x_pixel;
 		position[1] = y_pixel;
 
 		moveDir = DIRECTION.LEFT;
-	}
 
-	public JSONArray sterben() {
-		// TODO - implement Spieler.sterben
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean sichBewegen() {
-		// TODO - implement Spieler.sichBewegen
-		throw new UnsupportedOperationException();
+		//Animation
+		animations = as;
 	}
 
 	public int[] getPosition(){return position;}
@@ -36,8 +30,6 @@ public class Spieler {
 		position[0]+=x;
 		position[1]+=y;
 	}
-
-
 
 	public boolean isAlive() {
 		if(leben > 0)
@@ -64,5 +56,16 @@ public class Spieler {
 
     public void decrementLife() {
     	leben -= 1;
+	}
+
+	public Animation getAnimation(){
+		Animation an = null;
+
+		for(Animation a : animations)
+			if(a.getDir() == moveDir){
+				an = a;
+				break;
+			}
+		return an;
 	}
 }

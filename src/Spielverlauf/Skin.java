@@ -88,18 +88,16 @@ public class Skin {
 	}
 
 	private void createAnimations() {
-//Spieler 1
-		BufferedImage[] rbilder = new BufferedImage[6];
 
+		//Spieler 1
+		BufferedImage[] rbilder = new BufferedImage[6];
 		rbilder[0] = getImage("dig_red_rgt_f1");
 		rbilder[1] = getImage("dig_red_rgt_f2");
 		rbilder[2] = getImage("dig_red_rgt_f3");
 		rbilder[3] = getImage("dig_red_rgt_f4");
 		rbilder[4] = getImage("dig_red_rgt_f5");
 		rbilder[5] = getImage("dig_red_rgt_f6");
-
-		Animation a = new Animation(animation_measure, rbilder, this);
-		animations.put("digger_red_right", a);
+		animations.put("digger_red_right", new Animation(animation_measure, rbilder, this, DIRECTION.RIGHT, true));
 
 		BufferedImage[] lbilder = new BufferedImage[6];
 		lbilder[0] = getImage("dig_red_lft_f1");
@@ -108,8 +106,7 @@ public class Skin {
 		lbilder[3] = getImage("dig_red_lft_f4");
 		lbilder[4] = getImage("dig_red_lft_f5");
 		lbilder[5] = getImage("dig_red_lft_f6");
-		Animation b = new Animation(animation_measure, lbilder, this);
-		animations.put("digger_red_left", b);
+		animations.put("digger_red_left", new Animation(animation_measure, lbilder, this, DIRECTION.LEFT, true));
 
 		BufferedImage[] ubilder = new BufferedImage[6];
 		ubilder[0] = getImage("dig_red_up_f1");
@@ -118,8 +115,7 @@ public class Skin {
 		ubilder[3] = getImage("dig_red_up_f4");
 		ubilder[4] = getImage("dig_red_up_f5");
 		ubilder[5] = getImage("dig_red_up_f6");
-		Animation c = new Animation(animation_measure, ubilder, this);
-		animations.put("digger_red_up", c);
+		animations.put("digger_red_up", new Animation(animation_measure, ubilder, this, DIRECTION.UP, true));
 
 		BufferedImage[] dbilder = new BufferedImage[6];
 		dbilder[0] = getImage("dig_red_dow_f1");
@@ -128,19 +124,17 @@ public class Skin {
 		dbilder[3] = getImage("dig_red_dow_f4");
 		dbilder[4] = getImage("dig_red_dow_f5");
 		dbilder[5] = getImage("dig_red_dow_f6");
-		Animation d = new Animation(animation_measure, dbilder, this);
-		animations.put("digger_red_down", d);
+		animations.put("digger_red_down", new Animation(animation_measure, dbilder, this, DIRECTION.DOWN, true));
 
 		//Spieler 2
 		BufferedImage[] gre_rbilder = new BufferedImage[6];
-
 		gre_rbilder[0] = getImage("dig_gre_rgt_f1");
 		gre_rbilder[1] = getImage("dig_gre_rgt_f2");
 		gre_rbilder[2] = getImage("dig_gre_rgt_f3");
 		gre_rbilder[3] = getImage("dig_gre_rgt_f4");
 		gre_rbilder[4] = getImage("dig_gre_rgt_f5");
 		gre_rbilder[5] = getImage("dig_gre_rgt_f6");
-		animations.put("digger_gre_right", new Animation(animation_measure, gre_rbilder, this));
+		animations.put("digger_gre_right", new Animation(animation_measure, gre_rbilder, this, DIRECTION.RIGHT, true));
 
 		BufferedImage[] gre_lbilder = new BufferedImage[6];
 		gre_lbilder[0] = getImage("dig_gre_lft_f1");
@@ -149,7 +143,7 @@ public class Skin {
 		gre_lbilder[3] = getImage("dig_gre_lft_f4");
 		gre_lbilder[4] = getImage("dig_gre_lft_f5");
 		gre_lbilder[5] = getImage("dig_gre_lft_f6");
-		animations.put("digger_gre_left", new Animation(animation_measure, gre_lbilder, this));
+		animations.put("digger_gre_left", new Animation(animation_measure, gre_lbilder, this, DIRECTION.LEFT, true));
 
 		BufferedImage[] gre_ubilder = new BufferedImage[6];
 		gre_ubilder[0] = getImage("dig_gre_up_f1");
@@ -158,60 +152,28 @@ public class Skin {
 		gre_ubilder[3] = getImage("dig_gre_up_f4");
 		gre_ubilder[4] = getImage("dig_gre_up_f5");
 		gre_ubilder[5] = getImage("dig_gre_up_f6");
-		animations.put("digger_gre_up", new Animation(animation_measure, gre_ubilder, this));
+		animations.put("digger_gre_up", new Animation(animation_measure, gre_ubilder, this, DIRECTION.UP, true));
 
 		BufferedImage[] hob_left_bilder = new BufferedImage[4];
 		hob_left_bilder[0] = getImage("hobbin_right_f1");
 		hob_left_bilder[1] = getImage("hobbin_right_f2");
 		hob_left_bilder[2] = getImage("hobbin_right_f3");
 		hob_left_bilder[3] = getImage("hobbin_right_f4");
-		animations.put("hobbin_right", new Animation(animation_measure, hob_left_bilder, this));
+		animations.put("hobbin_right", new Animation(animation_measure, hob_left_bilder, this, DIRECTION.RIGHT, true));
 
 		BufferedImage[] hob_right_bilder = new BufferedImage[4];
 		hob_right_bilder[0] = getImage("hobbin_left_f1");
 		hob_right_bilder[1] = getImage("hobbin_left_f2");
 		hob_right_bilder[2] = getImage("hobbin_left_f3");
 		hob_right_bilder[3] = getImage("hobbin_left_f4");
-		animations.put("hobbin_left", new Animation(animation_measure, hob_right_bilder, this));
+		animations.put("hobbin_left", new Animation(animation_measure, hob_right_bilder, this, DIRECTION.LEFT, true));
 
 		BufferedImage[] hob_bilder = new BufferedImage[4];
 		hob_bilder[0] = getImage("nobbin_f1");
 		hob_bilder[1] = getImage("nobbin_f2");
 		hob_bilder[2] = getImage("nobbin_f3");
 		hob_bilder[3] = getImage("nobbin_f4");
-		animations.put("nobbin", new Animation(animation_measure, hob_bilder, this));
-
-		BufferedImage[] fb_red_bilder = new BufferedImage[6];
-		fb_red_bilder[0] = getImage("fireball_red_f1");
-		fb_red_bilder[1] = getImage("fireball_red_f2");
-		fb_red_bilder[2] = getImage("fireball_red_f3");
-		fb_red_bilder[3] = getImage("fireball_red_f4");
-		fb_red_bilder[4] = getImage("fireball_red_f5");
-		fb_red_bilder[5] = getImage("fireball_red_f6");
-
-		animations.put("fb_red", new Animation(animation_measure, fb_red_bilder, this));
-
-		BufferedImage[] fb_gre_bilder = new BufferedImage[6];
-		fb_gre_bilder[0] = getImage("fireball_gre_f1");
-		fb_gre_bilder[1] = getImage("fireball_gre_f2");
-		fb_gre_bilder[2] = getImage("fireball_gre_f3");
-		fb_gre_bilder[3] = getImage("fireball_gre_f4");
-		fb_gre_bilder[4] = getImage("fireball_gre_f5");
-		fb_gre_bilder[5] = getImage("fireball_gre_f6");
-
-		animations.put("fb_gre", new Animation(animation_measure, fb_gre_bilder, this));
-
-		BufferedImage[] gs_bilder = new BufferedImage[8];
-		gs_bilder[0] = getImage("backg_typ1");
-		gs_bilder[1] = getImage("backg_typ2");
-		gs_bilder[2] = getImage("backg_typ3");
-		gs_bilder[3] = getImage("backg_typ4");
-		gs_bilder[4] = getImage("backg_typ5");
-		gs_bilder[5] = getImage("backg_typ6");
-		gs_bilder[6] = getImage("backg_typ7");
-		gs_bilder[7] = getImage("backg_typ8");
-
-		animations.put("Geldscak", new Animation(animation_measure, gs_bilder, this));
+		animations.put("nobbin", new Animation(animation_measure, hob_bilder, this, null, true));
 
 		BufferedImage[] grave_bilder = new BufferedImage[5];
 		grave_bilder[0] = getImage("grave_f1");
@@ -219,19 +181,15 @@ public class Skin {
 		grave_bilder[2] = getImage("grave_f3");
 		grave_bilder[3] = getImage("grave_f4");
 		grave_bilder[4] = getImage("grave_f5");
+		animations.put("Grave", new Animation(animation_measure, grave_bilder, this, null, false));
 
-		animations.put("Grave", new Animation(animation_measure, grave_bilder, this));
 
+		BufferedImage[] geld_bilder = new BufferedImage[3];
+		geld_bilder[0] = getImage("money_fall_f4");
+		geld_bilder[1] = getImage("money_fall_f5");
+		geld_bilder[2] = getImage("money_fall_f6");
 
-		BufferedImage[] geld_bilder = new BufferedImage[1];
-		//geld_bilder[0] = getImage("money_fall_f1");
-		//geld_bilder[1] = getImage("money_fall_f2");
-		//geld_bilder[2] = getImage("money_fall_f3");
-		//geld_bilder[3] = getImage("money_fall_f4");
-		//geld_bilder[4] = getImage("money_fall_f5");
-		geld_bilder[0] = getImage("money_fall_f6");
-
-		animations.put("Geld", new Animation(animation_measure, geld_bilder, this));
+		animations.put("Geld", new Animation(animation_measure, geld_bilder, this, null, false));
 
 	}
 
