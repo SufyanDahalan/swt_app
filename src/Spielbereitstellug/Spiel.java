@@ -323,9 +323,9 @@ public class Spiel extends JPanel implements Runnable {
 				int[] newField2 = g2.getField();
 				if (g1 != g2) {
 					if (Arrays.equals(g1.getField(), g2.getField())) {
-						if ( newField1[0] + newField2[0] - PGSize[0] < newField1[0] ) {
+						if ( newField1[0]+newField2[0] < PGSize[0] ) {
 							g2.addFieldPosOff(1, 0);
-						} else if (PGSize[0] < newField2[0] + newField1[0] + PGSize[0] ) {
+							} else if (1 < newField2[0] + newField1[0] ) {
 							g2.addFieldPosOff(-1, 0);
 						}
 					}
@@ -333,7 +333,7 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1
+		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 //Geld erstellen
 			for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 				Geldsack gs = iterator.next();
 				int[] current_field = gs.getField();
@@ -344,18 +344,19 @@ public class Spiel extends JPanel implements Runnable {
 					gs.addFieldPosOff(0, 1);
 					gs.setFalling(true);
 					gs.incFallHeight();
+					if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
+						if (sp1.isAlive()) {
+							sp1.decrementLife();
+							sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+						}
+					}
+
 				} else if (gs.getFalling()) {
 					if (gs.getFallHeight() > 1) {
-						aktuelles_level.getMap().addGeld(new Geld(gs.getField()));
+						aktuelles_level.getMap().addGeld(new Geld(gs.getField(), current_skin));
 						iterator.remove();
 					} else
 						gs.resetFallHeight();
-				}
-				if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
-					if (sp1.isAlive()) {
-						sp1.decrementLife();
-						sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
-					}
 				}
 			}
 		// Spieler trifft Geld
@@ -524,7 +525,7 @@ public class Spiel extends JPanel implements Runnable {
 		// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
 		/// in jedem Fall wir true zurückgegeben. Andernfalls beendet sich die loop() und das spiel gilt als beendet. Darauf folgt dann die eintragung der ergebnisse ect.
 
-		if(!sp1.isAlive()) {
+		if(!sp1.isAlive() && !sp2.isAlive()) {
 				return false; // Spiel beendet
 		}
 
@@ -559,7 +560,15 @@ public class Spiel extends JPanel implements Runnable {
 		System.out.println("FieldSize: " + field_size);
 
 		int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
-		sp1 = new Spieler(pixelPos[0], pixelPos[1]);
+
+		ArrayList<Animation> an = new ArrayList<>();
+
+		an.add(current_skin.getAnimation("digger_red_right"));
+		an.add(current_skin.getAnimation("digger_red_left"));
+		an.add(current_skin.getAnimation("digger_red_up"));
+		an.add(current_skin.getAnimation("digger_red_down"));
+
+		sp1 = new Spieler(pixelPos[0], pixelPos[1], an);
 
 		if(isMultiplayer) {
 			an.clear();
