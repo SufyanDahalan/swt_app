@@ -6,10 +6,12 @@ import Spielbereitstellug.Spiel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.sound.sampled.*;
+
+import static Menuefuehrung.Song.play;
 
 
 public class MainFrame extends JFrame {
+
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
     public static void addKeyBinding(JComponent c, String key, final Action action) {
@@ -18,8 +20,11 @@ public class MainFrame extends JFrame {
         c.setFocusable(true);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        
         SwingUtilities.invokeLater(MainFrame::new);
+
+        play ("bin/music/Popcorn01.mp3") ;
     }
     public MainFrame() {
         getContentPane().setLayout(new CardLayout());
@@ -119,5 +124,6 @@ public class MainFrame extends JFrame {
         });
         getContentPane().add(spiel, "game");
     }
+
 
 }
