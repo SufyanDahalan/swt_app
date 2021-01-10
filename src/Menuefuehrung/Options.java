@@ -16,9 +16,7 @@ public class Options extends JPanel{
 
         setOpaque(false);
         button b1 = new button("Start", 20);
-        b1.setForeground(Color.green);
         button b2 = new button("Options", 20);
-        b2.setForeground(Color.green);
         button b3 = new button("Quit", 20);
         button b4 = new button("Singleplayer", 17);
         button b5 = new button("Multiplayer", 17);

@@ -20,7 +20,7 @@ public class button extends JButton {
                 setOpaque(false);
                 setContentAreaFilled(false);
                 setBorderPainted(false);
-                setForeground(Color.RED);
+                setForeground(Color.green);
                 setFocusable(false);
         current_skin = new Skin(new File(skinfolder_name), skinName);
         setFont(current_skin.getFont().deriveFont(Font.PLAIN, 22));
