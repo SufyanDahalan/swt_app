@@ -24,21 +24,6 @@ public class MainFrame extends JFrame {
 
         SwingUtilities.invokeLater(MainFrame::new);
 
-        // AudioInputStream as1 = AudioSystem.getAudioInputStream(new
-        // BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
-        // AudioFormat af = as1.getFormat();
-        // Clip clip1 = AudioSystem.getClip();
-        // DataLine.Info info = new DataLine.Info(Clip.class, af);
-
-        // Line line1 = AudioSystem.getLine(info);
-
-        // if ( ! line1.isOpen() )
-        // {
-        // clip1.open(as1);
-        // clip1.loop(Clip.LOOP_CONTINUOUSLY);
-        // clip1.start();
-        // }
-
     }
 
     public MainFrame() {
@@ -46,8 +31,6 @@ public class MainFrame extends JFrame {
         setTitle("Digger");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyBinding(this.getRootPane(), "F11", new AbstractAction() {
-            // TODO: changing size in game does not extend the game correctly, should be
-            // corrected in Map.java
             @Override
             public void actionPerformed(ActionEvent e) {
                 FullScreen();

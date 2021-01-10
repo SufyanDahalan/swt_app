@@ -360,7 +360,7 @@ public class Spiel extends JPanel implements Runnable {
 /*--------------------------------------------------------------------------------------------------------------------*/
 ///Spieler2:
 		//Spieler 2 trifft Diamant
-		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
+		/* for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
 			Diamant single_item = iterator.next();
 			if (Arrays.equals(single_item.getField(), getFieldOf(sp2.getPosition()))) {
 				iterator.remove();
@@ -441,7 +441,7 @@ public class Spiel extends JPanel implements Runnable {
 				spielstand += aktuelles_level.getMap().getKirsche().getValue();
 			}
 		}
-
+ */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 ///Monster:
