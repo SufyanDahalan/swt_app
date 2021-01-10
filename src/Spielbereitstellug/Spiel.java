@@ -469,7 +469,68 @@ public class Spiel extends JPanel implements Runnable {
 
 			m.addPosOff(x_off, y_off);
 		//}
+		
 */
+        
+            /*
+			Monster m = aktuelles_level.getMap().getMonster().get(0);
+		    int[] m_pos = m.getPosition();
+			int[] s_pos = sp1.getPosition();
+
+
+			int x_off = 0;
+			int y_off = 0;
+            int[] monsternext = m_pos;
+		    //ArrayList<Tunnel> tt3 = aktuelles_level.getMap().getTunnel(monsternext);
+
+			if (m_pos[0] > s_pos[0]){
+				monsternext[0] =  m_pos[0] - 1;
+				for (Tunnel num : tunnels) {
+					if(num.getField()==monsternext){
+						x_off=0;
+					}
+					else{
+						x_off = -1;}
+					m.addPosOff(x_off, y_off);
+			}
+
+			}
+			else
+			{
+				monsternext[0] =  m_pos[0] + 1;
+				for (Tunnel num : tunnels) {
+				if(num.getField()==monsternext){
+					x_off=0;
+				}
+				else{
+					x_off = 1;}
+				m.addPosOff(x_off, y_off);
+				}}
+		    if (m_pos[1] > s_pos[1])
+			{
+				monsternext[1] =  m_pos[1]  - 1;
+				for (Tunnel num : tunnels) {
+					if(num.getField()==monsternext){
+						y_off=0;
+					}
+
+				else{
+					y_off = -1;}
+
+			    m.addPosOff(x_off, y_off);}}
+		    else{
+				monsternext[1] =  m_pos[1] + 1;
+				for (Tunnel num : tunnels) {
+					if(num.getField()==monsternext){
+						x_off=0;
+					}
+
+				else{
+					y_off = 1;}
+
+				m.addPosOff(x_off, y_off);}}
+
+				*/
 		// Hobbin trifft Diamant
 		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext();){
 			Diamant d = iterator.next();
