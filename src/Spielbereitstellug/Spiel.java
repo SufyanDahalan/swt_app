@@ -472,7 +472,23 @@ public class Spiel extends JPanel implements Runnable {
 		
 */
         
-            /*
+            /*Monster m = aktuelles_level.getMap().getMonster().get(0);
+		    int[] m_pos = m.getPosition();
+			int[] s_pos = sp1.getPosition();
+			int[] monsternext = m_pos;
+			double dx1 = s_pos[0] - m_pos[0];
+            double dy1 = s_pos[1] - m_pos[1];
+            double norm = Math.sqrt(dx1*dx1+dy1*dy1);
+            dx1 /= norm;
+            dy1 /= norm;
+
+            dx1 *= 2;
+            dy1 *= 2;
+		    m.addPosOff(0, 0);
+
+
+
+			||| 
 			Monster m = aktuelles_level.getMap().getMonster().get(0);
 		    double[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
