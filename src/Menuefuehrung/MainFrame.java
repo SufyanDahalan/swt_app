@@ -6,14 +6,14 @@ import Spielbereitstellug.Spiel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import static Menuefuehrung.Song.play;
-
+import javax.sound.sampled.*;
+import java.io.*;
 
 public class MainFrame extends JFrame {
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
+
     public static void addKeyBinding(JComponent c, String key, final Action action) {
         c.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), key);
         c.getActionMap().put(key, action);
@@ -21,43 +21,76 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-        
+
         SwingUtilities.invokeLater(MainFrame::new);
 
-        play ("bin/music/Popcorn01.mp3") ;
+        // AudioInputStream as1 = AudioSystem.getAudioInputStream(new
+        // BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
+        // AudioFormat af = as1.getFormat();
+        // Clip clip1 = AudioSystem.getClip();
+        // DataLine.Info info = new DataLine.Info(Clip.class, af);
+
+        // Line line1 = AudioSystem.getLine(info);
+
+        // if ( ! line1.isOpen() )
+        // {
+        // clip1.open(as1);
+        // clip1.loop(Clip.LOOP_CONTINUOUSLY);
+        // clip1.start();
+        // }
+
     }
+
     public MainFrame() {
         getContentPane().setLayout(new CardLayout());
         setTitle("Digger");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyBinding(this.getRootPane(), "F11", new AbstractAction() {
-                    //TODO: changing size in game does not extend the game correctly, should be corrected in Map.java
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        FullScreen();
-                    }
-                }
-        );
+            // TODO: changing size in game does not extend the game correctly, should be
+            // corrected in Map.java
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FullScreen();
+            }
+        });
         MainPanel Panel = new MainPanel();
         getContentPane().add(Panel, "panel");
 
-
         LevelEditor editor = new LevelEditor();
-        getContentPane().add(editor, "editor");//add the LevelEditor to the cardboard layout
+        getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
 
         prepareMap();
 
-        //setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));
+        // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));
         setUndecorated(true);
-        CardLayout layout = (CardLayout)getContentPane().getLayout();
+        CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
 
         setVisible(true);
-
+        try {
+            Music();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+            e1.printStackTrace();
+        }
     }
+
+
+    public void Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        AudioInputStream as1 = AudioSystem.getAudioInputStream(new BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
+               AudioFormat af = as1.getFormat();
+               Clip clip1 = AudioSystem.getClip();
+               DataLine.Info info = new DataLine.Info(Clip.class, af);
+               Line line1 = AudioSystem.getLine(info);
+               if (!line1.isOpen()){
+                clip1.open(as1);
+                clip1.loop(Clip.LOOP_CONTINUOUSLY);
+                clip1.start();
+               }
+    }
+
     private void FullScreen(){
         if (fullscreen) {
             setVisible(false);
@@ -69,9 +102,10 @@ public class MainFrame extends JFrame {
             device.setFullScreenWindow(this);
             fullscreen = true;
             setVisible(true);
-
         }
     }
+
+
     public void prepareMap(){//copied from Test.java, should be adjusted later
 
         int height = getContentPane().getPreferredSize().height;
@@ -125,6 +159,5 @@ public class MainFrame extends JFrame {
 
         getContentPane().add(spiel, "multiplayer");
     }
-
 
 }
