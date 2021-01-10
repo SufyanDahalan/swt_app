@@ -122,7 +122,8 @@ public class MainFrame extends JFrame {
                 lok.shoot();
             }
         });
-        getContentPane().add(spiel, "game");
+
+        getContentPane().add(spiel, "multiplayer");
     }
 
 
