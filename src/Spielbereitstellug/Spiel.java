@@ -477,7 +477,13 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}}*/
 		// Nobbin trifft Boden
-		// Hobbin trifft Wand
+		// Monster trifft Wand // Not yet done
+		Monster m1 = aktuelles_level.getMap().getMonster().get(1);
+		int[] m_pos1 = m1.getPosition();
+		int[] newField = getFieldOf(m_pos1);
+		int[] pgSize = aktuelles_level.getMap().getPGSize();
+		if(0 < newField[0] && newField[0] <= pgSize[0] && 0 < newField[1] && newField[1] <= pgSize[1])
+			m1.addPosOff(6,6);
 		// Hobbin trifft Hobbin
 		// Hobbin trifft Kirsche
 		/*Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
