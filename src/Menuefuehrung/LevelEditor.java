@@ -2,14 +2,12 @@ package Menuefuehrung;
 
 import java.awt.image.BufferedImage;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import Spielverlauf.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,10 +22,8 @@ public class LevelEditor extends JPanel implements MouseListener {
     final static Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
     MouseAdapter globalMouseAdapter;
 
-    // Playground
     private int[] playground_size = { 15, 10 };
 
-    // Contente
     private int[] spawn_monster;
     private int[] spawn_sp1;
     private int[] spawn_sp2;
@@ -71,26 +67,8 @@ public class LevelEditor extends JPanel implements MouseListener {
 
     }
 
-    public void validateAndSave() {// should be callabe by ctrl+s
+    public void validateAndSave() {// can be called with ctrl+s
 
-        // Field map = obj.getClass().getDeclaredField("map");
-        // map.setAccessible(true);//because the field is private final...
-        // map.set(obj, new LinkedHashMap<>());
-        // map.setAccessible(false);//return flag
-
-        // Object[] jContent = /* new Object */ { obj.remove("name"), obj.remove("pg_size"), obj.remove("spawn_p1"),
-        //         obj.remove("spawn_p2"), obj.remove("spawn_mon"), obj.remove("spawn_cherry"), obj.remove("pos_diam"),
-        //         obj, obj.remove("pos_money"), obj.remove("pos_tun") };// maybe use removes
-
-        // obj.put("name", jContent[0]);
-        // obj.put("pg_size", jContent[1]);
-        // obj.put("spawn_p1", jContent[2]);
-        // obj.put("spawn_p2", jContent[3]);
-        // obj.put("spawn_mon", jContent[4]);
-        // obj.put("spawn_cherry", jContent[5]);
-        // obj.put("pos_diam", jContent[6]);
-        // obj.put("pos_money", jContent[7]);
-        // obj.put("pos_tun", jContent[8]);
 
         if (obj.has("name") && obj.has("pg_size") && obj.has("spawn_p1") && obj.has("spawn_p2") && obj.has("spawn_mon")
                 && obj.has("spawn_cherry") && obj.has("pos_diam") && obj.has("pos_money") && obj.has("pos_tun")) {
@@ -114,7 +92,7 @@ public class LevelEditor extends JPanel implements MouseListener {
                 int a = Collections.max(mapNumber)+1;
                 String aFormatted = formatter.format(a);
                 name = "level_"+aFormatted+".json";
-            }else/*  if(mapNumber.isEmpty()) */{
+            }else{
                 name = "level_01.json";
             }
 
@@ -135,7 +113,7 @@ public class LevelEditor extends JPanel implements MouseListener {
 
 
 
-    private void refreshSizing() {
+    private void refreshSizing() {//TODO: black borders to the right and top should not be rendered
 
         // Speichere Änderung
         // old_field_size = field_size;
@@ -156,7 +134,7 @@ public class LevelEditor extends JPanel implements MouseListener {
 
     }
 
-    protected void paintComponent(Graphics g) {//add shortcuts to black top and right "bar"
+    protected void paintComponent(Graphics g) {//TODO: suggestion:-  add shortcuts to black top and right "bar"
 
         super.paintComponent(g);
 
@@ -183,7 +161,6 @@ public class LevelEditor extends JPanel implements MouseListener {
         BufferedImage vertTunImg = current_skin.getImage("tunnel_vert", field_size);
         BufferedImage spacTunImg = current_skin.getImage("tunnel_space", field_size);
 
-        // ArrayList<Tunnel> tunnel = aktuelles_level.getMap().getTunnel();
         if(obj.has("pos_tun")){
 
             JSONObject kind_tun = obj.getJSONObject("pos_tun");
@@ -388,7 +365,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "P", new AbstractAction() {//Spieler1 Spawn point
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
@@ -409,7 +386,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "B", new AbstractAction() {//Spieler2 Spawn point
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
@@ -428,7 +405,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "M", new AbstractAction() {//Monster Spawn point
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
@@ -447,7 +424,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "K", new AbstractAction() {//Kirsche Spawn Point
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
@@ -468,7 +445,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "D", new AbstractAction() {//Diamant
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
@@ -494,7 +471,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "G", new AbstractAction() {//Geldsack
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
@@ -519,7 +496,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "V", new AbstractAction() {//Tunnel Vertikal
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
@@ -562,7 +539,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "H", new AbstractAction() {//Tunnel Horizontal
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
@@ -604,7 +581,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "S", new AbstractAction() {//Tunnel Space
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
@@ -644,7 +621,7 @@ public class LevelEditor extends JPanel implements MouseListener {
         addKeyBinding(this, "R", new AbstractAction() {//Remove a Tunnel
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeMouseListener(globalMouseAdapter);//Nullify previous Keybindings
+                removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         int[] deletedTunnel = PixelToInt(new int[]{e.getX(), e.getY()});
@@ -681,7 +658,7 @@ public class LevelEditor extends JPanel implements MouseListener {
                 addMouseListener(globalMouseAdapter);
             }});//TODO:check for redundancy in and across Tunnel types
 
-    }//TODO: suggestion: maybe add a keybinding to put ground instead of tunnel in a specific point?
+    }
 
     public int[] getBorderOffset(){
         int[] borderOffset = new int[2];
