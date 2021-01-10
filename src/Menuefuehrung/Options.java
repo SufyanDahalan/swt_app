@@ -2,12 +2,12 @@ package Menuefuehrung;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Options extends JPanel{
     Options(){
+
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
@@ -22,10 +22,13 @@ public class Options extends JPanel{
         b2.setForeground(Color.green);
         button b3 = new button("Quit", 20);
         b3.setForeground(Color.green);
+        button b8 = new button("music", 20);
+        b8.setForeground(Color.yellow);
+        //b8.setHorizontalAlignment(SwingConstants.LEFT);
         b1.addActionListener((event) ->{
             button b4 = new button("Singleplayer", 17);
             button b5 = new button("Multiplayer", 17);
-            Box box1 = Box.createVerticalBox();
+            Box box1 = Box.createHorizontalBox();
             box1.add(b4);
             box1.add(b5);
             Container frame = getParent().getParent();
@@ -51,11 +54,12 @@ public class Options extends JPanel{
         b2.addActionListener((event)-> {
             button b6 = new button("Level Editor", 17);
             button b7 = new button("Sound", 17);
-            button b8 = new button("Music", 17);
-            Box box = Box.createVerticalBox();
+            //button b8 = new button("Music", 17);
+            Box box = Box.createHorizontalBox();
             box.add(b6);
             box.add(b7);
-            box.add(b8);
+
+
 
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
@@ -75,13 +79,14 @@ public class Options extends JPanel{
         });
 
 
-
         b3.addActionListener(e -> System.exit(0));
         add(b1);
         add(b2);
         add(b3);
 
+
     }
+
 
 
 
