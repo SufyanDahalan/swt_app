@@ -1,15 +1,22 @@
 package Menuefuehrung;
 
+import Spielverlauf.Skin;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.io.File;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Scoreboard extends JPanel {
+    private final String skinName = "original_skin"; // Skinnname
+    private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
+    private Skin current_skin;
         Scoreboard(){
+            current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
@@ -28,7 +35,8 @@ public class Scoreboard extends JPanel {
             JTable Table = new JTable (dtm);
             Table.setModel(dtm);
             Table.setFillsViewportHeight(true);
-            Table.setForeground(Color.RED);
+            Table.setForeground(Color.white);
+            Table.setFont(current_skin.getFont().deriveFont(Font.PLAIN, 15));
 
 
 
@@ -49,7 +57,7 @@ public class Scoreboard extends JPanel {
             Header.setBorder(BorderFactory.createLineBorder(new Color(0,0,0,255)));
             Header.setResizingAllowed(false);
             Header.setReorderingAllowed(false);
-            Header.setFont(new Font("SansSerif", Font.BOLD, 16));
+            Header.setFont(current_skin.getFont().deriveFont(Font.PLAIN, 20));
             Table.setFocusable(false);
             Table.setRowSelectionAllowed(false);
 
