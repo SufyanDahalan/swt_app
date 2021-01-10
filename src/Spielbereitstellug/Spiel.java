@@ -451,7 +451,7 @@ public class Spiel extends JPanel implements Runnable {
 		//Monster verfolgt Spieler
 		//for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 		//	Monster m =iterator.next();
-	/*		Monster m = aktuelles_level.getMap().getMonster().get(0);
+		/*	Monster m = aktuelles_level.getMap().getMonster().get(0);
 			int[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
 			int x_off = 0;
@@ -466,6 +466,7 @@ public class Spiel extends JPanel implements Runnable {
 				y_off = -1;
 			else
 				y_off = 1;
+
 			m.addPosOff(x_off, y_off);
 		//}
 */
@@ -556,6 +557,24 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}}*/
 
+		// Nobbin trifft Boden
+		// Monster trifft Wand // Not yet done
+		for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
+			Monster h = it.next();
+			int[] m_pos1 = h.getPosition();
+			int[] newField = getFieldOf(m_pos1);
+			int[] pgSize = aktuelles_level.getMap().getPGSize();
+			if( newField[0] <= 0)
+				h.addPosOff(1,0);
+			if(newField[0] >= pgSize[0] )
+				h.addPosOff(-1,0);
+			if( newField[1] <= 0 )
+				h.addPosOff(0, 1);
+			if(newField[1] >= pgSize[1])
+				h.addPosOff(0,-1);
+
+		}
+		// Hobbin trifft Hobbin
 		// Hobbin trifft Kirsche
 		/*Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
 		  if (aktuelles_level.getMap().getKirsche().getVisible()) {
