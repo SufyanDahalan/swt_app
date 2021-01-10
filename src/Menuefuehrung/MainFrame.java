@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
         
         SwingUtilities.invokeLater(MainFrame::new);
 
-        play ("bin/music/Popcorn01.mp3") ;
+       // play ("bin/music/Popcorn01.mp3") ;
     }
     public MainFrame() {
         getContentPane().setLayout(new CardLayout());

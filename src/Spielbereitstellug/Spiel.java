@@ -212,7 +212,6 @@ public class Spiel extends JPanel implements Runnable {
 		/// Prüfroutinen
 
 		// alle Diamanten gesammel?
-
 		if (aktuelles_level.getMap().getDiamonds().size() == 0) {
 			// dann nächstes Level
 			aktuelles_level = createNextLevel();
@@ -221,28 +220,10 @@ public class Spiel extends JPanel implements Runnable {
 			sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
 			// vervolständigen zB von Scores
-
 		}
 
-		// alle Monster getötet?
-		int Max_monster = 3;
-		if (aktuelles_level.getMap().getMonster().size() < Max_monster) {
-			aktuelles_level.getMap().getSpawn_monster();
-		}
 
-		/*
-		if(aktuelles_level.getMap().getMonster().size() == 0) {
-			// dann nächstes Level
-			aktuelles_level = createNextLevel();
-
-			// vervolständigen zB von Scores
-
-		}
-		*/
-
-		// Folgende Ereignisse müssen ausfrmuliert und entsprechende Folgen triggern
-
-		// Spieler trifft Diamant
+		// Spieler 1 trifft Diamant
 		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
 			Diamant single_item = iterator.next();
 			if (Arrays.equals(single_item.getField(), getFieldOf(sp1.getPosition()))) {
@@ -250,14 +231,6 @@ public class Spiel extends JPanel implements Runnable {
 				spielstand += single_item.getValue();
 			}
 		}
-		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
-			Diamant single_item = iterator.next();
-			if (Arrays.equals(single_item.getField(), getFieldOf(sp2.getPosition()))) {
-				iterator.remove();
-				spielstand += single_item.getValue();
-			}
-		}
-
 
 		// Spieler trifft Monster
 /*
@@ -267,16 +240,6 @@ public class Spiel extends JPanel implements Runnable {
 				if(sp1.isAlive()) {
 					sp1.decrementLife();
 					sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
-				}
-			}
-		}
-
-		for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
-			Monster m = iterator.next();
-			if(Arrays.equals(getFieldOf(m.getPosition()),( getFieldOf(sp2.getPosition())))){
-				if(sp2.isAlive()) {
-					sp2.decrementLife();
-					sp2.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 				}
 			}
 		}
@@ -309,6 +272,113 @@ public class Spiel extends JPanel implements Runnable {
 				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL, current_skin));
 		}
 
+		// Spieler 1 trifft Geldsack
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
+			Geldsack gs1 = iterator.next();
+				if (Arrays.equals(gs1.getField(), getFieldOf(sp1.getPosition()))) {
+					int[] PGSize = aktuelles_level.getMap().getPGSize();
+					int[] newField1 = gs1.getField();
+					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
+							if (newField1[0] < PGSize[0])
+								gs1.addFieldPosOff(1, 0);
+					} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
+						if (1 < newField1[0])
+							gs1.addFieldPosOff(-1, 0);
+					}
+				}
+			}
+
+		// Spieler 1 trifft Geld
+		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
+			Geld gd = iterator.next();
+
+			if (Arrays.equals(gd.getField(), getFieldOf(sp1.getPosition()))) {
+
+				iterator.remove();
+				spielstand += gd.getValue();
+			}
+		}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+///Geldsack:
+		//Geldsack trifft Geldsack
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
+			Geldsack g1 = iterator.next();
+			for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
+				Geldsack g2 = it.next();
+				int[] PGSize = aktuelles_level.getMap().getPGSize();
+				int[] newField1 = g1.getField();
+				int[] newField2 = g2.getField();
+				if (g1 != g2) {
+					if (Arrays.equals(g1.getField(), g2.getField())) {
+						if ( newField1[0]+newField2[0] < PGSize[0] ) {
+							g2.addFieldPosOff(1, 0);
+						} else if (1 < newField2[0] + newField1[0] ) {
+							g2.addFieldPosOff(-1, 0);
+						}
+					}
+				}
+			}
+		}
+
+		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 // Geldscak trifft Spieler 2 //Geld erstellen
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
+			Geldsack gs = iterator.next();
+			int[] current_field = gs.getField();
+			int[] check_field = current_field.clone();
+			check_field[1]++;
+
+			if (aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
+				gs.addFieldPosOff(0, 1);
+				gs.setFalling(true);
+				gs.incFallHeight();
+				if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
+					if (sp1.isAlive()) {
+						sp1.decrementLife();
+						sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+					}
+				}
+
+			} else if (gs.getFalling()) {
+				if (gs.getFallHeight() > 1) {
+					aktuelles_level.getMap().addGeld(new Geld(gs.getField(), current_skin));
+					iterator.remove();
+				} else
+					gs.resetFallHeight();
+			}
+		}
+
+		///Bonsmodus aktivieren:
+		// Spieler 1 trifft Kirsche ->
+		if (aktuelles_level.getMap().getKirsche().getVisible()) {
+			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
+				aktuelles_level.getMap().hideKirsche();
+				spielstand += aktuelles_level.getMap().getKirsche().getValue();
+			}
+		}
+/*--------------------------------------------------------------------------------------------------------------------*/
+///Spieler2:
+		//Spieler 2 trifft Diamant
+		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
+			Diamant single_item = iterator.next();
+			if (Arrays.equals(single_item.getField(), getFieldOf(sp2.getPosition()))) {
+				iterator.remove();
+				spielstand += single_item.getValue();
+			}
+		}
+
+		//Monster trifft Spieler 2
+		for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
+			Monster m = iterator.next();
+			if(Arrays.equals(getFieldOf(m.getPosition()),( getFieldOf(sp2.getPosition())))){
+				if(sp2.isAlive()) {
+					sp2.decrementLife();
+					sp2.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+				}
+			}
+		}
+
 		//Spieler 2 trifft Boden
 		int[] fpSp2 = getFieldOf(sp2.getPosition());
 		DIRECTION dirSp2 = sp2.getMoveDir();
@@ -337,24 +407,7 @@ public class Spiel extends JPanel implements Runnable {
 				aktuelles_level.getMap().addTunnel(new Tunnel(fpSp2, TUNNELTYP.VERTICAL, current_skin));
 		}
 
-		// Spieler 1 trifft Geldsack
-
-		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-			Geldsack gs1 = iterator.next();
-				if (Arrays.equals(gs1.getField(), getFieldOf(sp1.getPosition()))) {
-					int[] PGSize = aktuelles_level.getMap().getPGSize();
-					int[] newField1 = gs1.getField();
-					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-							if (newField1[0] < PGSize[0])
-								gs1.addFieldPosOff(1, 0);
-					} else if (sp1.getMoveDir() == DIRECTION.LEFT) {
-						if (1 < newField1[0])
-							gs1.addFieldPosOff(-1, 0);
-					}
-				}
-			}
-
-		// Spieler 1 trifft Geldsack
+		// Spieler 2 trifft Geldsack
 		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 			Geldsack gs1 = iterator.next();
 			if (Arrays.equals(gs1.getField(), getFieldOf(sp2.getPosition()))) {
@@ -370,71 +423,6 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-
-		//Geldsack trifft Geldsack
-		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-			Geldsack g1 = iterator.next();
-			for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
-				Geldsack g2 = it.next();
-				int[] PGSize = aktuelles_level.getMap().getPGSize();
-				int[] newField1 = g1.getField();
-				int[] newField2 = g2.getField();
-				if (g1 != g2) {
-					if (Arrays.equals(g1.getField(), g2.getField())) {
-						if ( newField1[0]+newField2[0] < PGSize[0] ) {
-							g2.addFieldPosOff(1, 0);
-							} else if (1 < newField2[0] + newField1[0] ) {
-							g2.addFieldPosOff(-1, 0);
-						}
-					}
-				}
-			}
-		}
-
-		//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 // Geldscak trifft Spieler 2 //Geld erstellen
-			for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-				Geldsack gs = iterator.next();
-				int[] current_field = gs.getField();
-				int[] check_field = current_field.clone();
-				check_field[1]++;
-
-				if (aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
-					gs.addFieldPosOff(0, 1);
-					gs.setFalling(true);
-					gs.incFallHeight();
-					if (Arrays.equals(getFieldOf(sp1.getPosition()), gs.getField())) {
-						if (sp1.isAlive()) {
-							sp1.decrementLife();
-							sp1.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
-						}
-					}
-					if (Arrays.equals(getFieldOf(sp2.getPosition()), gs.getField())) {
-						if (sp2.isAlive()) {
-							sp2.decrementLife();
-							sp2.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP2()));
-						}
-					}
-
-				} else if (gs.getFalling()) {
-					if (gs.getFallHeight() > 1) {
-						aktuelles_level.getMap().addGeld(new Geld(gs.getField(), current_skin));
-						iterator.remove();
-					} else
-						gs.resetFallHeight();
-				}
-			}
-
-		// Spieler 1 trifft Geld
-		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
-			Geld gd = iterator.next();
-
-			if (Arrays.equals(gd.getField(), getFieldOf(sp1.getPosition()))) {
-
-				iterator.remove();
-				spielstand += gd.getValue();
-			}
-		}
-
 		// Spieler 2 trifft Geld
 		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
 			Geld gd = iterator.next();
@@ -446,7 +434,94 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
-         // Create Cherry (by killing X Monster)
+		// Spieler 2 trifft Kirsche -> Bonsmodus aktivieren
+		if (aktuelles_level.getMap().getKirsche().getVisible()) {
+			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp2.getPosition()))) {
+				aktuelles_level.getMap().hideKirsche();
+				spielstand += aktuelles_level.getMap().getKirsche().getValue();
+			}
+		}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+///Monster:
+		//Test
+		aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
+		aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
+		aktuelles_level.getMap().getMonster().get(2).addPosOff(0,1);
+
+		// Hobbin trifft Diamant
+		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext();){
+			Diamant d = iterator.next();
+			for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
+				Hobbin h = it.next();
+				if (Arrays.equals(d.getField(), getFieldOf(h.getPosition()))){
+					iterator.remove();
+				}
+			}
+		}
+
+		// Monster trifft Geld
+		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
+			Geld g = iterator.next();
+			for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
+				Monster h = it.next();
+				if (Arrays.equals(g.getField(), getFieldOf(h.getPosition()))) {
+					iterator.remove();
+				}
+			}
+		}
+
+		// Monster trifft Geldsack
+		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
+			Geldsack g = iterator.next();
+			for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
+				Monster mo = it.next();
+				int[] newField = g.getField();
+				int[] PGSize = aktuelles_level.getMap().getPGSize();
+				if (Arrays.equals(g.getField(), getFieldOf(mo.getPosition()))) {
+					if (mo.getMoveDir() == DIRECTION.RIGHT) {
+						if(newField[0] < PGSize[0])
+							g.addFieldPosOff(1, 0);
+					} else if (mo.getMoveDir() == DIRECTION.LEFT) {
+						if (1 < newField[0])
+							g.addFieldPosOff(-1, 0);
+					}
+				}
+			}
+		}
+
+		/*
+		// Nobbin trifft Nobbin && Hobbin setzen
+		int[] MSpoint = aktuelles_level.getMap().getSpawn_monster();
+		int Max_Monster = aktuelles_level.getMaxMonster();
+			for (Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
+				Nobbin n1 = iter.next();
+				for (Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
+					Nobbin n2 = it.next();
+					if (n1 != n2) {
+						if (monsters.size() <= Max_Monster && !Arrays.equals(n1.getPosition(), MSpoint)
+									&& !Arrays.equals(n2.getPosition(), MSpoint)) {
+							if (Arrays.equals(n1.getPosition(), n2.getPosition())) {
+								aktuelles_level.getMap().setzeHobbin(n1.getPosition());
+								iter.remove();
+							}
+						}
+					}
+				}
+			}
+		*/
+
+
+		/*
+		if(aktuelles_level.getMap().getMonster().size() == 0) {
+			// dann nächstes Level
+			aktuelles_level = createNextLevel();
+
+			// vervolständigen zB von Scores
+
+		}
+		*/
 
 		//Monster verfolgt Spieler
 		//for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
@@ -472,7 +547,8 @@ public class Spiel extends JPanel implements Runnable {
 		
 */
         
-            /*Monster m = aktuelles_level.getMap().getMonster().get(0);
+            /*
+            Monster m = aktuelles_level.getMap().getMonster().get(0);
 		    int[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
 			int[] monsternext = m_pos;
@@ -553,68 +629,11 @@ public class Spiel extends JPanel implements Runnable {
 		m.addPosOff(x_off, y_off);
 
 				*/
-		// Hobbin trifft Diamant
-		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext();){
-			Diamant d = iterator.next();
-			for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
-				Hobbin h = it.next();
-				if (Arrays.equals(d.getField(), getFieldOf(h.getPosition()))){
-					iterator.remove();
-				}
-			}
-		}
 
-		// Monster trifft Geld
-		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext();) {
-			Geld g = iterator.next();
-			for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
-				Monster h = it.next();
-				if (Arrays.equals(g.getField(), getFieldOf(h.getPosition()))) {
-					iterator.remove();
-				}
-			}
-		}
 
-		// Monster trifft Geldsack (legend oder fallend unterscheiden)
-		for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext();) {
-			Geldsack g = iterator.next();
-			for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
-				Monster mo = it.next();
-				int[] newField = g.getField();
-				int[] PGSize = aktuelles_level.getMap().getPGSize();
-				if (Arrays.equals(g.getField(), getFieldOf(mo.getPosition()))) {
-					if (mo.getMoveDir() == DIRECTION.RIGHT) {
-						if(newField[0] < PGSize[0])
-						g.addFieldPosOff(1, 0);
-					} else if (mo.getMoveDir() == DIRECTION.LEFT) {
-						if (1 < newField[0])
-						g.addFieldPosOff(-1, 0);
-					}
-				}
-			}
-		}
-
-		// Nobbin trifft Nobbin && Hobbin setzen
-		int[] MSpoint = aktuelles_level.getMap().getSpawn_monster();
-			for (Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
-				Nobbin n1 = iter.next();
-				for (Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
-					Nobbin n2 = it.next();
-					if (n1 != n2) {
-						if (monsters.size() <= 3 && !Arrays.equals(n1.getPosition(), MSpoint)
-									&& !Arrays.equals(n2.getPosition(), MSpoint)) {
-							if (Arrays.equals(n1.getPosition(), n2.getPosition())) {
-								aktuelles_level.getMap().setzeHobbin(n1.getPosition());
-								iter.remove();
-							}
-						}
-					}
-				}
-			}
-
-		// Hobbin trifft Nobbin
 		// Hobbin trifft Boden
-		/*for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
+		/*
+		for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
 				Hobbin h = it.next();
 
 		     int[] fph = getFieldOf(h.getPosition());
@@ -640,7 +659,6 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}}*/
 
-		// Nobbin trifft Boden
 		// Monster trifft Wand // Not yet done
 		for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
 			Monster h = it.next();
@@ -655,41 +673,8 @@ public class Spiel extends JPanel implements Runnable {
 				h.addPosOff(0, 1);
 			if(newField[1] >= pgSize[1])
 				h.addPosOff(0,-1);
-
 		}
-		// Hobbin trifft Hobbin
-		// Hobbin trifft Kirsche
-		/*Nobbin n = aktuelles_level.getMap().getHobbins().get(0);
-		  if (aktuelles_level.getMap().getKirsche().getVisible()) {
-			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(h.getPosition()))) {
-				aktuelles_level.getMap().hideKirsche();
-			}
-		} */
-
-		// Nobbin trifft Goldsack (liegend oder fallend unterscheiden)
-
-
-		// Spieler 1 trifft Kirsche -> Bonsmodus aktivieren
-		if (aktuelles_level.getMap().getKirsche().getVisible()) {
-			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
-				aktuelles_level.getMap().hideKirsche();
-				spielstand += aktuelles_level.getMap().getKirsche().getValue();
-			}
-		}
-		// Spieler 1 trifft Kirsche -> Bonsmodus aktivieren
-		if (aktuelles_level.getMap().getKirsche().getVisible()) {
-			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp2.getPosition()))) {
-				aktuelles_level.getMap().hideKirsche();
-				spielstand += aktuelles_level.getMap().getKirsche().getValue();
-			}
-		}
-
-
-		//test
-		aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
-		aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
-		aktuelles_level.getMap().getMonster().get(2).addPosOff(0,1);
-
+/*--------------------------------------------------------------------------------------------------------------------*/
 
 		// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
 		/// in jedem Fall wir true zurückgegeben. Andernfalls beendet sich die loop() und das spiel gilt als beendet. Darauf folgt dann die eintragung der ergebnisse ect.
@@ -757,7 +742,7 @@ public class Spiel extends JPanel implements Runnable {
 	}
 
 	public void spawnFeuerball(DIRECTION dir, int[] pos) {
-		feuerball_sp1 = new Feuerball(pos, dir);
+		feuerball_sp1 = new Feuerball(pos, dir, current_skin);
 	}
 
 	public Feuerball getFeuerball_sp1(){ return feuerball_sp1; }
