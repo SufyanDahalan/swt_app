@@ -4,7 +4,6 @@ import Spielverlauf.Skin;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 
 import static java.awt.Toolkit.getDefaultToolkit;
@@ -24,7 +23,7 @@ public class button extends JButton {
                 setForeground(Color.WHITE);
                 setFocusable(false);
         current_skin = new Skin(new File(skinfolder_name), skinName);
-        setFont(current_skin.getFont().deriveFont(Font.PLAIN, 30));
+        setFont(current_skin.getFont().deriveFont(Font.PLAIN, 22));
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
         setPreferredSize(new Dimension(Width/8,Height/13));
