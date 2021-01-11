@@ -36,13 +36,11 @@ public class MainFrame extends JFrame {
                 FullScreen();
             }
         });
-        MainPanel Panel = new MainPanel();
+        MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
+        
 
-        LevelEditor editor = new LevelEditor();
-        getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
 
-        prepareMap();
 
         // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));
         setUndecorated(true);

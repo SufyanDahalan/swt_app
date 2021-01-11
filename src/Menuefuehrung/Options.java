@@ -6,7 +6,7 @@ import java.awt.*;
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Options extends JPanel{
-    Options(){
+    Options(MainFrame babaFrame){
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
@@ -51,10 +51,8 @@ public class Options extends JPanel{
             CardLayout layout = (CardLayout) frame.getLayout();
 
             b4.addActionListener(e -> {
+                
                 layout.show(frame, "singleplayer");//Singleplayer mode
-            });
-            b5.addActionListener(e -> {
-                layout.show(frame, "multiplayer");
             });
             b6.addActionListener(e -> {
 
@@ -86,10 +84,10 @@ public class Options extends JPanel{
 
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
-            b6.addActionListener(e->{
+            // b6.addActionListener(e->{
 
-                layout.show(frame, "editor");
-            });
+            //     layout.show(frame, "editor");
+            // });
 
             //add(b1);
             //add(b2);
@@ -105,5 +103,28 @@ public class Options extends JPanel{
         b8.addActionListener((event) -> {});
 
         b3.addActionListener(e -> System.exit(0));
+        speilButton(b5, babaFrame);
+        editorButton(b6, babaFrame);
         }
+
+        public void speilButton(button b, MainFrame babaFrame){
+            b.addActionListener(e -> {
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+            babaFrame.prepareMap();
+            
+            layout.show(babaFrame.getContentPane(), "multiplayer");
+        });}
+
+        public void editorButton(button b, MainFrame babaFrame){
+
+            LevelEditor editor = new LevelEditor();
+            babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+            
+            layout.show(babaFrame.getContentPane(), "editor");
+
+        }
+
+
+
     }
