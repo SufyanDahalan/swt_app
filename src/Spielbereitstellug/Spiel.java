@@ -356,6 +356,18 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
+		//Entferne Geld nach x Sek
+
+		for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext(); ) {
+			Geld g = iterator.next();
+
+			if(g.outOfTime())
+				iterator.remove();
+			else
+				g.decRemainingTime(DELAY_PERIOD);
+		}
+
+
 		//Feuerball trifft Monster
 		for (Iterator<Feuerball> iterator=feuerballs.iterator();iterator.hasNext();){
 			Feuerball fb = iterator.next();
