@@ -208,6 +208,7 @@ public class Spiel extends JPanel implements Runnable {
 		ArrayList<Geldsack> geldsacke = aktuelles_level.getMap().getGeldsaecke();
 		ArrayList<Geld> gelds = aktuelles_level.getMap().getGeld();
 		ArrayList<Tunnel> tunnels = aktuelles_level.getMap().getTunnel();
+		ArrayList<Feuerball> feuerballs = aktuelles_level.getMap().getFeuerball();
 
 		/// Prüfroutinen
 
@@ -349,12 +350,45 @@ public class Spiel extends JPanel implements Runnable {
 			}
 		}
 
+		//Feuerball trifft Monster
+		for (Iterator<Feuerball> iterator=feuerballs.iterator();iterator.hasNext();){
+			Feuerball fb = iterator.next();
+			for (Iterator<Monster> iter=monsters.iterator();iter.hasNext();){
+				Monster m = iter.next();
+						if (Arrays.equals(fb.getPosition(),m.getPosition())){
+							iterator.remove();
+							iter.remove();
+						}
+
+					}
+			}
+
+		//Feuerball trifft Geldsack
+		for (Iterator<Feuerball> iterator=feuerballs.iterator();iterator.hasNext();){
+			Feuerball fb = iterator.next();
+			for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
+				Geldsack gs = it.next();
+				if (Arrays.equals(getFieldOf(fb.getPosition()),gs.getField())){
+				iterator.remove();
+				}
+			}
+		}
+
+		//Feuerball trifft Wand
+		//Feuerball trifft Boden
+
 		///Bonsmodus aktivieren:
 		// Spieler 1 trifft Kirsche ->
-		if (aktuelles_level.getMap().getKirsche().getVisible()) {
-			if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
-				aktuelles_level.getMap().hideKirsche();
-				spielstand += aktuelles_level.getMap().getKirsche().getValue();
+		for (Iterator<Monster> iterator=monsters.iterator();iterator.hasNext();) {
+			Monster m = iterator.next();
+			if (aktuelles_level.getMap().getKirsche().getVisible()) {
+				if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp1.getPosition()))) {
+					aktuelles_level.getMap().hideKirsche();
+					spielstand += aktuelles_level.getMap().getKirsche().getValue();
+					if (Arrays.equals(sp1.getPosition(), m.getPosition())){
+						iterator.remove();
+					}
+				}
 			}
 		}
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -526,7 +560,7 @@ public class Spiel extends JPanel implements Runnable {
 		//Monster verfolgt Spieler
 		//for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 		//	Monster m =iterator.next();
-		/*	Monster m = aktuelles_level.getMap().getMonster().get(0);
+	/*		Monster m = aktuelles_level.getMap().getMonster().get(0);
 			int[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
 			int x_off = 0;
@@ -542,10 +576,9 @@ public class Spiel extends JPanel implements Runnable {
 			else
 				y_off = 1;
 
-			m.addPosOff(x_off, y_off);
+			m.addPosOff(x_off, y_off);  */
 		//}
-		
-*/
+
         
             /*
             Monster m = aktuelles_level.getMap().getMonster().get(0);
