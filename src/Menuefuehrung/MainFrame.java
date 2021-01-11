@@ -53,11 +53,13 @@ public class MainFrame extends JFrame {
         setResizable(false);
 
         setVisible(true);
+        /*
         try {
             Music();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
             e1.printStackTrace();
         }
+        */
     }
 
 
