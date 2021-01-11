@@ -12,5 +12,7 @@ public class MainPanel extends JPanel {
             add(scoreboard);
             add(options);
 
+
+
     }
 }

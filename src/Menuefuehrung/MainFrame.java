@@ -3,13 +3,15 @@ package Menuefuehrung;
 import Spielbereitstellug.Lokalsteuerung;
 import Spielbereitstellug.Spiel;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.sound.sampled.*;
-import java.io.*;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.IOException;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
@@ -21,8 +23,9 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-
+        
         SwingUtilities.invokeLater(MainFrame::new);
+
 
     }
 
@@ -36,32 +39,27 @@ public class MainFrame extends JFrame {
                 FullScreen();
             }
         });
+
         MainPanel Panel = new MainPanel();
         getContentPane().add(Panel, "panel");
+
 
         LevelEditor editor = new LevelEditor();
         getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
 
         prepareMap();
 
-        // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/Images/Logo.png")));
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
-
         setVisible(true);
-        try {
-            Music();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
-            e1.printStackTrace();
-        }
     }
 
 
-    public void Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public Clip Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         AudioInputStream as1 = AudioSystem.getAudioInputStream(new BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
                AudioFormat af = as1.getFormat();
                Clip clip1 = AudioSystem.getClip();
@@ -72,7 +70,9 @@ public class MainFrame extends JFrame {
                 clip1.loop(Clip.LOOP_CONTINUOUSLY);
                 clip1.start();
                }
+        return clip1;
     }
+
 
     private void FullScreen(){
         if (fullscreen) {
@@ -85,8 +85,11 @@ public class MainFrame extends JFrame {
             device.setFullScreenWindow(this);
             fullscreen = true;
             setVisible(true);
+
         }
     }
+
+    private void Mute() {}
 
 
     public void prepareMap(){//copied from Test.java, should be adjusted later
@@ -143,4 +146,9 @@ public class MainFrame extends JFrame {
         getContentPane().add(spiel, "multiplayer");
     }
 
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }

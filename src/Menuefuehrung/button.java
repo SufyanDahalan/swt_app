@@ -26,8 +26,9 @@ public class button extends JButton {
         setFont(current_skin.getFont().deriveFont(Font.PLAIN, 22));
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
-        setPreferredSize(new Dimension(Width/8,Height/13));
+        setPreferredSize(new Dimension(Width/7,Height/13));
             }
+
 
 
     }

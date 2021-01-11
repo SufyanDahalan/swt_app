@@ -1069,6 +1069,7 @@ public class Spiel extends JPanel implements Runnable {
 				Animation ani_up = current_skin.getAnimation("digger_gre_up");
 				Animation ani_down = current_skin.getAnimation("digger_gre_down");
 
+
 				BufferedImage spImg = null;
 
 				if (sp2.getMoveDir() == DIRECTION.RIGHT) {
