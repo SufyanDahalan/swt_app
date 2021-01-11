@@ -318,24 +318,35 @@ public class Spiel extends Render implements Runnable {
 						Geldsack gs = it.next();
 						if (Arrays.equals(getFieldOf(fb.getPosition()), gs.getField())) {
 							iterator.remove();
+							break;
 						}
 					}
 
-					if (fb.getMovDir()==DIRECTION.UP){
-						fb.addPosOff(0,-2);
+					if (fb.getMovDir() == DIRECTION.UP) {
+						fb.addPosOff(0, -2);
 					}
-					if (fb.getMovDir()==DIRECTION.DOWN){
-						fb.addPosOff(0,2);
+					if (fb.getMovDir() == DIRECTION.DOWN) {
+						fb.addPosOff(0, 2);
 					}
-					if (fb.getMovDir()==DIRECTION.RIGHT){
-						fb.addPosOff(2,0);
+					if (fb.getMovDir() == DIRECTION.RIGHT) {
+						fb.addPosOff(2, 0);
 					}
-					if (fb.getMovDir()==DIRECTION.LEFT){
-						fb.addPosOff(-2,0);
+					if (fb.getMovDir() == DIRECTION.LEFT) {
+						fb.addPosOff(-2, 0);
+					}
+					//Feuerball trifft Wand
+					int[] FBp = getFieldOf(fb.getPosition());
+					int[] PGsize = aktuelles_level.getMap().getPGSize();
+					if (FBp[0] > PGsize[0] || 1 > FBp[0] || FBp[1] > PGsize[1] || 1 > FBp[1]) {
+						iterator.remove();
+					}
+					//Feuerball trifft Boden
+					ArrayList<Tunnel> tunneltreffer= aktuelles_level.getMap().getTunnel(fpSp);
+					if (tunneltreffer.size()==0){
+						iterator.remove();
 					}
 				}
-				//Feuerball trifft Wand
-				//Feuerball trifft Boden
+
 
 				///Bonsmodus aktivieren:
 				// Spieler 1 trifft Kirsche ->
