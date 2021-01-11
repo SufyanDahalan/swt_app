@@ -65,4 +65,8 @@ public class Geldsack{
 	public void resetFallHeight() {
 		fallHeight = 0;
 	}
+
+	public BufferedImage getImage() {
+		return bild;
+	}
 }

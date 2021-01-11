@@ -27,4 +27,8 @@ public class Feuerball {
 		position[0]+=x;
 		position[1]+=y;
 	}
+
+	public BufferedImage getImage(){
+		return bild;
+	}
 }
