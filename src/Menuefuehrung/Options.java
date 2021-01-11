@@ -1,18 +1,41 @@
 package Menuefuehrung;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
-public class Options extends JPanel{
-    Options(){
+public class Options extends JPanel implements ActionListener {
+    /*final*/ MediaPlayer clip;
+    boolean music = true;
+    Options() {
+        com.sun.javafx.application.PlatformImpl.startup(()->{});
+        try {
+            clip = Music();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
+            e1.printStackTrace();
+        }
+
+
+
+//        clip.stop();
+
+        ImageIcon icon = new ImageIcon("bin/Icon/VolumeIcon.png");
+
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
-        setPreferredSize(new Dimension(Width/3, (Height/4)*3));
+        setPreferredSize(new Dimension(Width / 3, (Height / 4) * 3));
 
         setOpaque(false);
         button b1 = new button("Start", 20);
@@ -20,16 +43,30 @@ public class Options extends JPanel{
         button b3 = new button("Quit", 20);
         button b4 = new button("Singleplayer", 17);
         button b5 = new button("Multiplayer", 17);
-        button b6 = new button("Level Editor", 17);
-        button b7 = new button("Sound", 17);
-        button b8 = new button("Graphic", 17);
+        button b6 = new button("Map Editor", 17);
+        button b7 = new button("About", 17);
+        button b9 = new button("", 20);
+        b9.setIcon(icon);
+
         add(b1);
+        add(b6);
         add(b2);
+        add(b7);
         add(b3);
+        add(b9);
+
+        b9.addActionListener(this);
+
+
         b1.addActionListener((event) -> {
             b1.setEnabled(false);
+            remove(b9);
+            remove(b6);
+            remove(b7);
+
             JPanel sigleplayer = new JPanel();
             sigleplayer.setBackground(Color.black);
+            b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
             b4.setForeground(Color.orange);
 
             JPanel multiplayer = new JPanel();
@@ -38,32 +75,38 @@ public class Options extends JPanel{
 
             JPanel levereditor = new JPanel();
             levereditor.setBackground(Color.black);
-            b6.setForeground(Color.orange);
+
 
             Box box1 = Box.createVerticalBox();
             sigleplayer.add(b4);
             multiplayer.add(b5);
-            levereditor.add(b6);
             box1.add(sigleplayer);
             box1.add(multiplayer);
             box1.add(levereditor);
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
 
+
             b4.addActionListener(e -> {
                 layout.show(frame, "singleplayer");//Singleplayer mode
             });
+            b4.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
             b5.addActionListener(e -> {
                 layout.show(frame, "multiplayer");
             });
+            b5.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
             b6.addActionListener(e -> {
 
                 layout.show(frame, "editor");
             });
+            b6.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
 
             add(box1);
+            add(b6);
             add(b2);
+            add(b7);
             add(b3);
+            add(b9);
 
             frame.repaint();
             frame.revalidate();
@@ -71,39 +114,70 @@ public class Options extends JPanel{
 
         b2.addActionListener((event) -> {
             b2.setEnabled(false);
-            JPanel sound = new JPanel();
-            sound.setBackground(Color.black);
-            b7.setForeground(Color.orange);
 
-            JPanel music = new JPanel();
-            music.setBackground(Color.black);
-            b8.setForeground(Color.orange);
-            Box box = Box.createVerticalBox();
-            sound.add(b7);
-            music.add(b8);
-            box.add(sound);
-            box.add(music);
 
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
-            b6.addActionListener(e->{
+            b6.addActionListener(e -> {
 
                 layout.show(frame, "editor");
             });
 
-            //add(b1);
-            //add(b2);
-            add(box);
             add(b3);
+            add(b9);
 
             frame.repaint();
             frame.revalidate();
 
         });
+        b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b2.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b7.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
 
-        b7.addActionListener((event) -> {});
-        b8.addActionListener((event) -> {});
 
         b3.addActionListener(e -> System.exit(0));
-        }
+        b3.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+
+
+
+
     }
+    public void playSound(String soundName)
+    {
+        try
+        {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip( );
+            clip.open(audioInputStream);
+            clip.start( );
+        }
+        catch(Exception ex)
+        {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace( );
+        }
+
+
+    }
+    public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        String bip = "bin/music/Popcorn01.wav";
+        Media hit = new Media(new File(bip).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(hit);
+        mediaPlayer.setCycleCount(50000000);
+        mediaPlayer.play();
+        return mediaPlayer;
+    }
+
+
+    public void actionPerformed(ActionEvent e) {
+        if(music && clip != null) {
+                clip.stop();
+                music = false;
+            }
+        else if(!music && clip != null) {
+                clip.play();
+                music = true;
+            }
+
+    }
+}
