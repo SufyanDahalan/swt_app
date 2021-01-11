@@ -61,13 +61,6 @@ public class Spiel extends JPanel implements Runnable {
 	private int way = 5;
 	private boolean down = true;
 
-    int[] PixelToInt(int[] pixelPos) {
-        int[]fp = new int[2];
-        int[] borderOffset = getBorderOffset();
-        fp[0] = ((pixelPos[0]-(field_size/2)-borderOffset[0])/field_size)+1;
-        fp[1] = ((pixelPos[1]-(field_size/2)-borderOffset[1])/field_size)+1;
-        return fp;
-    }
 	public Spiel(int[] panel_size, boolean isHost, boolean isMultiplayer) {
 
     	// initalisiere game setup
@@ -514,30 +507,26 @@ public class Spiel extends JPanel implements Runnable {
 					Monster m = iterator.next();
 
 					int[] m_pos = m.getPosition();
-					int[] s_pos = sp.getPosition();
+					int[] s_pos = sp1.getPosition();
 					int x_off = 0;
 					int y_off = 0;
 
 					if (m_pos[0] > s_pos[0])
 						x_off = -1;
-						// m.addPosOff(-1,0);
 					else
-						// m.addPosOff(1,0);
 						x_off = 1;
 
 					if (m_pos[1] > s_pos[1])
-						// m.addPosOff(0,-1);
 						y_off = -1;
 					else
-						// m.addPosOff(0,1);
 						y_off = 1;
 
 
-					if (!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
 						m.addPosOff(x_off, y_off);
-					else if (!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty())
+					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty())
 						m.addPosOff(0, y_off);
-					else if (!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty())
+					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty())
 						m.addPosOff(x_off, 0);
 
 				}
