@@ -52,10 +52,6 @@ public class Spiel extends JPanel implements Runnable {
 	private Spieler sp1;
 	private Spieler sp2;
 
-	// Feurball
-
-	private Feuerball feuerball_sp1;
-
 	// Testing
 
 	private int way = 5;
@@ -106,10 +102,6 @@ public class Spiel extends JPanel implements Runnable {
 
 		sp1 = null;
 		sp2 = null;
-
-
-		feuerball_sp1 = null;
-
 
 		aktuelles_level = createNextLevel();
 
@@ -307,7 +299,6 @@ public class Spiel extends JPanel implements Runnable {
 				// Spieler 1 trifft Geld
 				for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext(); ) {
 					Geld gd = iterator.next();
-
 					if (Arrays.equals(gd.getField(), getFieldOf(sp.getPosition()))) {
 
 						iterator.remove();
@@ -398,24 +389,34 @@ public class Spiel extends JPanel implements Runnable {
 					Feuerball fb = iterator.next();
 					for (Iterator<Monster> iter = monsters.iterator(); iter.hasNext(); ) {
 						Monster m = iter.next();
-						if (Arrays.equals(fb.getPosition(), m.getPosition())) {
+						if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(m.getPosition()))) {
 							iterator.remove();
 							iter.remove();
+							break;
 						}
 					}
-				}
 
-				//Feuerball trifft Geldsack
-				for (Iterator<Feuerball> iterator = feuerballs.iterator(); iterator.hasNext(); ) {
-					Feuerball fb = iterator.next();
+					//Feuerball trifft Geldsack
 					for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
 						Geldsack gs = it.next();
 						if (Arrays.equals(getFieldOf(fb.getPosition()), gs.getField())) {
 							iterator.remove();
 						}
 					}
-				}
 
+					if (fb.getMovDir()==DIRECTION.UP){
+						fb.addPosOff(0,-1);
+					}
+					if (fb.getMovDir()==DIRECTION.DOWN){
+						fb.addPosOff(0,1);
+					}
+					if (fb.getMovDir()==DIRECTION.RIGHT){
+						fb.addPosOff(1,0);
+					}
+					if (fb.getMovDir()==DIRECTION.LEFT){
+						fb.addPosOff(-1,0);
+					}
+				}
 				//Feuerball trifft Wand
 				//Feuerball trifft Boden
 
@@ -477,7 +478,7 @@ public class Spiel extends JPanel implements Runnable {
 					}
 				}
 
-				/*
+/*
 				// Nobbin trifft Nobbin && Hobbin setzen
 				int[] MSpoint = aktuelles_level.getMap().getSpawn_monster();
 				int Max_Monster = aktuelles_level.getMaxMonster();
@@ -496,7 +497,7 @@ public class Spiel extends JPanel implements Runnable {
 							}
 						}
 					}
-				*/
+*/
 
 
 				/*
@@ -746,10 +747,9 @@ public class Spiel extends JPanel implements Runnable {
 	}
 
 	public void spawnFeuerball(DIRECTION dir, int[] pos) {
-		feuerball_sp1 = new Feuerball(pos, dir, current_skin);
+		aktuelles_level.getMap().addFeuerball(new Feuerball(pos, dir, current_skin));
 	}
 
-	public Feuerball getFeuerball_sp1(){ return feuerball_sp1; }
 
 	// creates next Level, increases speed and decrease regtime
 
