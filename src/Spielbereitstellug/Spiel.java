@@ -359,7 +359,6 @@ public class Spiel extends JPanel implements Runnable {
 							iterator.remove();
 							iter.remove();
 						}
-
 					}
 			}
 
