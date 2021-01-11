@@ -56,7 +56,13 @@ public class Spiel extends JPanel implements Runnable {
 	private int way = 5;
 	private boolean down = true;
 
-
+    int[] PixelToInt(int[] pixelPos) {
+        int[]fp = new int[2];
+        int[] borderOffset = getBorderOffset();
+        fp[0] = ((pixelPos[0]-(field_size/2)-borderOffset[0])/field_size)+1;
+        fp[1] = ((pixelPos[1]-(field_size/2)-borderOffset[1])/field_size)+1;
+        return fp;
+    }
 	public Spiel(int[] panel_size) {
 
 		// initialisiere Skin
@@ -479,9 +485,9 @@ public class Spiel extends JPanel implements Runnable {
 
 ///Monster:
 		//Test
-		aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
-		aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
-		aktuelles_level.getMap().getMonster().get(2).addPosOff(0,1);
+		// aktuelles_level.getMap().getMonster().get(0).addPosOff(-1,0);
+		// aktuelles_level.getMap().getMonster().get(1).addPosOff(0,1);
+		// aktuelles_level.getMap().getMonster().get(2).addPosOff(0,1);
 
 		// Hobbin trifft Diamant
 		for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext();){
@@ -556,10 +562,10 @@ public class Spiel extends JPanel implements Runnable {
 		}
 		*/
 
-		//Monster verfolgt Spieler
-		//for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
-		//	Monster m =iterator.next();
-	/*		Monster m = aktuelles_level.getMap().getMonster().get(0);
+		// Monster verfolgt Spieler
+		// for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
+			// Monster m =iterator.next();
+			Monster m = aktuelles_level.getMap().getMonster().get(0);
 			int[] m_pos = m.getPosition();
 			int[] s_pos = sp1.getPosition();
 			int x_off = 0;
@@ -567,16 +573,27 @@ public class Spiel extends JPanel implements Runnable {
 
 			if (m_pos[0] > s_pos[0])
 				x_off = -1;
+				// m.addPosOff(-1,0); 
 			else
+			// m.addPosOff(1,0); 
 				x_off = 1;
 
 			if (m_pos[1] > s_pos[1])
+			// m.addPosOff(0,-1); 
 				y_off = -1;
 			else
-				y_off = 1;
+			// m.addPosOff(0,1); 
+			y_off = 1;
 
-			m.addPosOff(x_off, y_off);  */
-		//}
+			
+				if(!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{x_off+m_pos[0], y_off+m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
+				m.addPosOff(x_off, y_off); 
+				else if(!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{m_pos[0], y_off+m_pos[1]})).isEmpty())
+				m.addPosOff(0, y_off); 
+				else if(!aktuelles_level.getMap().getTunnel(PixelToInt(new int[]{x_off+m_pos[0],m_pos[1]})).isEmpty())
+				m.addPosOff(x_off,0); 
+
+		// }
 
         
             /*
@@ -692,20 +709,20 @@ public class Spiel extends JPanel implements Runnable {
 		}}*/
 
 		// Monster trifft Wand // Not yet done
-		for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
-			Monster h = it.next();
-			int[] m_pos1 = h.getPosition();
-			int[] newField = getFieldOf(m_pos1);
-			int[] pgSize = aktuelles_level.getMap().getPGSize();
-			if( newField[0] <= 0)
-				h.addPosOff(1,0);
-			if(newField[0] >= pgSize[0] )
-				h.addPosOff(-1,0);
-			if( newField[1] <= 0 )
-				h.addPosOff(0, 1);
-			if(newField[1] >= pgSize[1])
-				h.addPosOff(0,-1);
-		}
+		// for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
+		// 	Monster h = it.next();
+		// 	int[] m_pos1 = h.getPosition();
+		// 	int[] newField = getFieldOf(m_pos1);
+		// 	int[] pgSize = aktuelles_level.getMap().getPGSize();
+		// 	if( newField[0] <= 0)
+		// 		h.addPosOff(1,0);
+		// 	if(newField[0] >= pgSize[0] )
+		// 		h.addPosOff(-1,0);
+		// 	if( newField[1] <= 0 )
+		// 		h.addPosOff(0, 1);
+		// 	if(newField[1] >= pgSize[1])
+		// 		h.addPosOff(0,-1);
+		// }
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 		// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
