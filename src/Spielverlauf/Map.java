@@ -326,4 +326,13 @@ public class Map {
 
 		return ia;
 	}
+
+	public JSONObject exportAsJSON(){
+
+		JSONObject obj = new JSONObject();
+
+
+
+		return obj;
+	}
 }
