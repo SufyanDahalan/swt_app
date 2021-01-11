@@ -38,7 +38,7 @@ public class Spiel extends Render implements Runnable {
 
 	// temp. Att.
 
-	private int spielstand;
+	//private int spielstand;
 
 	public Spiel(int[] panel_size, boolean isHost, boolean isMultiplayer) {
 
@@ -90,7 +90,7 @@ public class Spiel extends Render implements Runnable {
 
 		// TESTING
 
-
+/*
 		// setze Monster ein
 		ArrayList<Monster> monster = aktuelles_level.getMap().getMonster();
 
@@ -110,8 +110,7 @@ public class Spiel extends Render implements Runnable {
 		// Ausgaben, Infos
 		System.out.println("Anzahl Nobbins: " + aktuelles_level.getMap().getNobbins().size());
 		System.out.println("Anzahl Hobbins: " + aktuelles_level.getMap().getHobbins().size());
-
-	}
+*/	}
 
 	/**
 	 *	Spiellogik, die Positionen prüft und Ereignisse aufruft.
@@ -163,7 +162,7 @@ public class Spiel extends Render implements Runnable {
 				}
 
 
-				// Spieler trifft Diamant
+				// Spieler triffen Diamant
 				for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
 					Diamant single_item = iterator.next();
 					if (Arrays.equals(single_item.getField(), getFieldOf(sp.getPosition()))) {
@@ -172,7 +171,7 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
-				// Spieler trifft Monster
+				// Monster triffen Spieler
 		/*
 				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 					Monster m = iterator.next();
@@ -184,7 +183,7 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 		*/
-				// Spieler trifft Boden
+				// Spieler triffen Boden
 				int[] fpSp = getFieldOf(sp.getPosition());
 				DIRECTION dirSp = sp.getMoveDir();
 
@@ -213,7 +212,7 @@ public class Spiel extends Render implements Runnable {
 				}
 
 
-				// Spieler 1 trifft Geld
+				// Spieler triffen Geld
 				for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext(); ) {
 					Geld gd = iterator.next();
 					if (Arrays.equals(gd.getField(), getFieldOf(sp.getPosition()))) {
@@ -223,7 +222,7 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
-				/*--------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------*/
 
 				///Geldsack:
 
@@ -307,6 +306,7 @@ public class Spiel extends Render implements Runnable {
 					for (Iterator<Monster> iter = monsters.iterator(); iter.hasNext(); ) {
 						Monster m = iter.next();
 						if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(m.getPosition()))) {
+							spielstand += m.getWertung();
 							iterator.remove();
 							iter.remove();
 							break;
@@ -322,16 +322,16 @@ public class Spiel extends Render implements Runnable {
 					}
 
 					if (fb.getMovDir()==DIRECTION.UP){
-						fb.addPosOff(0,-1);
+						fb.addPosOff(0,-2);
 					}
 					if (fb.getMovDir()==DIRECTION.DOWN){
-						fb.addPosOff(0,1);
+						fb.addPosOff(0,2);
 					}
 					if (fb.getMovDir()==DIRECTION.RIGHT){
-						fb.addPosOff(1,0);
+						fb.addPosOff(2,0);
 					}
 					if (fb.getMovDir()==DIRECTION.LEFT){
-						fb.addPosOff(-1,0);
+						fb.addPosOff(-2,0);
 					}
 				}
 				//Feuerball trifft Wand
@@ -352,7 +352,15 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
+/*--------------------------------------------------------------------------------------------------------------------*/
 				///Monster:
+				int[] MSpoint = aktuelles_level.getMap().getSpawn_monster();
+				int Max_Monster = aktuelles_level.getMaxMonster();
+
+				//Monster Anzahl aktualisieren
+				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster) {
+					monsters.add(new Nobbin(getCenterOf(MSpoint), current_skin));
+				}
 
 				// Hobbin trifft Diamant
 				for (Iterator<Diamant> iterator = diamants.iterator(); iterator.hasNext(); ) {
@@ -361,78 +369,69 @@ public class Spiel extends Render implements Runnable {
 						Hobbin h = it.next();
 						if (Arrays.equals(d.getField(), getFieldOf(h.getPosition()))) {
 							iterator.remove();
+							break;
 						}
 					}
 				}
 
 				// Monster trifft Geld
-				for (Iterator<Geld> iterator = gelds.iterator(); iterator.hasNext(); ) {
-					Geld g = iterator.next();
-					for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
-						Monster h = it.next();
-						if (Arrays.equals(g.getField(), getFieldOf(h.getPosition()))) {
-							iterator.remove();
+				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
+					Monster m = m_iter.next();
+					for (Iterator<Geld> g_iter = gelds.iterator(); g_iter.hasNext(); ) {
+						Geld g = g_iter.next();
+						if (Arrays.equals(g.getField(), getFieldOf(m.getPosition()))) {
+							g_iter.remove();
 						}
 					}
-				}
-
-				// Monster trifft Geldsack
-				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
-					Geldsack g = iterator.next();
-					for (Iterator<Monster> it = monsters.iterator(); it.hasNext(); ) {
-						Monster mo = it.next();
-						int[] newField = g.getField();
-						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						if (Arrays.equals(g.getField(), getFieldOf(mo.getPosition()))) {
-							if (mo.getMoveDir() == DIRECTION.RIGHT) {
-								if (newField[0] < PGSize[0])
-									g.addFieldPosOff(1, 0);
-							} else if (mo.getMoveDir() == DIRECTION.LEFT) {
-								if (1 < newField[0])
-									g.addFieldPosOff(-1, 0);
-							}
-						}
-					}
-				}
-
-/*
-				// Nobbin trifft Nobbin && Hobbin setzen
-				int[] MSpoint = aktuelles_level.getMap().getSpawn_monster();
-				int Max_Monster = aktuelles_level.getMaxMonster();
-					for (Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
-						Nobbin n1 = iter.next();
-						for (Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
-							Nobbin n2 = it.next();
-							if (n1 != n2) {
-								if (monsters.size() <= Max_Monster && !Arrays.equals(n1.getPosition(), MSpoint)
-											&& !Arrays.equals(n2.getPosition(), MSpoint)) {
-									if (Arrays.equals(n1.getPosition(), n2.getPosition())) {
-										aktuelles_level.getMap().setzeHobbin(n1.getPosition());
-										iter.remove();
-									}
+					// Monster trifft Geldsack
+					for (Iterator<Geldsack> gs_iter = geldsacke.iterator(); gs_iter.hasNext(); ) {
+						Geldsack g = gs_iter.next();
+							int[] newField = g.getField();
+							int[] PGSize = aktuelles_level.getMap().getPGSize();
+							if (Arrays.equals(g.getField(), getFieldOf(m.getPosition()))) {
+								if (m.getMoveDir() == DIRECTION.RIGHT) {
+									if (newField[0] < PGSize[0])
+										g.addFieldPosOff(1, 0);
+								} else if (m.getMoveDir() == DIRECTION.LEFT) {
+									if (1 < newField[0])
+										g.addFieldPosOff(-1, 0);
 								}
 							}
 						}
 					}
-*/
 
-
-				/*
-				if(aktuelles_level.getMap().getMonster().size() == 0) {
-					// dann nächstes Level
-					aktuelles_level = createNextLevel();
-
-					// vervolständigen zB von Scores
-
+				// Nobbin trifft Nobbin && Hobbin setzen
+				Monster m1=null;
+				Monster m2=null;
+				for(Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
+					Nobbin n1 = iter.next();
+					for(Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
+						Nobbin n2 = it.next();
+						if (n1 != n2) {
+							if (monsters.size() <= Max_Monster && !Arrays.equals(getFieldOf(n1.getPosition()), MSpoint)
+										&& !Arrays.equals(getFieldOf(n2.getPosition()), MSpoint)) {
+								if (Arrays.equals(getFieldOf(n1.getPosition()), getFieldOf(n2.getPosition()))) {
+									aktuelles_level.getMap().setzeHobbin(getCenterOf(getFieldOf(n1.getPosition())));
+									aktuelles_level.getMap().setzeHobbin(getCenterOf(getFieldOf(n2.getPosition())));
+									m1=n1;
+									m2=n2;
+								}
+							}
+						}
+					}
 				}
-				*/
+				if (m1!=null || m2!=null){
+					monsters.remove(m1);
+					monsters.remove(m2);
+				}
+
 
 				// Monster verfolgt Spieler
 				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 					Monster m = iterator.next();
 
 					int[] m_pos = m.getPosition();
-					int[] s_pos = sp.getPosition();
+					int[] s_pos = sp1.getPosition();
 					int x_off = 0;
 					int y_off = 0;
 
@@ -669,7 +668,7 @@ public class Spiel extends Render implements Runnable {
 		else{
 			new_s = 0;
 			new_r = 0;
-			new_mm = 4;
+			new_mm = 3;
 		}
 
 		return new Level(new_s, new_r, new_mm, nextMap);
