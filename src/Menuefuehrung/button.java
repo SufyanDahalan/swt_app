@@ -22,13 +22,12 @@ public class button extends JButton {
                 setBorderPainted(false);
                 setForeground(Color.green);
                 setFocusable(false);
-        current_skin = new Skin(new File(skinfolder_name), skinName);
-        setFont(current_skin.getFont().deriveFont(Font.PLAIN, 22));
-        Dimension screenSize = getDefaultToolkit().getScreenSize();
-        int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
-        setPreferredSize(new Dimension(Width/7,Height/13));
+                current_skin = new Skin(new File(skinfolder_name), skinName);
+                setFont(current_skin.getFont().deriveFont(Font.PLAIN, 22));
+                Dimension screenSize = getDefaultToolkit().getScreenSize();
+                int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
+                setPreferredSize(new Dimension(Width/7,Height/13));
             }
-
 
 
     }

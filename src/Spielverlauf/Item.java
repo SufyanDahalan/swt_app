@@ -28,4 +28,7 @@ public abstract class Item {
 
 	public abstract int getValue();
 
+	public BufferedImage getImage() {
+		return bild;
+	}
 }

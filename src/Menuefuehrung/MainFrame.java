@@ -3,12 +3,11 @@ package Menuefuehrung;
 import Spielbereitstellug.Lokalsteuerung;
 import Spielbereitstellug.Spiel;
 
-import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedInputStream;
-import java.io.IOException;
+import javax.sound.sampled.*;
+import java.io.*;
 
 public class MainFrame extends JFrame {
 
@@ -39,15 +38,18 @@ public class MainFrame extends JFrame {
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
+        
 
 
 
+        // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/images/Logo.png")));
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
+
         setVisible(true);
         /*
         try {
@@ -59,18 +61,18 @@ public class MainFrame extends JFrame {
     }
 
 
-    public void Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        AudioInputStream as1 = AudioSystem.getAudioInputStream(new BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
-               AudioFormat af = as1.getFormat();
-               Clip clip1 = AudioSystem.getClip();
-               DataLine.Info info = new DataLine.Info(Clip.class, af);
-               Line line1 = AudioSystem.getLine(info);
-               if (!line1.isOpen()){
-                clip1.open(as1);
-                clip1.loop(Clip.LOOP_CONTINUOUSLY);
-                clip1.start();
-               }
-    }
+    // public void Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    //     AudioInputStream as1 = AudioSystem.getAudioInputStream(new BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
+    //            AudioFormat af = as1.getFormat();
+    //            Clip clip1 = AudioSystem.getClip();
+    //            DataLine.Info info = new DataLine.Info(Clip.class, af);
+    //            Line line1 = AudioSystem.getLine(info);
+    //            if (!line1.isOpen()){
+    //             clip1.open(as1);
+    //             clip1.loop(Clip.LOOP_CONTINUOUSLY);
+    //             clip1.start();
+    //            }
+    // }
 
     private void FullScreen(){
         if (fullscreen) {

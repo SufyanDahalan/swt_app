@@ -16,7 +16,7 @@ public class Feuerball {
 	public Feuerball(int[] pos, DIRECTION d, Skin sk) {
 
 		dir = d;
-		position = pos;
+		position = pos.clone();
 		bild=sk.getImage("fireball_red_f6");
 	}
 
@@ -27,4 +27,16 @@ public class Feuerball {
 		position[0]+=x;
 		position[1]+=y;
 	}
+
+	public BufferedImage getImage(){
+		return bild;
+	}
+
+    public DIRECTION getMovDir() {
+        return dir;
+    }
+
+    public void setMovDir(DIRECTION movDir) {
+        this.dir = movDir;
+    }
 }

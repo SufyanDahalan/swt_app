@@ -1,5 +1,6 @@
 package Menuefuehrung;
 
+import Spielbereitstellug.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import java.awt.*;
@@ -107,7 +108,6 @@ public class LevelEditor extends JPanel implements MouseListener {
 
         }
 
-//display success message afterwards?
     }
 
 
@@ -371,11 +371,15 @@ public class LevelEditor extends JPanel implements MouseListener {
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
                         int x = e.getX();
                         int y = e.getY();
-                        spawn_sp1 = new int[]{x, y};
-                        int[] P1 = PixelToInt(spawn_sp1);
+                        int[] P1 = PixelToInt(new int[]{x, y});
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
+                        if(obj.has("pos_tun") && ((obj.getJSONObject("pos_tun").has("vertikal") && duplicate( obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) || 
+                        (obj.getJSONObject("pos_tun").has("horizontal") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) || 
+                        (obj.getJSONObject("pos_tun").has("space") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its on a tunnel
                         obj.put("spawn_p1", coordinations);
+                        spawn_sp1 = new int[]{x, y};
+                    }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -392,11 +396,15 @@ public class LevelEditor extends JPanel implements MouseListener {
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
                         int x = e.getX();
                         int y = e.getY();
-                        spawn_sp2 = new int[]{x, y};
-                        int[] P1 = PixelToInt(spawn_sp2);
+                        int[] P1 = PixelToInt(new int[]{x, y});
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
-                        obj.put("spawn_p2", coordinations);
+                        if(obj.has("pos_tun") && ((obj.getJSONObject("pos_tun").has("vertikal") && duplicate( obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) || 
+                        (obj.getJSONObject("pos_tun").has("horizontal") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) || 
+                        (obj.getJSONObject("pos_tun").has("space") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its on a tunnel
+                            obj.put("spawn_p2", coordinations);
+                            spawn_sp2 = new int[]{x, y};
+                    }
                     }
                 };
                 addMouseListener((globalMouseAdapter));
@@ -408,14 +416,19 @@ public class LevelEditor extends JPanel implements MouseListener {
                 removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
-                        ArrayList<Integer> coordinations = new ArrayList<Integer>();
-                        int x = e.getX();
-                        int y = e.getY();
-                        spawn_monster = new int[]{x, y};
-                        int[] P1 = PixelToInt(spawn_monster);
-                        coordinations.add(P1[0]);
-                        coordinations.add(P1[1]);
+                    ArrayList<Integer> coordinations = new ArrayList<Integer>();
+                    int x = e.getX();
+                    int y = e.getY();
+                    int[] P1 = PixelToInt(new int[]{x, y});
+                    coordinations.add(P1[0]);
+                    coordinations.add(P1[1]);
+                    
+                    if(obj.has("pos_tun") && (obj.getJSONObject("pos_tun").has("vertikal") &&  (duplicate(obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) || 
+                    (obj.getJSONObject("pos_tun").has("horizontal") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) || 
+                    (obj.getJSONObject("pos_tun").has("space") && duplicate(obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its on a tunnel
                         obj.put("spawn_mon", coordinations);
+                        spawn_monster = new int[]{x, y};
+                        }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -430,16 +443,19 @@ public class LevelEditor extends JPanel implements MouseListener {
                         ArrayList<Integer> coordinations = new ArrayList<Integer>();
                         int x = e.getX();
                         int y = e.getY();
-                        kirsche = new Kirsche(PixelToInt(new int[]{x, y}), current_skin);
-                        int[] P1 = kirsche.getField();
+                        int[] P1 = PixelToInt(new int[]{x, y});
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
-                        obj.put("spawn_cherry", coordinations);
+                        if((!obj.has("pos_money") || !duplicate(obj.getJSONArray("pos_money"), new JSONArray(coordinations)) ) && (!obj.has("pos_diam") || !duplicate(obj.getJSONArray("pos_diam"),
+                          new JSONArray(coordinations)))){//make sure its not overlapping with another item
+                            obj.put("spawn_cherry", new JSONArray(coordinations));
+                            kirsche = new Kirsche(PixelToInt(new int[]{x, y}), current_skin);
+                    }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
             }
-        });//TODO: fix PixelToInt and getCenterOf
+        });
 
 
         addKeyBinding(this, "D", new AbstractAction() {//Diamant
@@ -450,23 +466,29 @@ public class LevelEditor extends JPanel implements MouseListener {
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
                         int y = e.getY();
-                        diamanten.add(new Diamant(PixelToInt(new int[]{x, y}), current_skin));
                         JSONArray D = new JSONArray();
-                        D.put((PixelToInt(new int[]{x, y})));
+                        D.put(new JSONArray(PixelToInt(new int[]{x, y})));
+                        
+                        
+                        if((!obj.has("pos_money") || !duplicate(obj.getJSONArray("pos_money"),  (JSONArray)D.get(0)) ) && (!obj.has("spawn_cherry") || 
+                        ((int)obj.getJSONArray("spawn_cherry").get(0) != PixelToInt(new int[]{x, y})[0] || (int)obj.getJSONArray("spawn_cherry").get(1) != PixelToInt(new int[]{x, y})[1])
+                        )){//make sure its not overlapping with another item
+                            
+                        diamanten.add(new Diamant(PixelToInt(new int[]{x, y}), current_skin));
                         if(obj.has("pos_diam")){
                             JSONArray temp = obj.getJSONArray("pos_diam");
                             for(int i = 0; i < obj.getJSONArray("pos_diam").length(); i++){
-                                // D.put(obj.getJSONArray("pos_diam").get(i));
                                 D.put(temp.get(i));
                             }
                             obj.remove("pos_diam");
                         }
                         obj.put("pos_diam", D);
                     }
+                    }
                 };
                 addMouseListener(globalMouseAdapter);
             }
-        });//TODO: fix PixelToInt and getCenterOf
+        });
 
         addKeyBinding(this, "G", new AbstractAction() {//Geldsack
             @Override
@@ -476,22 +498,26 @@ public class LevelEditor extends JPanel implements MouseListener {
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
                         int y = e.getY();
-                        geldsaecke.add(new Geldsack(PixelToInt(new int[]{x, y}), current_skin));
                         JSONArray D = new JSONArray();
-                        D.put((PixelToInt(new int[]{x, y})));
-                        if(obj.has("pos_money")){
-                            JSONArray temp = obj.getJSONArray("pos_money");
-                            for(int i = 0; i < obj.getJSONArray("pos_money").length(); i++){
-                                // D.put(obj.getJSONArray("pos_money").get(i));//TODO: get the JSONArray and then iterate through it
-                                D.put(temp.get(i));
+                        D.put(new JSONArray(PixelToInt(new int[]{x, y})));
+                        if((!obj.has("pos_diam") || !duplicate(obj.getJSONArray("pos_diam"), (JSONArray)D.get(0)) ) && (!obj.has("spawn_cherry") || 
+                        ((int)obj.getJSONArray("spawn_cherry").get(0) != PixelToInt(new int[]{x, y})[0] || (int)obj.getJSONArray("spawn_cherry").get(1) != PixelToInt(new int[]{x, y})[1])
+                        ))//make sure its not overlapping with another item
+                            {
+                                if(obj.has("pos_money")){
+                                    JSONArray temp = obj.getJSONArray("pos_money");
+                                    for(int i = 0; i < obj.getJSONArray("pos_money").length(); i++){
+                                        D.put(temp.get(i));
+                                    }
+                                    obj.remove("pos_money");
+                                }
+                                geldsaecke.add(new Geldsack(PixelToInt(new int[]{x, y}), current_skin));
+                                obj.put("pos_money", D);
                             }
-                            obj.remove("pos_money");
-                        }
-                        obj.put("pos_money", D);
                     }
                 };
                 addMouseListener(globalMouseAdapter);
-            }});//TODO: fix PixelToInt and getCenterOf
+            }});
 
         addKeyBinding(this, "V", new AbstractAction() {//Tunnel Vertikal
             @Override
@@ -678,10 +704,13 @@ public class LevelEditor extends JPanel implements MouseListener {
         return ia;
     }
 
-    public boolean duplicate(JSONArray temp, JSONArray coords){//needs work
+    public boolean duplicate(JSONArray temp, JSONArray coords){
 
         for(int i = 0; i < temp.length(); i++){
-            if(toArray(coords)[0] == toArray(temp.getJSONArray(i))[0] && toArray(coords)[1] == toArray(temp.getJSONArray(i))[1]){
+            if(toArray(coords)[0] 
+            == toArray(temp.getJSONArray(i))[0]
+             && toArray(coords)[1] == 
+             toArray(temp.getJSONArray(i))[1]){
                 return true;
             }
         }

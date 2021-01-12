@@ -42,4 +42,8 @@ public abstract class Monster {
     public DIRECTION getMoveDir() {
 		return moveDir;
     }
+
+    public int getWertung(){
+    	return wertung;
+	}
 }

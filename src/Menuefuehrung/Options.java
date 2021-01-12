@@ -1,8 +1,5 @@
 package Menuefuehrung;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
@@ -11,12 +8,19 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Options extends JPanel implements ActionListener {
-    /*final*/ MediaPlayer clip;
+
+
+    MediaPlayer clip;
     boolean music = true;
-    Options() {
+        
+    Options(MainFrame babaFrame){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
         try {
             clip = Music();
@@ -25,17 +29,12 @@ public class Options extends JPanel implements ActionListener {
         }
 
 
-
-//        clip.stop();
-
-        ImageIcon icon = new ImageIcon("bin/Icon/VolumeIcon.png");
-
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
-        setPreferredSize(new Dimension(Width / 3, (Height / 4) * 3));
+        setPreferredSize(new Dimension(Width/3, (Height/4)*3));
 
         setOpaque(false);
         button b1 = new button("Start", 20);
@@ -43,78 +42,83 @@ public class Options extends JPanel implements ActionListener {
         button b3 = new button("Quit", 20);
         button b4 = new button("Singleplayer", 17);
         button b5 = new button("Multiplayer", 17);
-        button b6 = new button("Map Editor", 17);
+        button b6 = new button("Level Editor", 20);
         button b7 = new button("About", 17);
-        button b9 = new button("", 20);
-        b9.setIcon(icon);
+        button b8 = new button("", 17);
 
+
+        b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b2.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b3.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b4.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b5.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b6.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b7.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        b8.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
         add(b1);
         add(b6);
         add(b2);
         add(b7);
         add(b3);
-        add(b9);
+        add(b8);
 
-        b9.addActionListener(this);
+
+        ImageIcon icon = new ImageIcon("bin/images/VolumeIcon.png");
+        b8.setIcon(icon);
+
+        b8.addActionListener(this);
+
+
 
 
         b1.addActionListener((event) -> {
             b1.setEnabled(false);
-            remove(b9);
             remove(b6);
+            remove(b8);
             remove(b7);
+
+
 
             JPanel sigleplayer = new JPanel();
             sigleplayer.setBackground(Color.black);
-            b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
             b4.setForeground(Color.orange);
 
             JPanel multiplayer = new JPanel();
             multiplayer.setBackground(Color.black);
             b5.setForeground(Color.orange);
 
-            JPanel levereditor = new JPanel();
-            levereditor.setBackground(Color.black);
-
+            // JPanel levereditor = new JPanel();
+            // levereditor.setBackground(Color.black);
+            // b6.setForeground(Color.orange);
 
             Box box1 = Box.createVerticalBox();
             sigleplayer.add(b4);
             multiplayer.add(b5);
+            // levereditor.add(b6);
             box1.add(sigleplayer);
             box1.add(multiplayer);
-            box1.add(levereditor);
+            // box1.add(levereditor);
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
 
-
             b4.addActionListener(e -> {
+                
                 layout.show(frame, "singleplayer");//Singleplayer mode
             });
-            b4.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-            b5.addActionListener(e -> {
-                layout.show(frame, "multiplayer");
-            });
-            b5.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-            b6.addActionListener(e -> {
 
-                layout.show(frame, "editor");
-            });
-            b6.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
 
             add(box1);
             add(b6);
             add(b2);
             add(b7);
             add(b3);
-            add(b9);
+            add(b8);
 
             frame.repaint();
             frame.revalidate();
         });
 
         b2.addActionListener((event) -> {
-            b2.setEnabled(false);
-
 
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
@@ -124,24 +128,37 @@ public class Options extends JPanel implements ActionListener {
             });
 
             add(b3);
-            add(b9);
+            add(b8);
 
             frame.repaint();
             frame.revalidate();
 
         });
-        b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b2.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b7.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
 
 
         b3.addActionListener(e -> System.exit(0));
-        b3.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+        speilButton(b5, babaFrame);
+        editorButton(b6, babaFrame);
+        }
 
+        public void speilButton(button b, MainFrame babaFrame){
+            b.addActionListener(e -> {
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+            babaFrame.prepareMap();
+            
+            layout.show(babaFrame.getContentPane(), "multiplayer");
+        });}
 
+        public void editorButton(button b, MainFrame babaFrame){
 
+            LevelEditor editor = new LevelEditor();
+            babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+            
+            layout.show(babaFrame.getContentPane(), "editor");
 
-    }
+        }
+
     public void playSound(String soundName)
     {
         try
@@ -159,25 +176,41 @@ public class Options extends JPanel implements ActionListener {
 
 
     }
-    public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        String bip = "bin/music/Popcorn01.wav";
-        Media hit = new Media(new File(bip).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(hit);
-        mediaPlayer.setCycleCount(50000000);
-        mediaPlayer.play();
-        return mediaPlayer;
-    }
 
 
+
+        public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+            String bip = "bin/music/Popcorn01.wav";
+            Media hit = new Media(new File(bip).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(hit);
+            mediaPlayer.setCycleCount(50000000);
+            mediaPlayer.play();
+            return mediaPlayer;
+        }
+    
+        // //@Override
+        // public void actionPerformed(ActionEvent e) {
+        //     if(music && clip != null) {
+        //             clip.stop();
+        //             music = false;
+        //         }
+        //     else if(!music && clip != null) {
+        //             clip.play();
+        //             music = true;
+        //         }
+    
+        // }
+
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(music && clip != null) {
-                clip.stop();
-                music = false;
-            }
-        else if(!music && clip != null) {
-                clip.play();
-                music = true;
-            }
-
+            clip.stop();
+            music = false;
+        }
+    else if(!music && clip != null) {
+            clip.play();
+            music = true;
+        }
     }
 }
