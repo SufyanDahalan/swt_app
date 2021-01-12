@@ -186,17 +186,19 @@ public class Spiel extends Render implements Runnable {
 				}
 
 				// Monster triffen Spieler
-		/*
+/*
 				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 					Monster m = iterator.next();
 					if(Arrays.equals(getFieldOf(m.getPosition()),( getFieldOf(sp.getPosition())))){
 						if(sp.isAlive()) {
 							sp.decrementLife();
 							sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+							bounsmodus = false;
+							AnzMon = 0;
 						}
 					}
 				}
-		*/
+*/
 				// Spieler triffen Boden
 				int[] fpSp = getFieldOf(sp.getPosition());
 				DIRECTION dirSp = sp.getMoveDir();
@@ -298,6 +300,8 @@ public class Spiel extends Render implements Runnable {
 						if (sp.isAlive()) {
 							sp.decrementLife();
 							sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+							bounsmodus = false;
+							AnzMon = 0;
 						}
 					}
 					//Geldsack fält auf Monster
@@ -384,11 +388,14 @@ public class Spiel extends Render implements Runnable {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().hideKirsche();
 						spielstand += kirsche.getValue();
+						System.out.println("Bonsmodus is Aktive");
 						bounsmodus = true;
 					}
 
-					if (kirsche.outOfTime())
+					if (kirsche.outOfTime()) {
 						kirsche.setVisible(false);
+						AnzMon = 0;
+					}
 					else
 						kirsche.decRemainingTime(DELAY_PERIOD);
 
@@ -461,8 +468,15 @@ public class Spiel extends Render implements Runnable {
 
 					// Monster trifft Spieler im Bonusmode
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(m.getPosition())) && bounsmodus) {
-						System.out.println("Bonsmodus");
+						spielstand += m.getWertung();
 						m_iter.remove();
+				/*
+						if (sp.outOfTime()) {
+							bounsmodus=false;
+							System.out.println("BM ende");
+						}
+						else
+							sp.decRemainingTime(DELAY_PERIOD); */
 					}
 				}
 
