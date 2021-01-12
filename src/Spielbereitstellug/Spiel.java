@@ -76,10 +76,10 @@ public class Spiel extends Render implements Runnable {
 
 		// add Player
 
-		sp1 = null;
-		sp2 = null;
-
 		aktuelles_level = createNextLevel();
+
+		setFbRegTime();
+		monRTime = aktuelles_level.getRegenTimeFb();
 
 		// refresh sizing
 
@@ -117,6 +117,16 @@ public class Spiel extends Render implements Runnable {
 	 * @return false if plaer dead; else true if game schoud be contiued
 	 */
 
+	private  void setFbRegTime(){
+		// tell players the regentime
+
+		if(sp1!=null)
+			sp1.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+
+		if(sp2!=null)
+			sp2.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+	}
+
 	private boolean loop() {
 
 		// Take Time, set period
@@ -135,6 +145,7 @@ public class Spiel extends Render implements Runnable {
 			ArrayList<Geld> gelds = aktuelles_level.getMap().getGeld();
 			ArrayList<Tunnel> tunnels = aktuelles_level.getMap().getTunnel();
 			ArrayList<Feuerball> feuerballs = aktuelles_level.getMap().getFeuerball();
+			Kirsche kirsche = aktuelles_level.getMap().getKirsche();
 
 
 			/// Prüfroutinen
@@ -229,7 +240,6 @@ public class Spiel extends Render implements Runnable {
 				//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 // Geldscak trifft Spieler 2 //Geld erstellen
 				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 					Geldsack gs = iterator.next();
-
 
 					// nach l/r bewegen
 					if (Arrays.equals(gs.getField(), getFieldOf(sp.getPosition()))) {
@@ -370,7 +380,12 @@ public class Spiel extends Render implements Runnable {
 
 				//Monster Anzahl aktualisieren
 				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster) {
-					monsters.add(new Nobbin(getCenterOf(MSpoint), current_skin));
+					if(monRTime < 0) {
+						monsters.add(new Nobbin(getCenterOf(MSpoint), current_skin));
+						monRTime = aktuelles_level.getRegenTimeMonster();
+					}
+					else
+						monRTime -= DELAY_PERIOD;
 				}
 
 				// Hobbin trifft Diamant
@@ -385,6 +400,7 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
+
 				// Monster trifft Geld
 				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
 					Monster m = m_iter.next();
@@ -397,19 +413,25 @@ public class Spiel extends Render implements Runnable {
 					// Monster trifft Geldsack
 					for (Iterator<Geldsack> gs_iter = geldsacke.iterator(); gs_iter.hasNext(); ) {
 						Geldsack g = gs_iter.next();
-							int[] newField = g.getField();
-							int[] PGSize = aktuelles_level.getMap().getPGSize();
-							if (Arrays.equals(g.getField(), getFieldOf(m.getPosition()))) {
-								if (m.getMoveDir() == DIRECTION.RIGHT) {
-									if (newField[0] < PGSize[0])
-										g.addFieldPosOff(1, 0);
-								} else if (m.getMoveDir() == DIRECTION.LEFT) {
-									if (1 < newField[0])
-										g.addFieldPosOff(-1, 0);
-								}
+						int[] newField = g.getField();
+						int[] PGSize = aktuelles_level.getMap().getPGSize();
+						if (Arrays.equals(g.getField(), getFieldOf(m.getPosition()))) {
+							if (m.getMoveDir() == DIRECTION.RIGHT) {
+								if (newField[0] < PGSize[0])
+									g.addFieldPosOff(1, 0);
+							} else if (m.getMoveDir() == DIRECTION.LEFT) {
+								if (1 < newField[0])
+									g.addFieldPosOff(-1, 0);
 							}
 						}
 					}
+
+					// Monster trifft Spieler im Bonusmode
+					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(m.getPosition())) && bounsmodus) {
+						System.out.println("Bonsmodus");
+						m_iter.remove();
+					}
+				}
 
 				// Nobbin trifft Nobbin && Hobbin setzen
 				Monster m1=null;
@@ -459,10 +481,20 @@ public class Spiel extends Render implements Runnable {
 
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
 						m.addPosOff(x_off, y_off);
-					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty())
+					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
 						m.addPosOff(0, y_off);
-					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty())
+						if(y_off >0 )
+							m.setMoveDir(DIRECTION.DOWN);
+						else
+							m.setMoveDir(DIRECTION.UP);
+					}
+					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
 						m.addPosOff(x_off, 0);
+						if(x_off >0 )
+							m.setMoveDir(DIRECTION.RIGHT);
+						else
+							m.setMoveDir(DIRECTION.LEFT);
+					}
 
 				}
 
@@ -636,6 +668,7 @@ public class Spiel extends Render implements Runnable {
 		an.add(current_skin.getAnimation("digger_red_down"));
 
 		sp1 = new Spieler(pixelPos[0], pixelPos[1], an);
+		System.out.println(pixelPos[0]+ " " +pixelPos[1]);
 
 		if(isMultiplayer) {
 			an.clear();
@@ -646,7 +679,9 @@ public class Spiel extends Render implements Runnable {
 
 			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
 			sp2 = new Spieler(pixelPos[0], pixelPos[1], an);
+			System.out.println(pixelPos[0]+ " " +pixelPos[1]);
 		}
+
 
 	}
 
@@ -654,8 +689,11 @@ public class Spiel extends Render implements Runnable {
 		return sp1;
 	}
 
-	public void spawnFeuerball(DIRECTION dir, int[] pos) {
-		aktuelles_level.getMap().addFeuerball(new Feuerball(pos, dir, current_skin));
+	public void spawnFeuerball(DIRECTION dir, int[] pos, Spieler sp) {
+		if(sp.ableToFire()){
+			sp.setFired(true);
+			aktuelles_level.getMap().addFeuerball(new Feuerball(pos, dir, current_skin));
+		}
 	}
 
 	// creates next Level, increases speed and decrease regtime
@@ -665,6 +703,7 @@ public class Spiel extends Render implements Runnable {
 		int new_s;
 		int new_r;
 		int new_mm;
+		int new_mr;
 		Map nextMap;
 		current_map = (current_map+1)%mapChain.size();
 		System.out.println("create next Level with Map: " + current_map);
@@ -673,16 +712,26 @@ public class Spiel extends Render implements Runnable {
 		if (aktuelles_level != null) {
 
 			new_s = aktuelles_level.getSpeed() + 1;
-			new_r = aktuelles_level.getRegenTime() + 1;
+			new_r = aktuelles_level.getRegenTimeFb() - 100;
+			if(new_r < 3000)
+				new_r = 3000;
+
 			new_mm = aktuelles_level.getMaxMonster() + 1;
+
+			new_mr = aktuelles_level.getRegenTimeMonster() - 100;
+			if(new_mr < 2000)
+				new_mr = 2000;
 		}
-		else{
+		else {
 			new_s = 0;
-			new_r = 0;
+			new_r = 5000;
 			new_mm = 3;
+			new_mr = 10000;
 		}
 
-		return new Level(new_s, new_r, new_mm, nextMap);
+		setFbRegTime();
+
+		return new Level(new_s, new_r, new_mm, new_mr, nextMap);
 
 	}
 
@@ -733,6 +782,11 @@ public class Spiel extends Render implements Runnable {
 
 		super.paintComponent(g);
 
-
 	}
+
+	public void start(){
+		Thread thread = new Thread(this);
+		thread.start();
+	}
+
 }

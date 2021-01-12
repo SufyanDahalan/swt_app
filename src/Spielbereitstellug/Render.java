@@ -118,12 +118,11 @@ public class Render extends JPanel {
         for (int i = 0; i < hobbins.size(); i++) {
             Hobbin single_item = hobbins.get(i);
 
-            if (single_item.getMoveDir() == DIRECTION.RIGHT) {
+            if (single_item.getMoveDir() == DIRECTION.RIGHT)
                 hobbinImg = ani_hobbin_right.nextFrame(field_size);
-            }
-            if (single_item.getMoveDir() == DIRECTION.LEFT) {
+            else
                 hobbinImg = ani_hobbin_left.nextFrame(field_size);
-            }
+
 
             int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
             int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);

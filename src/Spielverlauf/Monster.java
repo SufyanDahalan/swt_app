@@ -22,8 +22,6 @@ public abstract class Monster {
 		throw new UnsupportedOperationException();
 	}
 
-	abstract public boolean testMove(DIRECTION d);
-
 	public int[] getPosition(){
 		return position;
 	};

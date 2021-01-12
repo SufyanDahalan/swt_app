@@ -102,7 +102,7 @@ public class Lokalsteuerung {
 
 		DIRECTION latestDir = spiel.getSP1().getMoveDir();
 
-		spiel.spawnFeuerball(latestDir, spiel.getSP1().getPosition() );
+		spiel.spawnFeuerball(latestDir, spiel.getSP1().getPosition(), spiel.sp1 );
 
 		// System.out.println("FEUEEEEEER!"); // System.out.println( spiel.getFeuerball_sp1().getPosition()[0] );
 

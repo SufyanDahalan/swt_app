@@ -6,6 +6,7 @@ public class Level {
 
 	private final int geschwindigkeit;
 	private final int regeneration_feuer;
+	private final int regeneration_monster;
 	private final int max_monster; // Anzahl der gleichzeitig möglichen Monster
 
 	// Konstanten
@@ -16,11 +17,12 @@ public class Level {
 
 	private int temp_kills = 0;
 
-	public Level(int gesch, int reg_feu, int max_mon, Map m) {
+	public Level(int gesch, int reg_feu, int max_mon, int reg_mon, Map m) {
 		karte = m; // TODO: Anpassen
 		max_monster = max_mon; // TODO: Anpassen
 		geschwindigkeit = gesch; // TODO: Anpassen
 		regeneration_feuer = reg_feu; // TODO: Anpassen
+		regeneration_monster = reg_mon;
 	}
 
 	public void loop() {
@@ -41,8 +43,12 @@ public class Level {
 		return geschwindigkeit;
 	}
 
-	public int getRegenTime() {
+	public int getRegenTimeFb() {
 		return regeneration_feuer;
+	}
+
+	public int getRegenTimeMonster() {
+		return regeneration_monster;
 	}
 
 	public int getMaxMonster() {

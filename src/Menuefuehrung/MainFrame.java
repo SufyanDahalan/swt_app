@@ -100,10 +100,7 @@ public class MainFrame extends JFrame {
 
         spiel.spawnSpieler();
 
-        Runnable runnable = (Runnable)spiel; // or an anonymous class, or lambda...
-
-        Thread thread = new Thread(runnable);
-        thread.start();
+        spiel.start();
 
         // Naiv-Testing Area:
         Lokalsteuerung lok = new Lokalsteuerung(spiel);

@@ -12,6 +12,8 @@ public class Spieler {
 	private int leben = 3;
 	private DIRECTION moveDir;
 	private ArrayList<Animation> animations;
+	private int fbRegeneration;
+	private boolean fired;
 
 	public Spieler(int x_pixel, int y_pixel, ArrayList<Animation> as) {
 
@@ -21,6 +23,7 @@ public class Spieler {
 		position[1] = y_pixel;
 
 		moveDir = DIRECTION.LEFT;
+		fired = false;
 
 		//Animation
 		animations = as;
@@ -69,5 +72,24 @@ public class Spieler {
 				break;
 			}
 		return an;
+	}
+
+	public void setFbRegeneration(int fbRegeneration) {
+		this.fbRegeneration = fbRegeneration;
+	}
+
+    public boolean ableToFire() {
+        return !fired;
+    }
+
+	public void setFired(boolean b) {
+		fired = b;
+	}
+	public int getRegTime(){
+		return fbRegeneration;
+	}
+
+	public void decRegTime(long delay_period) {
+		fbRegeneration -= delay_period;
 	}
 }
