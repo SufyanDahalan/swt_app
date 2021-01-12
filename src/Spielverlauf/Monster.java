@@ -2,7 +2,7 @@ package Spielverlauf;
 
 public abstract class Monster {
 
-	protected int[] position;
+	private int[] position;
 	protected int wertung = 250;
 	protected boolean graben;
 	protected DIRECTION moveDir;
@@ -40,6 +40,9 @@ public abstract class Monster {
     public DIRECTION getMoveDir() {
 		return moveDir;
     }
+	public void setMoveDir(DIRECTION dir) {
+		moveDir = dir;
+	}
 
     public int getWertung(){
     	return wertung;

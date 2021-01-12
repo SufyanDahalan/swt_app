@@ -36,7 +36,10 @@ public class Spiel extends Render implements Runnable {
 	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 
-	// temp. Att.
+	// loop global
+	int AnzMon = 0;
+	boolean bounsmodus = false;
+	int monRTime;
 
 	//private int spielstand;
 
@@ -297,6 +300,15 @@ public class Spiel extends Render implements Runnable {
 							sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 						}
 					}
+					//Geldsack fält auf Monster
+					for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext();){
+						Monster m = m_iter.next();
+						if (Arrays.equals(gs.getField(),getFieldOf(m.getPosition())) && gs.getFalling()){
+							m_iter.remove();
+							AnzMon++;
+							break;
+						}
+					}
 				}
 
 				//Entferne Geld nach x Sek
@@ -317,6 +329,7 @@ public class Spiel extends Render implements Runnable {
 						Monster m = iter.next();
 						if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(m.getPosition()))) {
 							spielstand += m.getWertung();
+							AnzMon++;
 							iterator.remove();
 							iter.remove();
 							break;
@@ -357,20 +370,40 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
+				//add Kirsche
+				if (AnzMon == 4){
+					System.out.println("Monster kill "+ AnzMon + " show Kirsche");
+					aktuelles_level.getMap().showKirsche();
+					AnzMon=0;
+				}
 
 				///Bonsmodus aktivieren:
-				// Spieler 1 trifft Kirsche ->
-				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext(); ) {
-					Monster m = iterator.next();
-					if (aktuelles_level.getMap().getKirsche().getVisible()) {
-						if (Arrays.equals(aktuelles_level.getMap().getKirsche().getField(), getFieldOf(sp.getPosition()))) {
-							aktuelles_level.getMap().hideKirsche();
-							spielstand += aktuelles_level.getMap().getKirsche().getValue();
-							if (Arrays.equals(sp.getPosition(), m.getPosition())) {
-								iterator.remove();
-							}
-						}
+				// Spieler trifft Kirsche ->
+
+				if (kirsche.getVisible()) {
+					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
+						aktuelles_level.getMap().hideKirsche();
+						spielstand += kirsche.getValue();
+						bounsmodus = true;
 					}
+
+					if (kirsche.outOfTime())
+						kirsche.setVisible(false);
+					else
+						kirsche.decRemainingTime(DELAY_PERIOD);
+
+				}
+
+				// prüfe sp regteimes
+
+				if(!sp.ableToFire()){
+
+					if(sp.getRegTime() < 0){
+						sp.setFired(false);
+						sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+					}
+					else
+						sp.decRegTime(DELAY_PERIOD);
 				}
 
 /*--------------------------------------------------------------------------------------------------------------------*/

@@ -14,14 +14,6 @@ public class Hobbin extends Monster {
 		animations.add(sk.getAnimation("hobbin_left"));
 	}
 
-	@Override
-	public boolean testMove(DIRECTION d){
-		// ist Wand
-		if(false) //TODO: check wether Move is accepted or not
-			return true;
-		else
-			return false;
-	}
 /*
 	public boolean graben(Map m, DIRECTION d) {
 		if( testMove(d) ) {
