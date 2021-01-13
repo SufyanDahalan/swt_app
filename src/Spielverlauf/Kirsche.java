@@ -6,7 +6,7 @@ public class Kirsche extends Item {
 
 	private int wertung = 1000;
 	private boolean visible = false;
-	private int liveTime = 10000; //ms
+	private int liveTime = 15000; //ms
 
 	public Kirsche(int[] fp, Skin sk) {
 		super(fp, sk.getImage("cherry"));

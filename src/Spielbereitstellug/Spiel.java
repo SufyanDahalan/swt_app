@@ -366,10 +366,11 @@ public class Spiel extends Render implements Runnable {
 					int[] PGsize = aktuelles_level.getMap().getPGSize();
 					if (FBp[0] > PGsize[0] || 1 > FBp[0] || FBp[1] > PGsize[1] || 1 > FBp[1]) {
 						iterator.remove();
+						break;
 					}
 					//Feuerball trifft Boden
-					ArrayList<Tunnel> tunneltreffer= aktuelles_level.getMap().getTunnel(fpSp);
-					if (tunneltreffer.size()==0){
+					int [] fb_pos = getFieldOf(fb.getPosition());
+					if (aktuelles_level.getMap().getTunnel(fb_pos).isEmpty()){
 						iterator.remove();
 					}
 				}
