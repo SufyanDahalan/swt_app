@@ -39,6 +39,8 @@ public class Spiel extends Render implements Runnable {
 	// loop global
 	int AnzMon = 0;
 	boolean bounsmodus = false;
+	private int bounsRemTime;
+	private final int bounsTime = 10000;
 	int monRTime;
 
 	//private int spielstand;
@@ -49,7 +51,7 @@ public class Spiel extends Render implements Runnable {
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
-
+		bounsRemTime=bounsTime;
 		// initialisiere Skin
 		current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
 
@@ -384,7 +386,6 @@ public class Spiel extends Render implements Runnable {
 
 				///Bonsmodus aktivieren:
 				// Spieler trifft Kirsche ->
-
 				if (kirsche.getVisible()) {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().hideKirsche();
@@ -420,7 +421,7 @@ public class Spiel extends Render implements Runnable {
 				int Max_Monster = aktuelles_level.getMaxMonster();
 
 				//Monster Anzahl aktualisieren
-				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster) {
+				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster && !kirsche.getVisible()) {
 					if(monRTime < 0) {
 						monsters.add(new Nobbin(getCenterOf(MSpoint), current_skin));
 						monRTime = aktuelles_level.getRegenTimeMonster();
@@ -468,16 +469,18 @@ public class Spiel extends Render implements Runnable {
 					}
 
 					// Monster trifft Spieler im Bonusmode
+					if (bounsmodus) {
+						if (bounsRemTime < 0) {
+							bounsRemTime = bounsTime;
+							bounsmodus = false;
+							System.out.println("BM beenden");
+						} else
+							bounsRemTime -= DELAY_PERIOD;
+					}
+
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(m.getPosition())) && bounsmodus) {
 						spielstand += m.getWertung();
 						m_iter.remove();
-				/*
-						if (sp.outOfTime()) {
-							bounsmodus=false;
-							System.out.println("BM ende");
-						}
-						else
-							sp.decRemainingTime(DELAY_PERIOD); */
 					}
 				}
 
