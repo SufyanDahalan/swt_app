@@ -12,7 +12,7 @@ public class Spieler {
 	private int leben = 3;
 	private DIRECTION moveDir;
 	private ArrayList<Animation> animations;
-	private int fbRegeneration;
+	private long fbRegeneration;
 	private boolean fired;
 
 	public Spieler(int x_pixel, int y_pixel, ArrayList<Animation> as) {
@@ -74,18 +74,18 @@ public class Spieler {
 		return an;
 	}
 
-	public void setFbRegeneration(int fbRegeneration) {
+	public void setFbRegeneration(long fbRegeneration) {
 		this.fbRegeneration = fbRegeneration;
 	}
 
-    public boolean ableToFire() {
-        return !fired;
+    public boolean getFired() {
+        return fired;
     }
 
 	public void setFired(boolean b) {
 		fired = b;
 	}
-	public int getRegTime(){
+	public long getRegTime(){
 		return fbRegeneration;
 	}
 
