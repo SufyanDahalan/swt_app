@@ -583,7 +583,7 @@ public class Spiel extends Render implements Runnable {
 
 
 						}
-						else if(x!=0){
+						else if(m.x!=0){
 							 if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1] - y_off})).isEmpty()){
 								System.out.print(x);
 								m.addPosOff(0, -y_off);
