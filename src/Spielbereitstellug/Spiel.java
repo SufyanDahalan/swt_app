@@ -35,9 +35,14 @@ public class Spiel extends Render implements Runnable {
 	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 
+	/// Monster verfolgt Spieler variables
+	int z = 0, u=0, x=0;
+
 	// loop global
 	int AnzMon = 0;
 	boolean bounsmodus = false;
+	private int bounsRemTime;
+	private final int bounsTime = 4000;
 	int monRTime;
 
 	private int spielstand;
@@ -49,6 +54,7 @@ public class Spiel extends Render implements Runnable {
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
+		bounsRemTime=bounsTime;
 
 		// initialisiere Mapchain
 
@@ -338,10 +344,11 @@ public class Spiel extends Render implements Runnable {
 					int[] PGsize = aktuelles_level.getMap().getPGSize();
 					if (FBp[0] > PGsize[0] || 1 > FBp[0] || FBp[1] > PGsize[1] || 1 > FBp[1]) {
 						iterator.remove();
+						break;
 					}
 					//Feuerball trifft Boden
-					ArrayList<Tunnel> tunneltreffer= aktuelles_level.getMap().getTunnel(fpSp);
-					if (tunneltreffer.size()==0){
+					int [] fb_pos = getFieldOf(fb.getPosition());
+					if (aktuelles_level.getMap().getTunnel(fb_pos).isEmpty()){
 						iterator.remove();
 					}
 				}
@@ -355,7 +362,6 @@ public class Spiel extends Render implements Runnable {
 
 				///Bonsmodus aktivieren:
 				// Spieler trifft Kirsche ->
-
 				if (kirsche.getVisible()) {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().hideKirsche();
@@ -391,7 +397,7 @@ public class Spiel extends Render implements Runnable {
 				int Max_Monster = aktuelles_level.getMaxMonster();
 
 				//Monster Anzahl aktualisieren
-				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster) {
+				if (aktuelles_level.getMap().getMonsterAmmount()<Max_Monster && !kirsche.getVisible()) {
 					if(monRTime < 0) {
 						monsters.add(new Nobbin(getCenterOf(MSpoint), current_skin));
 						monRTime = aktuelles_level.getRegenTimeMonster();
@@ -439,16 +445,18 @@ public class Spiel extends Render implements Runnable {
 					}
 
 					// Monster trifft Spieler im Bonusmode
+					if (bounsmodus) {
+						if (bounsRemTime < 0) {
+							bounsRemTime = bounsTime;
+							bounsmodus = false;
+							System.out.println("BM beenden");
+						} else
+							bounsRemTime -= DELAY_PERIOD;
+					}
+
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(m.getPosition())) && bounsmodus) {
 						spielstand += m.getWertung();
 						m_iter.remove();
-				/*
-						if (sp.outOfTime()) {
-							bounsmodus=false;
-							System.out.println("BM ende");
-						}
-						else
-							sp.decRemainingTime(DELAY_PERIOD); */
 					}
 				}
 
@@ -467,6 +475,7 @@ public class Spiel extends Render implements Runnable {
 									aktuelles_level.getMap().setzeHobbin(getCenterOf(getFieldOf(n2.getPosition())));
 									m1=n1;
 									m2=n2;
+									break;
 								}
 							}
 						}
@@ -476,9 +485,52 @@ public class Spiel extends Render implements Runnable {
 					monsters.remove(m1);
 					monsters.remove(m2);
 				}
+				// Hobbin verfolgt Spieler
+				for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext();) {
+					Monster h = iterator.next();
+
+					int[] h_pos = h.getPosition();
+					int[] s_pos = sp1.getPosition();
+					int[] fph = getFieldOf(h.getPosition());
+					int x_off = 0;
+					int y_off = 0;
+
+					if (h_pos[0] > s_pos[0])
+						x_off = -1;
+					else
+						x_off = 1;
+
+					if (h_pos[1] > s_pos[1])
+						y_off = -1;
+					else
+						y_off = 1;
+					TUNNELTYP arrangement = TUNNELTYP.HORIZONTAL;
+
+					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], h_pos[1]})).isEmpty())
+					{
+						if (x_off!=0)
+							arrangement = TUNNELTYP.HORIZONTAL;
 
 
-				// Monster verfolgt Spieler
+						aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+
+					}
+					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ h_pos[0], y_off + h_pos[1]})).isEmpty())
+					{
+						if (y_off!=0)
+							arrangement = TUNNELTYP.VERTICAL;
+
+
+						aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+
+					}
+					h.addPosOff(x_off, y_off);
+
+
+				}
+
+
+				// Monster(Nobbin) verfolgt Spieler // still buggy after the second monster goes out, any solution for this, will be thankful
 				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 					Monster m = iterator.next();
 
@@ -493,29 +545,135 @@ public class Spiel extends Render implements Runnable {
 						x_off = 1;
 
 					if (m_pos[1] > s_pos[1])
+
 						y_off = -1;
 					else
-						y_off = 1;
+						if(z==0){
+							y_off = 1;
+
+						}
+						else y_off=-1;
+						if (z !=0){
+
+							m.addPosOff(0, 1);
+							System.out.print(z);
+							if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()){
+								m.addPosOff(0, 1);
+								z=0;
+							}
 
 
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
-						m.addPosOff(x_off, y_off);
+						}
+						else if(u !=0){
+							if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] -1, m_pos[1]})).isEmpty()){
+								System.out.print(u);
+								m.addPosOff(-1, 0);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+									m.addPosOff(-1, 0);
+									u=0;
+								}
+
+
+							}
+							else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1]+1})).isEmpty()){
+								m.addPosOff(0, 1);
+
+							}
+
+
+
+						}
+						else if(x!=0){
+							 if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1] - y_off})).isEmpty()){
+								System.out.print(x);
+								m.addPosOff(0, -y_off);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0]+x_off, m_pos[1]})).isEmpty()){
+									m.addPosOff(0, -y_off);
+									u=0;
+								}
+
+
+							}
+							else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] - x_off, m_pos[1]})).isEmpty()){
+								System.out.print(x);
+								m.addPosOff(-x_off, 0);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+									m.addPosOff(-x_off, 0);
+									x=0;
+								}
+
+
+							}
+
+
+						}
+						else {
+					if (m_pos[1] == s_pos[1] )
+					{
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0],  m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+							//m.addPosOff(0, -1);
+							z++;
+							System.out.print(z);
+
+
+						}}
+					if (m_pos[0] == s_pos[0] )
+							{
+								if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],  y_off+m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+									//m.addPosOff(0, -1);
+									u++;
+									System.out.print(u);
+
+
+								}}
+
+
+
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+
+						if(z==0 && u ==0){
+							m.addPosOff(x_off, y_off);
+							if (x_off > 0)
+								m.setMoveDir(DIRECTION.RIGHT);
+							else
+								m.setMoveDir(DIRECTION.LEFT);
+						}
+						else {
+							//m.addPosOff(0, -1);
+							System.out.print("test");
+
+						}
+					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-						m.addPosOff(0, y_off);
-						if(y_off >0 )
+						if(z==0&& u==0){
+							m.addPosOff(0, y_off);
+
+						}
+						else {
+							//y_off = -1;
 							m.setMoveDir(DIRECTION.DOWN);
-						else
-							m.setMoveDir(DIRECTION.UP);
+							//m.addPosOff(0,  y_off);
+							System.out.print("ml");
+
+						}
+
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
-						m.addPosOff(x_off, 0);
-						if(x_off >0 )
-							m.setMoveDir(DIRECTION.RIGHT);
-						else
-							m.setMoveDir(DIRECTION.LEFT);
-					}
+						if(z==0 && u==0){
+							//m.addPosOff(0, y_off);
+							m.addPosOff(x_off, 0);
+							z=0;
+							if(x_off >0 )
+								m.setMoveDir(DIRECTION.RIGHT);
+							else
+								m.setMoveDir(DIRECTION.LEFT);
 
-				}
+						}}
+					else x++;
+
+
+
+					}}
 
 
 					/*
