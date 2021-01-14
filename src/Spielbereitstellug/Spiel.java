@@ -509,6 +509,41 @@ public class Spiel extends Render implements Runnable {
 					monsters.remove(m1);
 					monsters.remove(m2);
 				}
+				// Hobbin verfolgt Spieler
+				for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext();) {
+					Monster h = iterator.next();
+
+					int[] h_pos = h.getPosition();
+					int[] s_pos = sp1.getPosition();
+					int[] fph = getFieldOf(h.getPosition());
+					int x_off = 0;
+					int y_off = 0;
+
+					if (h_pos[0] > s_pos[0])
+						x_off = -1;
+					else
+						x_off = 1;
+
+					if (h_pos[1] > s_pos[1])
+						y_off = -1;
+					else
+						y_off = 1;
+					TUNNELTYP arrangement;
+
+					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], y_off + h_pos[1]})).isEmpty())
+					{
+						if (x_off!=0)
+							arrangement = TUNNELTYP.VERTICAL;
+						else
+							arrangement = TUNNELTYP.HORIZONTAL;
+
+						aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+
+					}
+					h.addPosOff(x_off, y_off);
+
+
+				}
 
 
 				// Monster verfolgt Spieler
