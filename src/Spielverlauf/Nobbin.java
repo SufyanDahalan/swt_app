@@ -1,7 +1,7 @@
 package Spielverlauf;
 
 public class Nobbin extends Monster {
-	public int z=0, u =0,z=0;
+	public int z=0, u =0,x=0;
 
 	private Animation animation;
 
