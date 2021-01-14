@@ -94,9 +94,7 @@ public class MainFrame extends JFrame {
         int height = getContentPane().getPreferredSize().height;
         int width = getContentPane().getPreferredSize().width;
 
-        int[] size = {width,height};
-
-        Spiel spiel = new Spiel(size, true, true);
+        Spiel spiel = new Spiel(true, true);
 
         spiel.spawnSpieler();
 

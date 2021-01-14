@@ -7,21 +7,31 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
-public class Render extends JPanel {
+public abstract class Render extends JPanel {
 
     protected int field_size;
     protected int old_field_size;
     protected Skin current_skin;
-    protected int spielstand;
     protected boolean devFrames;
-    protected Spieler sp1;
-    protected Spieler sp2;
-    private final double[] border = {0.4, 0.2}; // Wandstärke x,y
-    private final double topbarHeight = 1; // Faktor von Feldgröße
+    protected final double[] border = {0.4, 0.2}; // Wandstärke x,y
+    protected final double topbarHeight = 1; // Faktor von Feldgröße
     protected JSONObject obj;
-    protected Level aktuelles_level;
+
+
+    private final String skinName = "original_skin"; // Skinnname
+    private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
+
+    public Render(){
+
+        // initialisiere Skin
+        current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
+
+        obj = new JSONObject();
+
+    }
 
     protected void paintComponent(Graphics g) {
 
@@ -40,288 +50,118 @@ public class Render extends JPanel {
         TexturePaint slatetp = new TexturePaint(backgroundImg, new Rectangle(0, 0, backgroundImg.getWidth(), backgroundImg.getHeight()));
         Graphics2D g2d = (Graphics2D) g;
         g2d.setPaint(slatetp);
-        int[] pg_size = aktuelles_level.getMap().getPGSize();
-        g2d.fillRect(0, getTopBarHeight(), field_size*pg_size[0]+borderOffset[0]*2, field_size*pg_size[1]+borderOffset[1]*2);
+        int[] pg_size = toArray(obj.getJSONArray("pg_size"));
+        g2d.fillRect(0, getTopBarHeight(), field_size * pg_size[0] + borderOffset[0] * 2, field_size * pg_size[1] + borderOffset[1] * 2);
 
-        ArrayList<Tunnel> tunnel = aktuelles_level.getMap().getTunnel();
+        if(obj.has("pos_tun")) {
+            JSONObject tunnel = obj.getJSONObject("pos_tun");
+            JSONArray vTun = tunnel.getJSONArray("vertikal");
+            JSONArray hTun = tunnel.getJSONArray("horizontal");
+            JSONArray sTun = tunnel.getJSONArray("space");
 
-        for (int i = 0; i < tunnel.size(); i++) {
+            if (tunnel.has("vertikal")) {
+                BufferedImage unscaledImg = current_skin.getImage("tunnel_vert", field_size);
+                for (int i = 0; i < vTun.length(); i++) {
 
-            Tunnel single_item = tunnel.get(i);
+                    int[] field = toArray(vTun.getJSONArray(i));
+                    int[] middle = getCenterOf(field);
+                    int x_pixel = middle[0] - (unscaledImg.getWidth() / 2);
+                    int y_pixel = middle[1] - (unscaledImg.getHeight() / 2);
 
-            BufferedImage unscaledImg = current_skin.scale(single_item.getImage(), field_size);
+                    g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
-            int[] field = single_item.getField();
-            int[] middle = getCenterOf(field);
-            int x_pixel = middle[0] - (unscaledImg.getWidth() / 2);
-            int y_pixel = middle[1] - (unscaledImg.getHeight() / 2);
+                    if (devFrames) {
+                        g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
+                        g.setColor(Color.RED);
+                    }
+                }
+            }
+            if (tunnel.has("horizontal")) {
+                BufferedImage unscaledImg = current_skin.getImage("tunnel_hori", field_size);
+                for (int i = 0; i < hTun.length(); i++) {
 
-            g.drawImage(unscaledImg, x_pixel, y_pixel, null);
 
-            if(devFrames) {
-                g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
+                    int[] field = toArray(hTun.getJSONArray(i));
+                    int[] middle = getCenterOf(field);
+                    int x_pixel = middle[0] - (unscaledImg.getWidth() / 2);
+                    int y_pixel = middle[1] - (unscaledImg.getHeight() / 2);
+
+                    g.drawImage(unscaledImg, x_pixel, y_pixel, null);
+
+                    if (devFrames) {
+                        g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
+                        g.setColor(Color.RED);
+                    }
+                }
+            }
+            if (tunnel.has("space")) {
+                BufferedImage unscaledImg = current_skin.getImage("tunnel_space", field_size);
+                for (int i = 0; i < sTun.length(); i++) {
+
+
+                    int[] field = toArray(sTun.getJSONArray(i));
+                    int[] middle = getCenterOf(field);
+                    int x_pixel = middle[0] - (unscaledImg.getWidth() / 2);
+                    int y_pixel = middle[1] - (unscaledImg.getHeight() / 2);
+
+                    g.drawImage(unscaledImg, x_pixel, y_pixel, null);
+
+                    if (devFrames) {
+                        g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
+                        g.setColor(Color.RED);
+                    }
+                }
             }
         }
 
         // Zeichne Diamanten
+        if (obj.has("pos_diam")) {
+            JSONArray diamanten = obj.getJSONArray("pos_diam");
 
-        ArrayList<Diamant> diamanten = aktuelles_level.getMap().getDiamonds();
+            BufferedImage diamImg = current_skin.getImage("diamond", field_size);
+            for (int i = 0; i < diamanten.length(); i++) {
+                int[] field = toArray(diamanten.getJSONArray(i));
+                int[] middle = getCenterOf(field);
+                int x_pixel = middle[0] - (diamImg.getWidth() / 2);
+                int y_pixel = middle[1] - (diamImg.getHeight() / 2);
 
-        for (int i = 0; i < diamanten.size(); i++) {
-            Diamant single_item = diamanten.get(i);
-            BufferedImage diamImg = current_skin.scale(single_item.getImage(),field_size);
-
-            int[] field = single_item.getField();
-            int[] middle = getCenterOf(field);
-            int x_pixel = middle[0] - (diamImg.getWidth() / 2);
-            int y_pixel = middle[1] - (diamImg.getHeight() / 2);
-
-            g.drawImage(diamImg, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
+                g.drawImage(diamImg, x_pixel, y_pixel, null);
             }
         }
-
 
         // Zeichne Geldsäcke
 
-        ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
+        if (obj.has("pos_money")) {
+            JSONArray geldsaecke = obj.getJSONArray("pos_money");
 
-        for (int i = 0; i < geldsaecke.size(); i++) {
+            BufferedImage moneyPodImg = current_skin.getImage("money_static", field_size);
+            for (int i = 0; i < geldsaecke.length(); i++) {
 
-            Geldsack single_item = geldsaecke.get(i);
-            BufferedImage moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
+                int[] field = toArray(geldsaecke.getJSONArray(i));
+                int[] middle = getCenterOf(field);
+                int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
+                int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
 
-            int[] field = single_item.getField();
-            int[] middle = getCenterOf(field);
-            int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
-            int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
-
-            g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
-            }
-        }
-
-        // Monster
-        ArrayList<Hobbin> hobbins = aktuelles_level.getMap().getHobbins();
-        Animation ani_hobbin_left = current_skin.getAnimation("hobbin_left");
-        Animation ani_hobbin_right = current_skin.getAnimation("hobbin_right");
-
-        BufferedImage hobbinImg = null;
-
-        for (int i = 0; i < hobbins.size(); i++) {
-            Hobbin single_item = hobbins.get(i);
-
-            if (single_item.getMoveDir() == DIRECTION.RIGHT)
-                hobbinImg = ani_hobbin_right.nextFrame(field_size);
-            else
-                hobbinImg = ani_hobbin_left.nextFrame(field_size);
-
-
-            int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
-            int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);
-
-            g.drawImage(hobbinImg, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                int[] field = getFieldOf(single_item.getPosition());
-                g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
-            }
-        }
-
-        Animation ani_nobbin = current_skin.getAnimation("nobbin");
-        BufferedImage nobbinImg = ani_nobbin.nextFrame(field_size);
-
-        ArrayList<Nobbin> nobbins = aktuelles_level.getMap().getNobbins();
-
-        for (int i = 0; i < nobbins.size(); i++) {
-            Nobbin single_item = nobbins.get(i);
-
-            int x_pixel = single_item.getPosition()[0] - (nobbinImg.getWidth() / 2);
-            int y_pixel = single_item.getPosition()[1] - (nobbinImg.getHeight() / 2);
-
-            g.drawImage(nobbinImg, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                int[] field = getFieldOf(single_item.getPosition());
-                g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
-            }
-        }
-
-        // Feuerball
-
-        ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
-
-        for (int i = 0; i < feuerball.size(); i++) {
-            Feuerball single_item = feuerball.get(i);
-            BufferedImage pic = current_skin.scale(single_item.getImage(), field_size);
-
-            int[] pos = single_item.getPosition();
-            int x_pixel = pos[0] - (pic.getWidth() / 2);
-            int y_pixel = pos[1] - (pic.getHeight() / 2);
-
-            g.drawImage(pic, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                int[] field = getFieldOf(single_item.getPosition());
-                g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
-            }
-        }
-
-        // Geld
-
-        ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
-
-        for (int i = 0; i < geld.size(); i++) {
-            Geld single_item = geld.get(i);
-            Animation a = single_item.getAnimation();
-
-            BufferedImage geldImg = a.nextFrame(field_size);
-
-            int[] field = single_item.getField();
-            int[] middle = getCenterOf(field);
-            int x_pixel = middle[0] - (geldImg.getWidth() / 2);
-            int y_pixel = middle[1] - (geldImg.getHeight() / 2);
-
-            // scaling ...
-
-            g.drawImage(geldImg, x_pixel, y_pixel, null);
-
-            if(devFrames) {
-                g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
+                g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
             }
         }
 
         // Kirsche
-        if(aktuelles_level.getMap().getKirsche().getVisible()){
+
+        if (obj.has("spawn_cherry")) {
             BufferedImage kirscheImg = current_skin.getImage("cherry", field_size);
 
-            int[] field = aktuelles_level.getMap().getKirsche().getField();
+            int[] field = toArray(obj.getJSONArray("spawn_cherry"));
 
             int[] middle = getCenterOf(field);
             int x_pixel = middle[0] - (kirscheImg.getWidth() / 2);
             int y_pixel = middle[1] - (kirscheImg.getHeight() / 2);
 
             g.drawImage(kirscheImg, x_pixel, y_pixel, null);
-
-            if (devFrames) {
-                g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
-                g.setColor(Color.RED);
-            }
         }
-
-        // Spieler
-
-        if(sp1 != null) {
-            if(sp1.isAlive()) {
-
-                Animation ani_left = current_skin.getAnimation("digger_red_left");
-                Animation ani_right = current_skin.getAnimation("digger_red_right");
-                Animation ani_up = current_skin.getAnimation("digger_red_up");
-                Animation ani_down = current_skin.getAnimation("digger_red_down");
-
-                BufferedImage sp1Img = null;
-
-                if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-                    sp1Img = ani_right.nextFrame(field_size);
-                }
-                if (sp1.getMoveDir() == DIRECTION.LEFT) {
-                    sp1Img = ani_left.nextFrame(field_size);
-                }
-                if (sp1.getMoveDir() == DIRECTION.UP) {
-                    sp1Img = ani_up.nextFrame(field_size);
-                }
-                if (sp1.getMoveDir() == DIRECTION.DOWN) {
-                    sp1Img = ani_down.nextFrame(field_size);
-                }
-
-
-                int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-                int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-                g.drawImage(sp1Img, x_pixel, y_pixel, null);
-
-            }
-            else {
-                // gegen Geist ersetzen
-                Animation ani_grave = current_skin.getAnimation("Grave");
-                BufferedImage sp1Img = ani_grave.nextFrame(field_size);
-                int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-                int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-                g.drawImage(sp1Img, x_pixel, y_pixel, null);
-            }
-        }
-
-        if(sp2 != null) {
-            if(sp2.isAlive()) {
-                Animation ani_left = current_skin.getAnimation("digger_gre_left");
-                Animation ani_right = current_skin.getAnimation("digger_gre_right");
-                Animation ani_up = current_skin.getAnimation("digger_gre_up");
-                Animation ani_down = current_skin.getAnimation("digger_gre_down");
-
-                BufferedImage spImg = null;
-
-                if (sp2.getMoveDir() == DIRECTION.RIGHT) {
-                    spImg = ani_right.nextFrame(field_size);
-                }
-                if (sp2.getMoveDir() == DIRECTION.LEFT) {
-                    spImg = ani_left.nextFrame(field_size);
-                }
-                if (sp2.getMoveDir() == DIRECTION.UP) {
-                    spImg = ani_up.nextFrame(field_size);
-                }
-                if (sp2.getMoveDir() == DIRECTION.DOWN) {
-                    spImg = ani_down.nextFrame(field_size);
-                }
-
-
-                int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
-                int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
-                g.drawImage(spImg, x_pixel, y_pixel, null);
-            }
-        }
-
-        // Zeichne Score
-        int margin_y = field_size/4;
-        int margin_x = field_size/2;
-
-        int fontSize = field_size/2;
-        g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
-        g.setColor(Color.white);
-        g.drawString(String.format("%05d", spielstand), margin_x, margin_y+fontSize);
-
-        // Zeichne Leben
-
-
-        // Zeichne Leben von SP1
-        BufferedImage sp1Img =current_skin.getImage("statusbar_digger_MP_red", field_size);
-        margin_x = 3*field_size;
-        for(int i = sp1.getLeben(); i > 0; i--) {
-            g.drawImage(sp1Img, margin_x, margin_y, null);
-            margin_x += sp1Img.getWidth();
-        }
-
-        // Zeichene auch leben von SP2
-        if(sp2 != null) {
-            margin_x = 9*field_size;
-            BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
-            for(int i = sp2.getLeben(); i > 0; i--) {
-                g.drawImage(sp2Img, margin_x, margin_y, null);
-                margin_x -= sp1Img.getWidth();
-            }
-
-        }
-
     }
+
+
 
 
     protected void refreshSizing() {
@@ -333,8 +173,9 @@ public class Render extends JPanel {
 
         Dimension d = this.getSize();
 
-        int felderX = aktuelles_level.getMap().getPGSize()[0];
-        int felderY = aktuelles_level.getMap().getPGSize()[1];
+
+        int felderX = toArray(obj.getJSONArray("pg_size"))[0];
+        int felderY = toArray(obj.getJSONArray("pg_size"))[1];
 
         if(d.width == 0 || d.height == 0)
             d = new Dimension(500, 500);
@@ -343,25 +184,6 @@ public class Render extends JPanel {
         int h_temp_size = (int)((double)d.height / ( (double)felderY + ( 2*border[1]) + topbarHeight ));
 
         field_size = Math.min(w_temp_size, h_temp_size);
-
-        // berechne neue Pixelpositionen
-
-        if(field_size != old_field_size && old_field_size != 0) {
-            double factor = (double) field_size / (double) old_field_size;
-
-            if(sp1 != null)
-                for (int i = 0; i <= sp1.getPosition().length - 1; i++)
-                    sp1.getPosition()[i] *= factor;
-
-            if(sp2 != null)
-                for (int i = 0; i <= sp2.getPosition().length - 1; i++)
-                    sp2.getPosition()[i] *= factor;
-
-            for (Monster m : aktuelles_level.getMap().getMonster())
-                for (int i = 0; i <= m.getPosition().length - 1; i++)
-                    m.getPosition()[i] *= factor;
-        }
-
     }
 
     public int[] getFieldOf(int[] pos){

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class Map {
 
@@ -327,11 +328,53 @@ public class Map {
 		return ia;
 	}
 
-	public JSONObject exportAsJSON(){
+	public JSONObject exportStaticsAsJSON(){
 
 		JSONObject obj = new JSONObject();
 
+		obj.put("pg_size", new JSONArray(new int[]{playground_size[0], playground_size[1]}));
+		obj.put("spawn_p1", new JSONArray(new int[]{spawn_sp1[0],spawn_sp1[1]}));
+		obj.put("spawn_p2", new JSONArray(new int[]{spawn_sp2[0],spawn_sp2[1]}));
+		obj.put("spawn_mon", new JSONArray(new int[]{spawn_monster[0],spawn_monster[1]}));
+		obj.put("spawn_cherry", new JSONArray(new int[]{kirsche.getField()[0],kirsche.getField()[1]}));
 
+		// Diamneten
+		{
+			JSONArray D = new JSONArray();
+
+			for (Iterator<Diamant> iterator = diamanten.iterator(); iterator.hasNext(); ) {
+				Diamant d = iterator.next();
+
+				D.put(new JSONArray(new int[]{d.field[0], d.field[1]}));
+			}
+			obj.put("pos_diam", D);
+		}
+
+		// Tunnel
+		{
+			JSONObject temp = new JSONObject();
+			JSONArray tempV = new JSONArray();
+			JSONArray tempH = new JSONArray();
+			JSONArray tempS = new JSONArray();
+
+			for (Iterator<Tunnel> iterator = tunnel.iterator(); iterator.hasNext(); ) {
+				Tunnel t = iterator.next();
+
+				if (t.typ == TUNNELTYP.VERTICAL)
+					tempV.put(new JSONArray(new int[]{t.fieldPosition[0],t.fieldPosition[1]}));
+				else if (t.typ == TUNNELTYP.HORIZONTAL)
+					tempH.put(new JSONArray(new int[]{t.fieldPosition[0],t.fieldPosition[1]}));
+				else
+					tempS.put(new JSONArray(new int[]{t.fieldPosition[0],t.fieldPosition[1]}));
+
+
+			}
+
+			temp.put("vertikal", tempV);
+			temp.put("horizontal", tempH);
+			temp.put("space", tempS);
+			obj.put("pos_tun", temp);
+		}
 
 		return obj;
 	}

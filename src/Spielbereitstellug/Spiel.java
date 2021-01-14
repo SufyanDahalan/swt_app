@@ -1,6 +1,7 @@
 package Spielbereitstellug;
 
 import Spielverlauf.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -17,20 +18,18 @@ import java.util.Iterator;
 
 public class Spiel extends Render implements Runnable {
 
-	//dev stuff
-
-	boolean devFrames = false;
-
 	// game setup
 
 	boolean isMultiplayer;
 	boolean isHost;
 
+
+	protected Spieler sp1;
+	protected Spieler sp2;
+
 	// System-/ Filestructure
 
-	private final String skinName = "original_skin"; // Skinnname
 	private final String levelfolder_name = "bin/level/"; // ./level/level-01.json ...
-	private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
 
 	// static content
 	private final ArrayList<Map> mapChain;
@@ -41,17 +40,15 @@ public class Spiel extends Render implements Runnable {
 	boolean bounsmodus = false;
 	int monRTime;
 
-	//private int spielstand;
+	private int spielstand;
 
-	public Spiel(int[] panel_size, boolean isHost, boolean isMultiplayer) {
+	private Level aktuelles_level;
 
-    	// initalisiere game setup
+	public Spiel(boolean isHost, boolean isMultiplayer) {
+		// initalisiere game setup
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
-
-		// initialisiere Skin
-		current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
 
 		// initialisiere Mapchain
 
@@ -66,15 +63,15 @@ public class Spiel extends Render implements Runnable {
 		for (String map : maps) {
 
 			// read Level-File
-			JSONObject obj = null;
+			JSONObject objf = null;
 			try {
-				obj = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
+				objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 			// create Map and add to chain
-			mapChain.add(new Map(obj, current_skin));
+			mapChain.add(new Map(objf, current_skin));
 		}
 
 		// add Player
@@ -85,35 +82,12 @@ public class Spiel extends Render implements Runnable {
 		monRTime = aktuelles_level.getRegenTimeFb();
 
 		// refresh sizing
-
+		obj = aktuelles_level.getMap().exportStaticsAsJSON();
 		refreshSizing();
 
 		System.out.println(field_size);
 
-
-		// TESTING
-
-/*
-		// setze Monster ein
-		ArrayList<Monster> monster = aktuelles_level.getMap().getMonster();
-
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
-		monster.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
-
-		int[] fp = {1,1};
-		int[] pos = getCenterOf(fp);
-
-		aktuelles_level.getMap().setzeHobbin(pos);
-
-		// setze Kirsche ein
-
-		aktuelles_level.getMap().showKirsche();
-
-		// Ausgaben, Infos
-		System.out.println("Anzahl Nobbins: " + aktuelles_level.getMap().getNobbins().size());
-		System.out.println("Anzahl Hobbins: " + aktuelles_level.getMap().getHobbins().size());
-*/	}
+	}
 
 	/**
 	 *	Spiellogik, die Positionen prüft und Ereignisse aufruft.
@@ -135,8 +109,6 @@ public class Spiel extends Render implements Runnable {
 		// Take Time, set period
 		long DELAY_PERIOD = 10;
 		long beginTime = System.currentTimeMillis();
-
-		super.obj = aktuelles_level.getMap().exportAsJSON();
 
 		if(isHost) {
 			// link current lists
@@ -698,6 +670,8 @@ public class Spiel extends Render implements Runnable {
 		if (sleepTime >= 0) {
 			try{Thread.sleep(sleepTime);} catch(InterruptedException e){}
 		}
+
+		super.obj = aktuelles_level.getMap().exportStaticsAsJSON();
 		this.repaint();
 		return true;
 
@@ -829,11 +803,270 @@ public class Spiel extends Render implements Runnable {
 
 		super.paintComponent(g);
 
+		int[] borderOffset = getBorderOffset();
+
+		// Zeichne Geldsäcke
+
+		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
+
+		for (int i = 0; i < geldsaecke.size(); i++) {
+
+			Geldsack single_item = geldsaecke.get(i);
+			BufferedImage moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
+
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
+			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
+
+			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		// Monster
+		ArrayList<Hobbin> hobbins = aktuelles_level.getMap().getHobbins();
+		Animation ani_hobbin_left = current_skin.getAnimation("hobbin_left");
+		Animation ani_hobbin_right = current_skin.getAnimation("hobbin_right");
+
+		BufferedImage hobbinImg = null;
+
+		for (int i = 0; i < hobbins.size(); i++) {
+			Hobbin single_item = hobbins.get(i);
+
+			if (single_item.getMoveDir() == DIRECTION.RIGHT)
+				hobbinImg = ani_hobbin_right.nextFrame(field_size);
+			else
+				hobbinImg = ani_hobbin_left.nextFrame(field_size);
+
+
+			int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
+			int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);
+
+			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				int[] field = getFieldOf(single_item.getPosition());
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		Animation ani_nobbin = current_skin.getAnimation("nobbin");
+		BufferedImage nobbinImg = ani_nobbin.nextFrame(field_size);
+
+		ArrayList<Nobbin> nobbins = aktuelles_level.getMap().getNobbins();
+
+		for (int i = 0; i < nobbins.size(); i++) {
+			Nobbin single_item = nobbins.get(i);
+
+			int x_pixel = single_item.getPosition()[0] - (nobbinImg.getWidth() / 2);
+			int y_pixel = single_item.getPosition()[1] - (nobbinImg.getHeight() / 2);
+
+			g.drawImage(nobbinImg, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				int[] field = getFieldOf(single_item.getPosition());
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		// Feuerball
+
+		ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
+
+		for (int i = 0; i < feuerball.size(); i++) {
+			Feuerball single_item = feuerball.get(i);
+			BufferedImage pic = current_skin.scale(single_item.getImage(), field_size);
+
+			int[] pos = single_item.getPosition();
+			int x_pixel = pos[0] - (pic.getWidth() / 2);
+			int y_pixel = pos[1] - (pic.getHeight() / 2);
+
+			g.drawImage(pic, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				int[] field = getFieldOf(single_item.getPosition());
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		// Geld
+
+		ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
+
+		for (int i = 0; i < geld.size(); i++) {
+			Geld single_item = geld.get(i);
+			Animation a = single_item.getAnimation();
+
+			BufferedImage geldImg = a.nextFrame(field_size);
+
+			int[] field = single_item.getField();
+			int[] middle = getCenterOf(field);
+			int x_pixel = middle[0] - (geldImg.getWidth() / 2);
+			int y_pixel = middle[1] - (geldImg.getHeight() / 2);
+
+			// scaling ...
+
+			g.drawImage(geldImg, x_pixel, y_pixel, null);
+
+			if(devFrames) {
+				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+				g.setColor(Color.RED);
+			}
+		}
+
+		// Spieler
+
+		if(sp1 != null) {
+			if(sp1.isAlive()) {
+
+				Animation ani_left = current_skin.getAnimation("digger_red_left");
+				Animation ani_right = current_skin.getAnimation("digger_red_right");
+				Animation ani_up = current_skin.getAnimation("digger_red_up");
+				Animation ani_down = current_skin.getAnimation("digger_red_down");
+
+				BufferedImage sp1Img = null;
+
+				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
+					sp1Img = ani_right.nextFrame(field_size);
+				}
+				if (sp1.getMoveDir() == DIRECTION.LEFT) {
+					sp1Img = ani_left.nextFrame(field_size);
+				}
+				if (sp1.getMoveDir() == DIRECTION.UP) {
+					sp1Img = ani_up.nextFrame(field_size);
+				}
+				if (sp1.getMoveDir() == DIRECTION.DOWN) {
+					sp1Img = ani_down.nextFrame(field_size);
+				}
+
+
+				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+				g.drawImage(sp1Img, x_pixel, y_pixel, null);
+
+			}
+			else {
+				// gegen Geist ersetzen
+				Animation ani_grave = current_skin.getAnimation("Grave");
+				BufferedImage sp1Img = ani_grave.nextFrame(field_size);
+				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+				g.drawImage(sp1Img, x_pixel, y_pixel, null);
+			}
+		}
+
+		if(sp2 != null) {
+			if(sp2.isAlive()) {
+				Animation ani_left = current_skin.getAnimation("digger_gre_left");
+				Animation ani_right = current_skin.getAnimation("digger_gre_right");
+				Animation ani_up = current_skin.getAnimation("digger_gre_up");
+				Animation ani_down = current_skin.getAnimation("digger_gre_down");
+
+				BufferedImage spImg = null;
+
+				if (sp2.getMoveDir() == DIRECTION.RIGHT) {
+					spImg = ani_right.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.LEFT) {
+					spImg = ani_left.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.UP) {
+					spImg = ani_up.nextFrame(field_size);
+				}
+				if (sp2.getMoveDir() == DIRECTION.DOWN) {
+					spImg = ani_down.nextFrame(field_size);
+				}
+
+
+				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
+				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+				g.drawImage(spImg, x_pixel, y_pixel, null);
+			}
+		}
+
+		// Zeichne Score
+		int margin_y = field_size/4;
+		int margin_x = field_size/2;
+
+		int fontSize = field_size/2;
+		g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
+		g.setColor(Color.white);
+		g.drawString(String.format("%05d", spielstand), margin_x, margin_y+fontSize);
+
+		// Zeichne Leben
+
+		// Zeichne Leben von SP1
+		BufferedImage sp1Img =current_skin.getImage("statusbar_digger_MP_red", field_size);
+		margin_x = 3*field_size;
+		for(int i = sp1.getLeben(); i > 0; i--) {
+			g.drawImage(sp1Img, margin_x, margin_y, null);
+			margin_x += sp1Img.getWidth();
+		}
+
+		// Zeichene auch leben von SP2
+		if(sp2 != null) {
+			margin_x = 9*field_size;
+			BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
+			for(int i = sp2.getLeben(); i > 0; i--) {
+				g.drawImage(sp2Img, margin_x, margin_y, null);
+				margin_x -= sp1Img.getWidth();
+			}
+
+		}
+
 	}
 
 	public void start(){
 		Thread thread = new Thread(this);
 		thread.start();
+	}
+
+	@Override
+	protected void refreshSizing() {
+
+		// Speichere Änderung
+		old_field_size = field_size;
+
+		// setze Feldgröße
+
+		Dimension d = this.getSize();
+
+		int[] feld = aktuelles_level.getMap().getPGSize();
+
+
+		if (d.width == 0 || d.height == 0)
+			d = new Dimension(500, 500);
+
+		int w_temp_size = (int) ((double) d.width / ((double) feld[0] + (2 * border[0])));
+		int h_temp_size = (int) ((double) d.height / ((double) feld[1] + (2 * border[1]) + topbarHeight));
+
+		field_size = Math.min(w_temp_size, h_temp_size);
+
+		// berechne neue Pixelpositionen
+
+		if (field_size != old_field_size && old_field_size != 0) {
+			double factor = (double) field_size / (double) old_field_size;
+
+			if (sp1 != null)
+				for (int i = 0; i <= sp1.getPosition().length - 1; i++)
+					sp1.getPosition()[i] *= factor;
+
+			if (sp2 != null)
+				for (int i = 0; i <= sp2.getPosition().length - 1; i++)
+					sp2.getPosition()[i] *= factor;
+
+			for (Monster m : aktuelles_level.getMap().getMonster())
+				for (int i = 0; i <= m.getPosition().length - 1; i++)
+					m.getPosition()[i] *= factor;
+		}
+
 	}
 
 }
