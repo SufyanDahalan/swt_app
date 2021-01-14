@@ -530,12 +530,20 @@ public class Spiel extends Render implements Runnable {
 						y_off = 1;
 					TUNNELTYP arrangement;
 
-					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], y_off + h_pos[1]})).isEmpty())
+					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], h_pos[1]})).isEmpty())
 					{
 						if (x_off!=0)
 							arrangement = TUNNELTYP.HORIZONTAL;
-						else
+
+
+						aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+
+					}
+					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ h_pos[0], y_off + h_pos[1]})).isEmpty())
+					{
+						if (y_off!=0)
 							arrangement = TUNNELTYP.VERTICAL;
+
 
 						aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
 
