@@ -528,7 +528,7 @@ public class Spiel extends Render implements Runnable {
 						y_off = -1;
 					else
 						y_off = 1;
-					TUNNELTYP arrangement;
+					TUNNELTYP arrangement = TUNNELTYP.HORIZONTAL;
 
 					if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], h_pos[1]})).isEmpty())
 					{
