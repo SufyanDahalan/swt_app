@@ -36,6 +36,9 @@ public class Spiel extends Render implements Runnable {
 	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 
+	/// Monster verfolgt Spieler variables
+	int z = 0, u=0, x=0;
+
 	// loop global
 	int AnzMon = 0;
 	boolean bounsmodus = false;
