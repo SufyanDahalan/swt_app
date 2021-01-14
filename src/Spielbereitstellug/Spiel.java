@@ -40,7 +40,7 @@ public class Spiel extends Render implements Runnable {
 	int AnzMon = 0;
 	boolean bounsmodus = false;
 	private int bounsRemTime;
-	private final int bounsTime = 10000;
+	private final int bounsTime = 4000;
 	int monRTime;
 
 	//private int spielstand;
@@ -499,6 +499,7 @@ public class Spiel extends Render implements Runnable {
 									aktuelles_level.getMap().setzeHobbin(getCenterOf(getFieldOf(n2.getPosition())));
 									m1=n1;
 									m2=n2;
+									break;
 								}
 							}
 						}
@@ -530,14 +531,15 @@ public class Spiel extends Render implements Runnable {
 						y_off = 1;
 
 
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty())//check if nextpos is a tunnel or no, and then choose to execute the move or no
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
 						m.addPosOff(x_off, y_off);
+						if (x_off > 0)
+							m.setMoveDir(DIRECTION.RIGHT);
+						else
+							m.setMoveDir(DIRECTION.LEFT);
+					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
 						m.addPosOff(0, y_off);
-						if(y_off >0 )
-							m.setMoveDir(DIRECTION.DOWN);
-						else
-							m.setMoveDir(DIRECTION.UP);
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
 						m.addPosOff(x_off, 0);
@@ -546,7 +548,6 @@ public class Spiel extends Render implements Runnable {
 						else
 							m.setMoveDir(DIRECTION.LEFT);
 					}
-
 				}
 
 
