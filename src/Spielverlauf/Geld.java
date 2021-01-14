@@ -6,7 +6,7 @@ public class Geld extends Item{
 
     private int wertung = 500;
     private Animation animation;
-    private int liveTime = 10000; //ms
+    private long liveTime = 10000; //ms
 
     public Geld(int[] fp, Skin sk) {
         super(fp);

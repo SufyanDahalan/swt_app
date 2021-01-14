@@ -18,6 +18,7 @@ public class Map {
 	// Contente
 	private ArrayList<Monster> monster;
 	private int[] spawn_monster;
+	private int[] spawn_cherry;
 	private int[] spawn_sp1;
 	private int[] spawn_sp2;
 	private ArrayList<Feuerball> feuerball;
@@ -37,12 +38,12 @@ public class Map {
 		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
 		spawn_sp1 = toArray(obj.getJSONArray("spawn_p1"));
 		spawn_sp2 = toArray(obj.getJSONArray("spawn_p2"));
+		spawn_cherry = toArray(obj.getJSONArray("spawn_cherry"));
 
 		geldsaecke = new ArrayList<Geldsack>();
 		diamanten = new ArrayList<Diamant>();
 		tunnel = new ArrayList<Tunnel>();
 
-		kirsche = new Kirsche( toArray(obj.getJSONArray("spawn_cherry")), sk);
 		geld = new ArrayList<Geld>();
 		feuerball= new ArrayList<Feuerball>();
 
@@ -115,12 +116,13 @@ public class Map {
 		spawn_monster = m.spawn_monster.clone();
 		spawn_sp1 = m.spawn_sp1.clone();
 		spawn_sp2 = m.spawn_sp2.clone();
+		spawn_cherry = m.spawn_cherry.clone();
 		feuerball = new ArrayList<Feuerball>(m.feuerball);
 		diamanten = new ArrayList<Diamant>(m.diamanten);
 		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
 		geld = new ArrayList<Geld>(m.geld);
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
-		kirsche = new Kirsche(m.kirsche.field, m.skin);
+		kirsche = m.kirsche;
 		skin = m.skin;
 	}
 
@@ -193,15 +195,7 @@ public class Map {
 		kirsche = k;
 	}
 
-	// Kische verstecke/anzeigen
-
-	public void showKirsche() {
-		kirsche.setVisible(true);
-	}
-
-	public void hideKirsche() {
-		kirsche.setVisible(false);
-	}
+	public void removeKirsche(){kirsche = null;}
 
 	/// Tunnel
 
@@ -336,7 +330,9 @@ public class Map {
 		obj.put("spawn_p1", new JSONArray(new int[]{spawn_sp1[0],spawn_sp1[1]}));
 		obj.put("spawn_p2", new JSONArray(new int[]{spawn_sp2[0],spawn_sp2[1]}));
 		obj.put("spawn_mon", new JSONArray(new int[]{spawn_monster[0],spawn_monster[1]}));
-		obj.put("spawn_cherry", new JSONArray(new int[]{kirsche.getField()[0],kirsche.getField()[1]}));
+
+		if(kirsche != null)
+			obj.put("spawn_cherry", new JSONArray(new int[]{kirsche.getField()[0],kirsche.getField()[1]}));
 
 		// Diamneten
 		{
@@ -377,5 +373,9 @@ public class Map {
 		}
 
 		return obj;
+	}
+
+	public int[] getSpawn_cherry() {
+		return spawn_cherry;
 	}
 }
