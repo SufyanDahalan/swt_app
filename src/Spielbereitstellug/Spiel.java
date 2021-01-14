@@ -26,6 +26,7 @@ public class Spiel extends Render implements Runnable {
 	// Speed
 
 	int feuerball_steps;
+	final int geldsack_steps = 3;
 	int monster_steps = 5;
 	final long DELAY_PERIOD = 15;
 
@@ -97,6 +98,17 @@ public class Spiel extends Render implements Runnable {
 		// refresh sizing
 		obj = aktuelles_level.getMap().exportStaticsAsJSON();
 		refreshSizing();
+
+		// Tanslate Geldsackpositionen
+
+		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
+
+		for (int i = 0; i < geldsaecke.size(); i++) {
+
+			Geldsack single_item = geldsaecke.get(i);
+			if (single_item.getPosition() == null)
+				single_item.setPosition(getCenterOf(single_item.getField()));
+		}
 
 		feuerball_steps = field_size/15;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
@@ -218,15 +230,15 @@ public class Spiel extends Render implements Runnable {
 					Geldsack gs = iterator.next();
 
 					// nach l/r bewegen
-					if (Arrays.equals(gs.getField(), getFieldOf(sp.getPosition()))) {
+					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
 						int[] newField1 = gs.getField();
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
 							if (newField1[0] < PGSize[0])
-								gs.addFieldPosOff(1, 0);
+								gs.addPosOff(field_size, 0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
 							if (1 < newField1[0])
-								gs.addFieldPosOff(-1, 0);
+								gs.addPosOff(-field_size, 0);
 						}
 					}
 
@@ -234,14 +246,14 @@ public class Spiel extends Render implements Runnable {
 					for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
 						Geldsack g2 = it.next();
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						int[] newField1 = gs.getField();
-						int[] newField2 = g2.getField();
+						int[] newField1 = getFieldOf(gs.getPosition());
+						int[] newField2 = getFieldOf(g2.getPosition());
 						if (gs != g2) {
-							if (Arrays.equals(gs.getField(), g2.getField())) {
+							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
 								if (newField1[0] + newField2[0] < PGSize[0]) {
-									g2.addFieldPosOff(1, 0);
+									g2.addPosOff(field_size, 0);
 								} else if (1 < newField2[0] + newField1[0]) {
-									g2.addFieldPosOff(-1, 0);
+									g2.addPosOff(-field_size, 0);
 								}
 							}
 						}
@@ -249,7 +261,7 @@ public class Spiel extends Render implements Runnable {
 
 					// Geldsack fällt auf Spieler
 
-					if (Arrays.equals(getFieldOf(sp.getPosition()), gs.getField()) && gs.getFalling()) {
+					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(gs.getPosition())) && gs.getFalling()) {
 						if (sp.isAlive()) {
 							sp.decrementLife();
 							sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
@@ -644,28 +656,36 @@ public class Spiel extends Render implements Runnable {
 			// Gelsäcke
 			for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 				Geldsack gs = iterator.next();
+
 				// Geldsack trifft auf Boden
-				int[] current_field = gs.getField();
+				int[] current_field = getFieldOf(gs.getPosition());
 				int[] check_field = current_field.clone();
 				check_field[1]++;
 
-				if (aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
-					gs.addFieldPosOff(0, 1);
+				if (!gs.getFalling() && aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
 					gs.setFalling(true);
-					gs.incFallHeight();
-
-				} else if (gs.getFalling()) {
-					if (gs.getFallHeight() > 1) {
-						aktuelles_level.getMap().addGeld(new Geld(gs.getField(), current_skin));
-						iterator.remove();
-				} else
-					gs.resetFallHeight();
 				}
+
+
+				if (gs.getFalling()) {
+					if(gs.getPosition()[1]<getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1]>=getCenterOf(getFieldOf(gs.getPosition()))[1]&& aktuelles_level.getMap().getTunnel(check_field).size() > 0) ) {
+						gs.addPosOff(0, geldsack_steps);
+						gs.incFallHeight();
+					}
+					else {
+						if (gs.getFallHeight() > field_size-2) {
+							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition()), current_skin));
+							iterator.remove();
+						} else
+							gs.resetFallHeight();
+					}
+				}
+
 
 				//Geldsack fällt auf Monster
 				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext();){
 					Monster m = m_iter.next();
-					if (Arrays.equals(gs.getField(),getFieldOf(m.getPosition())) && gs.getFalling()){
+					if (Arrays.equals(getFieldOf(gs.getPosition()),getFieldOf(m.getPosition())) && gs.getFalling()){
 						m_iter.remove();
 						anzMon++;
 						break;
@@ -768,15 +788,15 @@ public class Spiel extends Render implements Runnable {
 				// Monster trifft Geldsack
 				for (Iterator<Geldsack> gs_iter = geldsacke.iterator(); gs_iter.hasNext(); ) {
 					Geldsack g = gs_iter.next();
-					int[] newField = g.getField();
+					int[] newField = getFieldOf(g.getPosition());
 					int[] PGSize = aktuelles_level.getMap().getPGSize();
-					if (Arrays.equals(g.getField(), getFieldOf(m.getPosition()))) {
+					if (Arrays.equals(getFieldOf(g.getPosition()), getFieldOf(m.getPosition()))) {
 						if (m.getMoveDir() == DIRECTION.RIGHT) {
 							if (newField[0] < PGSize[0])
-								g.addFieldPosOff(1, 0);
+								g.addPosOff(field_size, 0);
 						} else if (m.getMoveDir() == DIRECTION.LEFT) {
 							if (1 < newField[0])
-								g.addFieldPosOff(-1, 0);
+								g.addPosOff(-field_size, 0);
 						}
 					}
 				}
@@ -1015,10 +1035,11 @@ public class Spiel extends Render implements Runnable {
 		for (int i = 0; i < geldsaecke.size(); i++) {
 
 			Geldsack single_item = geldsaecke.get(i);
+
 			BufferedImage moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
 
 			int[] field = single_item.getField();
-			int[] middle = getCenterOf(field);
+			int[] middle = single_item.getPosition();
 			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
 			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
 
@@ -1268,6 +1289,11 @@ public class Spiel extends Render implements Runnable {
 			for (Monster m : aktuelles_level.getMap().getMonster())
 				for (int i = 0; i <= m.getPosition().length - 1; i++)
 					m.getPosition()[i] *= factor;
+
+			for (Geldsack gs : aktuelles_level.getMap().getGeldsaecke()) {
+				for (int i= 0; i<= gs.getPosition().length -1; i++)
+					gs.getPosition()[i] *= factor;
+			}
 		}
 
 		//monster_steps = field_size/aktuelles_level.getSpeed();
