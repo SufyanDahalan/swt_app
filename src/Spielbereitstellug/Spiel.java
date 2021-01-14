@@ -531,8 +531,8 @@ public class Spiel extends Render implements Runnable {
 
 
 				// Monster(Nobbin) verfolgt Spieler // still buggy after the second monster goes out, any solution for this, will be thankful
-				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
-					Monster m = iterator.next();
+				for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext();) {
+					Nobbin m = iterator.next();
 
 					int[] m_pos = m.getPosition();
 					int[] s_pos = sp1.getPosition();
@@ -548,29 +548,29 @@ public class Spiel extends Render implements Runnable {
 
 						y_off = -1;
 					else
-						if(z==0){
+						if(m.z==0){
 							y_off = 1;
 
 						}
 						else y_off=-1;
-						if (z !=0){
+						if (m.z !=0){
 
 							m.addPosOff(0, 1);
 							System.out.print(z);
 							if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()){
 								m.addPosOff(0, 1);
-								z=0;
+								m.z=0;
 							}
 
 
 						}
-						else if(u !=0){
+						else if(m.u !=0){
 							if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] -1, m_pos[1]})).isEmpty()){
 								System.out.print(u);
 								m.addPosOff(-1, 0);
 								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
 									m.addPosOff(-1, 0);
-									u=0;
+									m.u=0;
 								}
 
 
@@ -589,17 +589,17 @@ public class Spiel extends Render implements Runnable {
 								m.addPosOff(0, -y_off);
 								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0]+x_off, m_pos[1]})).isEmpty()){
 									m.addPosOff(0, -y_off);
-									u=0;
+									m.u=0;
 								}
 
 
 							}
 							else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] - x_off, m_pos[1]})).isEmpty()){
-								System.out.print(x);
+								System.out.print(m.x);
 								m.addPosOff(-x_off, 0);
 								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
 									m.addPosOff(-x_off, 0);
-									x=0;
+									m.x=0;
 								}
 
 
@@ -612,8 +612,8 @@ public class Spiel extends Render implements Runnable {
 					{
 						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0],  m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
-							z++;
-							System.out.print(z);
+							m.z++;
+							System.out.print(m.z);
 
 
 						}}
@@ -621,8 +621,8 @@ public class Spiel extends Render implements Runnable {
 							{
 								if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],  y_off+m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
 									//m.addPosOff(0, -1);
-									u++;
-									System.out.print(u);
+									m.u++;
+									System.out.print(m.u);
 
 
 								}}
@@ -631,7 +631,7 @@ public class Spiel extends Render implements Runnable {
 
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
 
-						if(z==0 && u ==0){
+						if(m.z==0 && m.u ==0){
 							m.addPosOff(x_off, y_off);
 							if (x_off > 0)
 								m.setMoveDir(DIRECTION.RIGHT);
@@ -645,7 +645,7 @@ public class Spiel extends Render implements Runnable {
 						}
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-						if(z==0&& u==0){
+						if(m.z==0&& m.u==0){
 							m.addPosOff(0, y_off);
 
 						}
@@ -659,17 +659,17 @@ public class Spiel extends Render implements Runnable {
 
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
-						if(z==0 && u==0){
+						if(m.z==0 && m.u==0){
 							//m.addPosOff(0, y_off);
 							m.addPosOff(x_off, 0);
-							z=0;
+							m.z=0;
 							if(x_off >0 )
 								m.setMoveDir(DIRECTION.RIGHT);
 							else
 								m.setMoveDir(DIRECTION.LEFT);
 
 						}}
-					else x++;
+					else m.x++;
 
 
 
