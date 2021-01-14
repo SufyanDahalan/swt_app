@@ -7,19 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 import static java.awt.Toolkit.getDefaultToolkit;
+
 
 public class Options extends JPanel implements ActionListener {
 
-
     MediaPlayer clip;
     boolean music = true;
-        
+
     Options(MainFrame babaFrame){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
         try {
@@ -65,10 +62,7 @@ public class Options extends JPanel implements ActionListener {
 
         ImageIcon icon = new ImageIcon("bin/images/VolumeIcon.png");
         b8.setIcon(icon);
-
         b8.addActionListener(this);
-
-
 
 
         b1.addActionListener((event) -> {
@@ -76,8 +70,6 @@ public class Options extends JPanel implements ActionListener {
             remove(b6);
             remove(b8);
             remove(b7);
-
-
 
             JPanel sigleplayer = new JPanel();
             sigleplayer.setBackground(Color.black);
@@ -87,17 +79,14 @@ public class Options extends JPanel implements ActionListener {
             multiplayer.setBackground(Color.black);
             b5.setForeground(Color.orange);
 
-            // JPanel levereditor = new JPanel();
-            // levereditor.setBackground(Color.black);
-            // b6.setForeground(Color.orange);
 
             Box box1 = Box.createVerticalBox();
             sigleplayer.add(b4);
             multiplayer.add(b5);
-            // levereditor.add(b6);
+
             box1.add(sigleplayer);
             box1.add(multiplayer);
-            // box1.add(levereditor);
+
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
 
@@ -105,7 +94,6 @@ public class Options extends JPanel implements ActionListener {
                 
                 layout.show(frame, "singleplayer");//Singleplayer mode
             });
-
 
             add(box1);
             add(b6);
@@ -118,13 +106,14 @@ public class Options extends JPanel implements ActionListener {
             frame.revalidate();
         });
 
-        b2.addActionListener((event) -> {
+        /*b2.addActionListener((event) -> {
 
             Container frame = getParent().getParent();
             CardLayout layout = (CardLayout) frame.getLayout();
+
             b6.addActionListener(e -> {
 
-                layout.show(frame, "editor");
+            layout.show(frame, "editor");
             });
 
             add(b3);
@@ -134,9 +123,16 @@ public class Options extends JPanel implements ActionListener {
             frame.revalidate();
 
         });
+*/
 
+        b6.addActionListener(e -> {
+            Container frame = getParent().getParent();
+            CardLayout layout = (CardLayout) frame.getLayout();
+            layout.show(frame, "editor");
+        });
 
         b3.addActionListener(e -> System.exit(0));
+
         speilButton(b5, babaFrame);
         editorButton(b6, babaFrame);
         }
@@ -147,7 +143,8 @@ public class Options extends JPanel implements ActionListener {
             babaFrame.prepareMap();
             
             layout.show(babaFrame.getContentPane(), "multiplayer");
-        });}
+        });
+    }
 
         public void editorButton(button b, MainFrame babaFrame){
 
@@ -177,8 +174,6 @@ public class Options extends JPanel implements ActionListener {
 
     }
 
-
-
         public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
             String bip = "bin/music/Popcorn01.wav";
             Media hit = new Media(new File(bip).toURI().toString());
@@ -188,19 +183,6 @@ public class Options extends JPanel implements ActionListener {
             return mediaPlayer;
         }
     
-        // //@Override
-        // public void actionPerformed(ActionEvent e) {
-        //     if(music && clip != null) {
-        //             clip.stop();
-        //             music = false;
-        //         }
-        //     else if(!music && clip != null) {
-        //             clip.play();
-        //             music = true;
-        //         }
-    
-        // }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
