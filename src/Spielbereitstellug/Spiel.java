@@ -554,7 +554,7 @@ public class Spiel extends Render implements Runnable {
 				}
 
 
-				// Monster verfolgt Spieler
+				// Monster(Nobbin) verfolgt Spieler // still buggy after the second monster goes out, any solution for this, will be thankful
 				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
 					Monster m = iterator.next();
 
@@ -569,29 +569,135 @@ public class Spiel extends Render implements Runnable {
 						x_off = 1;
 
 					if (m_pos[1] > s_pos[1])
+
 						y_off = -1;
 					else
-						y_off = 1;
+						if(z==0){
+							y_off = 1;
+
+						}
+						else y_off=-1;
+						if (z !=0){
+
+							m.addPosOff(0, 1);
+							System.out.print(z);
+							if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()){
+								m.addPosOff(0, 1);
+								z=0;
+							}
+
+
+						}
+						else if(u !=0){
+							if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] -1, m_pos[1]})).isEmpty()){
+								System.out.print(u);
+								m.addPosOff(-1, 0);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+									m.addPosOff(-1, 0);
+									u=0;
+								}
+
+
+							}
+							else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1]+1})).isEmpty()){
+								m.addPosOff(0, 1);
+
+							}
+
+
+
+						}
+						else if(x!=0){
+							 if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1] - y_off})).isEmpty()){
+								System.out.print(x);
+								m.addPosOff(0, -y_off);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0]+x_off, m_pos[1]})).isEmpty()){
+									m.addPosOff(0, -y_off);
+									u=0;
+								}
+
+
+							}
+							else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] - x_off, m_pos[1]})).isEmpty()){
+								System.out.print(x);
+								m.addPosOff(-x_off, 0);
+								if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+									m.addPosOff(-x_off, 0);
+									x=0;
+								}
+
+
+							}
+
+
+						}
+						else {
+					if (m_pos[1] == s_pos[1] )
+					{
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0],  m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+							//m.addPosOff(0, -1);
+							z++;
+							System.out.print(z);
+
+
+						}}
+					if (m_pos[0] == s_pos[0] )
+							{
+								if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],  y_off+m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+									//m.addPosOff(0, -1);
+									u++;
+									System.out.print(u);
+
+
+								}}
+
 
 
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
-						m.addPosOff(x_off, y_off);
-						if (x_off > 0)
-							m.setMoveDir(DIRECTION.RIGHT);
-						else
-							m.setMoveDir(DIRECTION.LEFT);
+
+						if(z==0 && u ==0){
+							m.addPosOff(x_off, y_off);
+							if (x_off > 0)
+								m.setMoveDir(DIRECTION.RIGHT);
+							else
+								m.setMoveDir(DIRECTION.LEFT);
+						}
+						else {
+							//m.addPosOff(0, -1);
+							System.out.print("test");
+
+						}
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-						m.addPosOff(0, y_off);
+						if(z==0&& u==0){
+							m.addPosOff(0, y_off);
+
+						}
+						else {
+							//y_off = -1;
+							m.setMoveDir(DIRECTION.DOWN);
+							//m.addPosOff(0,  y_off);
+							System.out.print("ml");
+
+						}
+
 					}
 					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
-						m.addPosOff(x_off, 0);
-						if(x_off >0 )
-							m.setMoveDir(DIRECTION.RIGHT);
-						else
-							m.setMoveDir(DIRECTION.LEFT);
-					}
-				}
+						if(z==0 && u==0){
+							//m.addPosOff(0, y_off);
+							m.addPosOff(x_off, 0);
+							z=0;
+							if(x_off >0 )
+								m.setMoveDir(DIRECTION.RIGHT);
+							else
+								m.setMoveDir(DIRECTION.LEFT);
+
+						}}
+					else x++;
+
+
+
+					}}
 
 
 					/*
