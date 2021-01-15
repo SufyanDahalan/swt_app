@@ -373,7 +373,7 @@ public class Spiel extends Render implements Runnable {
 			}
 
 
-			// Monster(Nobbin) verfolgt Spieler // still buggy after the second monster goes out, any solution for this, will be thankful
+			// Monster(Nobbin) verfolgt Spieler // still a little buggy 
 			for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext();) {
 				Nobbin m = iterator.next();
 
