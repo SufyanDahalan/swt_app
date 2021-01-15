@@ -308,13 +308,13 @@ public class Spiel extends Render implements Runnable {
 							iterator.remove();
 						}
 						else {
-							/*
+							//Monster trifft Spieler
 							if(sp.isAlive()) {
 								sp.decrementLife();
 								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 								anzMon = 0;
 							}
-							 */
+
 						}
 					}
 
@@ -673,7 +673,7 @@ public class Spiel extends Render implements Runnable {
 						gs.incFallHeight();
 					}
 					else {
-						if (gs.getFallHeight() > field_size-2) {
+						if (gs.getFallHeight() > field_size-25) {
 							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition()), current_skin));
 							iterator.remove();
 						} else
