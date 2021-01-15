@@ -232,7 +232,7 @@ public class Spiel extends Render implements Runnable {
 					// nach l/r bewegen
 					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						int[] newField1 = gs.getField();
+						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
 							if (newField1[0] < PGSize[0])
 								gs.addPosOff(field_size, 0);
@@ -252,7 +252,7 @@ public class Spiel extends Render implements Runnable {
 							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
 								if (newField1[0] + newField2[0] < PGSize[0]) {
 									g2.addPosOff(field_size, 0);
-								} else if (1 < newField2[0] + newField1[0]) {
+								}if (1 < newField2[0] + newField1[0]) {
 									g2.addPosOff(-field_size, 0);
 								}
 							}
@@ -715,7 +715,7 @@ public class Spiel extends Render implements Runnable {
 				//Feuerball trifft Geldsack
 				for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
 					Geldsack gs = it.next();
-					if (Arrays.equals(getFieldOf(fb.getPosition()), gs.getField())) {
+					if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(gs.getPosition()))) {
 						iterator.remove();
 						break breakoutpoint;
 					}
