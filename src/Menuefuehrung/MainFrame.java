@@ -6,8 +6,7 @@ import Spielbereitstellug.Spiel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.sound.sampled.*;
-import java.io.*;
+
 
 public class MainFrame extends JFrame {
 
@@ -42,7 +41,7 @@ public class MainFrame extends JFrame {
 
 
 
-        // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/images/Logo.png")));
+        setIconImage(new ImageIcon("bin/images/VolumeIcon.png").getImage());
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
@@ -51,28 +50,8 @@ public class MainFrame extends JFrame {
         setResizable(false);
 
         setVisible(true);
-        /*
-        try {
-            Music();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
-            e1.printStackTrace();
-        }
-        */
     }
 
-
-    // public void Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-    //     AudioInputStream as1 = AudioSystem.getAudioInputStream(new BufferedInputStream(new java.io.FileInputStream("bin/music/Popcorn01.wav")));
-    //            AudioFormat af = as1.getFormat();
-    //            Clip clip1 = AudioSystem.getClip();
-    //            DataLine.Info info = new DataLine.Info(Clip.class, af);
-    //            Line line1 = AudioSystem.getLine(info);
-    //            if (!line1.isOpen()){
-    //             clip1.open(as1);
-    //             clip1.loop(Clip.LOOP_CONTINUOUSLY);
-    //             clip1.start();
-    //            }
-    // }
 
     private void FullScreen(){
         if (fullscreen) {
@@ -102,8 +81,7 @@ public class MainFrame extends JFrame {
 
         // Naiv-Testing Area:
         Lokalsteuerung lok = new Lokalsteuerung(spiel);
-        //implemented swing keyBinding instead of awt keyListener because keyListener is a heavyweight awt component and does not work
-        //with a swing cardLayout.
+
         addKeyBinding(spiel, "DOWN", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
