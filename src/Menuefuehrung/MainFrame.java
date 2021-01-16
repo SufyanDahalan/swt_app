@@ -11,6 +11,7 @@ import java.io.*;
 
 public class MainFrame extends JFrame {
 
+
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
 
@@ -38,11 +39,11 @@ public class MainFrame extends JFrame {
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
+
+
         
 
 
-
-        // setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bin/images/Logo.png")));
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
