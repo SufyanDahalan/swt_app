@@ -41,7 +41,7 @@ public class MainFrame extends JFrame {
 
 
 
-        setIconImage(new ImageIcon("bin/images/VolumeIcon.png").getImage());
+        setIconImage(new ImageIcon("bin/images/Logo.png").getImage());
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
