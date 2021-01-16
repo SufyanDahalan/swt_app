@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+
+import javafx.scene.control.DialogPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import static java.awt.Toolkit.getDefaultToolkit;
@@ -16,6 +18,7 @@ public class Options extends JPanel implements ActionListener {
 
     MediaPlayer clip;
     boolean music = true;
+    MainFrame digger;
 
     Options(MainFrame babaFrame){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
@@ -106,24 +109,31 @@ public class Options extends JPanel implements ActionListener {
             frame.revalidate();
         });
 
-        /*b2.addActionListener((event) -> {
 
-            Container frame = getParent().getParent();
-            CardLayout layout = (CardLayout) frame.getLayout();
-
-            b6.addActionListener(e -> {
-
-            layout.show(frame, "editor");
-            });
-
-            add(b3);
-            add(b8);
-
-            frame.repaint();
-            frame.revalidate();
-
+        b2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = JOptionPane.showInputDialog(digger, "Option", null);
+                //JOptionPane
+            }
         });
-*/
+
+        b5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int choice = JOptionPane.showOptionDialog(null ,"Host or Client ?", "choose a on", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Host", "Local"},  "Host");
+
+                if(choice == 0) {
+                     // Host ausgewählt
+                    //System.out.println("Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation..." );
+                    int Host = JOptionPane.showConfirmDialog(null,"Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION );
+                }
+                else {
+                    // Local ausgewählt
+                    String name = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
+                }
+            }
+        });
 
         b6.addActionListener(e -> {
             Container frame = getParent().getParent();
