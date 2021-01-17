@@ -256,10 +256,14 @@ public class Spiel extends Render implements Runnable {
 
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(gs.getPosition())) && gs.getFalling()) {
 						if (sp.isAlive()) {
-							sp.decrementLife();
-							sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+							if (sp.decrementLife())
+								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+
 							bounsmodus = false;
 							anzMon = 0;
+							monsters.clear();
+							iterator.remove();
+							break;
 						}
 					}
 				}
@@ -301,8 +305,9 @@ public class Spiel extends Render implements Runnable {
 						else {
 							//Monster trifft Spieler
 							if(sp.isAlive()) {
-								sp.decrementLife();
-								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+								if (sp.decrementLife())
+									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+
 								anzMon = 0;
 								monsters.clear();
 								break;
@@ -862,7 +867,7 @@ public class Spiel extends Render implements Runnable {
 			// ---- Counter ende
 
 
-			if (!sp1.isAlive() && !sp2.isAlive()) {
+			if (!sp1.isAlive() && isMultiplayer && !sp2.isAlive()) {
 				return false; // Spiel beendet
 			}
 			if(spielers.size() == 0) {
@@ -1174,8 +1179,8 @@ public class Spiel extends Render implements Runnable {
 			}
 			else {
 				// gegen Geist ersetzen
-				Animation ani_grave = current_skin.getAnimation("Grave");
-				BufferedImage sp1Img = ani_grave.nextFrame(field_size);
+				//Animation ani_grave = current_skin.getAnimation("Grave");
+				BufferedImage sp1Img = current_skin.getImage("grave_f5", field_size);
 				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
 				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
 				g.drawImage(sp1Img, x_pixel, y_pixel, null);
@@ -1211,8 +1216,8 @@ public class Spiel extends Render implements Runnable {
 			}
 			else {
 				// gegen Geist ersetzen
-				Animation ani_grave = current_skin.getAnimation("Grave");
-				BufferedImage spImg = ani_grave.nextFrame(field_size);
+				//Animation ani_grave = current_skin.getAnimation("Grave");
+				BufferedImage spImg = current_skin.getImage("grave_f5", field_size);
 				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
 				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
 				g.drawImage(spImg, x_pixel, y_pixel, null);
