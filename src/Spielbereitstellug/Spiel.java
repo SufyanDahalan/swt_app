@@ -1,10 +1,8 @@
 package Spielbereitstellug;
 
 import Spielverlauf.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -77,8 +75,6 @@ public class Spiel extends Render implements Runnable {
 		String[] maps = new File(levelfolder_name).list(); // read Level from Folder
 
 		// create Map and add it to chain
-
-		System.out.println("Anzahl der gelesenen Karten: " + maps.length);
 
 		mapChain = new ArrayList<>();
 
@@ -274,7 +270,6 @@ public class Spiel extends Render implements Runnable {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().removeKirsche();
 						spielstand += kirsche.getValue();
-						System.out.println("Bonsmodus is Aktive");
 						bounsmodus = true;
 					}
 				}
@@ -751,7 +746,6 @@ public class Spiel extends Render implements Runnable {
 
 			//add Kirsche
 			if (anzMon == aktuelles_level.getMaxMonster()){
-				System.out.println("Monster kill "+ anzMon + " show Kirsche");
 				aktuelles_level.getMap().setKirsche(new Kirsche(aktuelles_level.getMap().getSpawn_cherry(), current_skin));
 				anzMon=0;
 			}
@@ -869,11 +863,9 @@ public class Spiel extends Render implements Runnable {
 
 
 			if (!sp1.isAlive() && !sp2.isAlive()) {
-				System.out.println("Beide tot. Loop beendet");
 				return false; // Spiel beendet
 			}
 			if(spielers.size() == 0) {
-				System.out.println("kein Spieler gespawnt. Loop beendet");
 				return false;
 			}
 
@@ -913,7 +905,6 @@ public class Spiel extends Render implements Runnable {
 		an.add(current_skin.getAnimation("digger_red_down"));
 
 		sp1 = new Spieler(pixelPos[0], pixelPos[1], an);
-		System.out.println(pixelPos[0]+ " " +pixelPos[1]);
 
 		if(isMultiplayer) {
 			an.clear();
@@ -924,25 +915,16 @@ public class Spiel extends Render implements Runnable {
 
 			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
 			sp2 = new Spieler(pixelPos[0], pixelPos[1], an);
-			System.out.println(pixelPos[0]+ " " +pixelPos[1]);
 		}
 
 
-	}
-
-	public Spieler getSP1(){
-		return sp1;
 	}
 
 	public void spawnFeuerball( Spieler sp) {
-		if(!sp.getFired()){
+		if(!sp.getFired() && sp.isAlive()){
 			sp.setFired(true);
 			sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
 			aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
-		}
-		else
-		{
-			System.out.println("Darf zZ nicht feuern");
 		}
 	}
 
@@ -956,7 +938,6 @@ public class Spiel extends Render implements Runnable {
 		int new_mr;
 		Map nextMap;
 		current_map = (current_map+1)%mapChain.size();
-		System.out.println("create next Level with Map: " + current_map);
 		System.out.println("Feldgröße: " + field_size);
 		nextMap = new Map(mapChain.get(current_map)); // nächste Map als KOPIE!!! einsetzen. Sonst wird die Mapchain manipuliert und Folgelevel sind verändert.
 
@@ -1020,8 +1001,6 @@ public class Spiel extends Render implements Runnable {
 		int[] playground_size = aktuelles_level.getMap().getPGSize();
 
 		Dimension d = new Dimension(playground_size[0] * field_size + 2* borderOffset[0], playground_size[1] * field_size + 2* borderOffset[1] + getTopBarHeight());
-
-		System.out.println(d);
 
 		return d;
 	}
