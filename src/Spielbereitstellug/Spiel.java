@@ -23,6 +23,8 @@ public class Spiel extends Render implements Runnable {
 	boolean isMultiplayer;
 	boolean isHost;
 
+	Netzwerksteuerung netControl;
+
 	// Speed
 
 	int feuerball_steps;
@@ -56,12 +58,19 @@ public class Spiel extends Render implements Runnable {
 
 	private Level aktuelles_level;
 
-	public Spiel(boolean isHost, boolean isMultiplayer) {
+	public Spiel(){
+		this(true, false, null);
+	}
+
+	public Spiel(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
 		// initalisiere game setup
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
 		bounsRemTime=bounsTime;
+
+		// initialisiere Netzwerksteuerung
+		netControl = netC;
 
 		// initialisiere Mapchain
 
@@ -866,6 +875,14 @@ public class Spiel extends Render implements Runnable {
 				System.out.println("kein Spieler gespawnt. Loop beendet");
 				return false;
 			}
+
+			// Netzwerkpart
+			// alle Änderungen sind nun vollzogen. Die Map kann nun an die Netzwerksteuerung gegeben und zum zweiten Spieler gesendet werden.
+
+			// Sende Mapobj
+			if(isMultiplayer && netControl != null)
+				netControl.send(aktuelles_level.getMap());
+
 
 		}
 

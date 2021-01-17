@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import Spielbereitstellug.Netzwerksteuerung;
 import javafx.scene.control.DialogPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -94,7 +95,7 @@ public class Options extends JPanel implements ActionListener {
             CardLayout layout = (CardLayout) frame.getLayout();
 
             b4.addActionListener(e -> {
-                
+                babaFrame.prepareMap(true, false, null);
                 layout.show(frame, "singleplayer");//Singleplayer mode
             });
 
@@ -150,17 +151,28 @@ public class Options extends JPanel implements ActionListener {
         b5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int choice = JOptionPane.showOptionDialog(null ,"Host or Client ?", "choose a on", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Host", "Local"},  "Host");
+                int choice = JOptionPane.showOptionDialog(null ,"Host or Client ?", "choose a on", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Host", "Client"},  "Host");
+
+                CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
 
                 if(choice == 0) {
-                     // Host ausgewählt
+                    // Host ausgewählt
                     //System.out.println("Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation..." );
                     int Host = JOptionPane.showConfirmDialog(null,"Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION );
+
+                    Netzwerksteuerung netCont = new Netzwerksteuerung(true);
+
+                    babaFrame.prepareMap(true, true, netCont);
                 }
                 else {
                     // Local ausgewählt
                     String name = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
+
+                    Netzwerksteuerung netCont = new Netzwerksteuerung(false);
+
+                    babaFrame.prepareMap(false, true, netCont);
                 }
+                layout.show(babaFrame.getContentPane(), "multiplayer");
             }
         });
 
@@ -172,28 +184,19 @@ public class Options extends JPanel implements ActionListener {
 
         b3.addActionListener(e -> System.exit(0));
 
-        speilButton(b5, babaFrame);
         editorButton(b6, babaFrame);
-        }
-
-        public void speilButton(button b, MainFrame babaFrame){
-            b.addActionListener(e -> {
-            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
-            babaFrame.prepareMap();
-            
-            layout.show(babaFrame.getContentPane(), "multiplayer");
-        });
     }
 
-        public void editorButton(button b, MainFrame babaFrame){
 
-            LevelEditor editor = new LevelEditor();
-            babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
-            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
-            
-            layout.show(babaFrame.getContentPane(), "editor");
+    public void editorButton(button b, MainFrame babaFrame){
 
-        }
+        LevelEditor editor = new LevelEditor();
+        babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
+        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+
+        layout.show(babaFrame.getContentPane(), "editor");
+
+    }
 
     public void playSound(String soundName)
     {

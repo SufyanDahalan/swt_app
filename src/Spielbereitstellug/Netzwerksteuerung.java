@@ -1,5 +1,7 @@
 package Spielbereitstellug;
 
+import Spielverlauf.Map;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -141,4 +143,7 @@ public class Netzwerksteuerung {
 	}
 
 
+    public void send( Map m ) {
+		// sende Map an SP2 via net
+    }
 }

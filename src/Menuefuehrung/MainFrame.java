@@ -1,6 +1,7 @@
 package Menuefuehrung;
 
 import Spielbereitstellug.Lokalsteuerung;
+import Spielbereitstellug.Netzwerksteuerung;
 import Spielbereitstellug.Spiel;
 
 import javax.swing.*;
@@ -68,16 +69,12 @@ public class MainFrame extends JFrame {
     }
 
 
-    public void prepareMap(){//copied from Test.java, should be adjusted later
+    public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont){//copied from Test.java, should be adjusted later
 
         int height = getContentPane().getPreferredSize().height;
         int width = getContentPane().getPreferredSize().width;
 
-        Spiel spiel = new Spiel(true, true);
-
-        spiel.spawnSpieler();
-
-        spiel.start();
+        Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
 
         // Naiv-Testing Area:
         Lokalsteuerung lok = new Lokalsteuerung(spiel);
@@ -113,7 +110,15 @@ public class MainFrame extends JFrame {
             }
         });
 
-        getContentPane().add(spiel, "multiplayer");
+        if(isMultiplayer)
+            getContentPane().add(spiel, "multiplayer");
+        else
+            getContentPane().add(spiel, "singleplayer");
+
+        spiel.spawnSpieler();
+
+        spiel.start();
+
     }
 
 }
