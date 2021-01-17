@@ -77,7 +77,7 @@ public class MainFrame extends JFrame {
         Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
 
         // Naiv-Testing Area:
-        Lokalsteuerung lok = new Lokalsteuerung(spiel);
+        Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost);
 
         addKeyBinding(spiel, "DOWN", new AbstractAction() {
             @Override

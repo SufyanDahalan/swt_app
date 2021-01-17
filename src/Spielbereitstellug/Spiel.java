@@ -1025,8 +1025,8 @@ public class Spiel extends Render implements Runnable {
 		return d;
 	}
 
-	public void moveSP(int velx, int vely) {
-		int[] spPos = sp1.getPosition().clone();
+	public void moveSP(int velx, int vely, Spieler s) {
+		int[] spPos = s.getPosition().clone();
 
 		spPos[0] += velx;
 		spPos[1] += vely;
@@ -1034,7 +1034,7 @@ public class Spiel extends Render implements Runnable {
 		int[] newField = getFieldOf(spPos);
 		int[] pgSize = aktuelles_level.getMap().getPGSize();
 		if(0 < newField[0] && newField[0] <= pgSize[0] && 0 < newField[1] && newField[1] <= pgSize[1])
-			sp1.addPosOff(velx,vely);
+			s.addPosOff(velx,vely);
 
 	}
 

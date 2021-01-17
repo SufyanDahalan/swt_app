@@ -154,6 +154,15 @@ public class Skin {
 		gre_ubilder[5] = getImage("dig_gre_up_f6");
 		animations.put("digger_gre_up", new Animation(animation_measure, gre_ubilder, this, DIRECTION.UP, true));
 
+		BufferedImage[] gre_dbilder = new BufferedImage[6];
+		gre_dbilder[0] = getImage("dig_gre_dow_f1");
+		gre_dbilder[1] = getImage("dig_gre_dow_f2");
+		gre_dbilder[2] = getImage("dig_gre_dow_f3");
+		gre_dbilder[3] = getImage("dig_gre_dow_f4");
+		gre_dbilder[4] = getImage("dig_gre_dow_f5");
+		gre_dbilder[5] = getImage("dig_gre_dow_f6");
+		animations.put("digger_gre_down", new Animation(animation_measure, gre_dbilder, this, DIRECTION.DOWN, true));
+
 		BufferedImage[] hob_left_bilder = new BufferedImage[4];
 		hob_left_bilder[0] = getImage("hobbin_right_f1");
 		hob_left_bilder[1] = getImage("hobbin_right_f2");

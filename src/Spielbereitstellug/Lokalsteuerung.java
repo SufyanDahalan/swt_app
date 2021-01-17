@@ -1,6 +1,7 @@
 package Spielbereitstellug;
 
 import Spielverlauf.DIRECTION;
+import Spielverlauf.Spieler;
 
 import javax.swing.*;
 
@@ -10,11 +11,12 @@ public class Lokalsteuerung {
 	private int velx;
 	private int vely;
 	private Spiel spiel;
+	private boolean isHost;
 
-	public Lokalsteuerung(Spiel m) {
+	public Lokalsteuerung(Spiel m, boolean isHost) {
 
 		spiel = m;
-
+		this.isHost = isHost;
 		velx = 0;
 		vely = 0;
 		spiel.setFocusTraversalKeysEnabled(false);
@@ -33,7 +35,14 @@ public class Lokalsteuerung {
 	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
 
 	public void render(){
-		spiel.moveSP(velx,vely);
+		spiel.moveSP(velx,vely, getSpieler());
+	}
+
+	private Spieler getSpieler(){
+		if(isHost)
+			return spiel.sp1;
+		else
+			return spiel.sp2;
 	}
 
 
@@ -41,9 +50,9 @@ public class Lokalsteuerung {
 
 	public void up() {
 
-		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+		DIRECTION latestDir = getSpieler().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.UP || latestDir == DIRECTION.DOWN) {
-			spiel.getSP1().setMoveDir(DIRECTION.UP);
+			getSpieler().setMoveDir(DIRECTION.UP);
 			vely = -getSteps();
 		}
 		else
@@ -55,9 +64,9 @@ public class Lokalsteuerung {
 
 	public void down() {
 
-		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+		DIRECTION latestDir = getSpieler().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.DOWN || latestDir == DIRECTION.UP) {
-			spiel.getSP1().setMoveDir(DIRECTION.DOWN);
+			getSpieler().setMoveDir(DIRECTION.DOWN);
 			vely = getSteps();
 		}
 		else
@@ -69,9 +78,9 @@ public class Lokalsteuerung {
 
 	public void left() {
 
-		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+		DIRECTION latestDir = getSpieler().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.LEFT || latestDir == DIRECTION.RIGHT) {
-			spiel.getSP1().setMoveDir(DIRECTION.LEFT);
+			getSpieler().setMoveDir(DIRECTION.LEFT);
 			velx = -getSteps();
 		}
 		else
@@ -83,9 +92,9 @@ public class Lokalsteuerung {
 
 	public void right() {
 
-		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+		DIRECTION latestDir = getSpieler().getMoveDir();
 		if (isOnCrossroad() || latestDir == DIRECTION.RIGHT || latestDir == DIRECTION.LEFT) {
-			spiel.getSP1().setMoveDir(DIRECTION.RIGHT);
+			getSpieler().setMoveDir(DIRECTION.RIGHT);
 
 			velx = getSteps();
 		}
@@ -111,8 +120,8 @@ public class Lokalsteuerung {
 	private boolean isOnCrossroad() {
 
 		int tolerance = getSteps()/2;
-		int[] field_middle = spiel.getCenterOf(spiel.getFieldOf(spiel.getSP1().getPosition()));
-		int[] sp_pos = spiel.getSP1().getPosition();
+		int[] field_middle = spiel.getCenterOf(spiel.getFieldOf(getSpieler().getPosition()));
+		int[] sp_pos = getSpieler().getPosition();
 
 		if (field_middle[0] - tolerance <= sp_pos[0] && sp_pos[0] <= field_middle[0] + tolerance && field_middle[1] - tolerance <= sp_pos[1] && sp_pos[1] <= field_middle[1] + tolerance) {
 			return true;
@@ -123,7 +132,7 @@ public class Lokalsteuerung {
 	}
 
 	private void repeatLastMove() {
-		DIRECTION latestDir = spiel.getSP1().getMoveDir();
+		DIRECTION latestDir = getSpieler().getMoveDir();
 
 		switch (latestDir){
 			case UP:
