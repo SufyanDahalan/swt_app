@@ -299,7 +299,6 @@ public class Spiel extends Render implements Runnable {
 					Monster mon = iterator.next();
 
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(mon.getPosition()))) {
-
 						if(bounsmodus) {
 							spielstand += mon.getWertung();
 							iterator.remove();
@@ -310,6 +309,8 @@ public class Spiel extends Render implements Runnable {
 								sp.decrementLife();
 								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 								anzMon = 0;
+								monsters.clear();
+								break;
 							}
 
 						}
