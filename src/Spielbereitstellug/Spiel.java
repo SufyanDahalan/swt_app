@@ -89,25 +89,14 @@ public class Spiel extends Render implements Runnable {
 
 		// add Player
 
-		aktuelles_level = createNextLevel();
+		createNextLevel();
+
 
 		setFbRegTime();
 		monRTime = aktuelles_level.getRegenTimeFb();
 
 		// refresh sizing
 		obj = aktuelles_level.getMap().exportStaticsAsJSON();
-		refreshSizing();
-
-		// Tanslate Geldsackpositionen
-
-		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
-
-		for (int i = 0; i < geldsaecke.size(); i++) {
-
-			Geldsack single_item = geldsaecke.get(i);
-			if (single_item.getPosition() == null)
-				single_item.setPosition(getCenterOf(single_item.getField()));
-		}
 
 		feuerball_steps = field_size/15;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
@@ -164,7 +153,7 @@ public class Spiel extends Render implements Runnable {
 				// alle Diamanten gesammel?
 				if (aktuelles_level.getMap().getDiamonds().size() == 0) {
 					// dann nächstes Level
-					aktuelles_level = createNextLevel();
+					createNextLevel();
 
 					//reset players position
 					sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
@@ -941,7 +930,7 @@ public class Spiel extends Render implements Runnable {
 
 	// creates next Level, increases speed and decrease regtime
 
-	private Level createNextLevel() {
+	private void createNextLevel() {
 
 		int new_s;
 		int new_r;
@@ -950,6 +939,7 @@ public class Spiel extends Render implements Runnable {
 		Map nextMap;
 		current_map = (current_map+1)%mapChain.size();
 		System.out.println("create next Level with Map: " + current_map);
+		System.out.println("Feldgröße: " + field_size);
 		nextMap = new Map(mapChain.get(current_map)); // nächste Map als KOPIE!!! einsetzen. Sonst wird die Mapchain manipuliert und Folgelevel sind verändert.
 
 		if (aktuelles_level != null) {
@@ -974,8 +964,18 @@ public class Spiel extends Render implements Runnable {
 
 		setFbRegTime();
 
-		return new Level(new_s, new_r, new_mm, new_mr, nextMap);
+		aktuelles_level = new Level(new_s, new_r, new_mm, new_mr, nextMap);
 
+		refreshSizing();
+
+		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
+
+		for (int i = 0; i < geldsaecke.size(); i++) {
+
+			Geldsack single_item = geldsaecke.get(i);
+			if (single_item.getPosition() == null)
+				single_item.setPosition(getCenterOf(single_item.getField()));
+		}
 	}
 
 	public void beenden() {
@@ -1212,6 +1212,14 @@ public class Spiel extends Render implements Runnable {
 				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
 				g.drawImage(spImg, x_pixel, y_pixel, null);
 			}
+			else {
+				// gegen Geist ersetzen
+				Animation ani_grave = current_skin.getAnimation("Grave");
+				BufferedImage spImg = ani_grave.nextFrame(field_size);
+				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
+				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+				g.drawImage(spImg, x_pixel, y_pixel, null);
+			}
 		}
 
 		// Zeichne Score
@@ -1290,6 +1298,10 @@ public class Spiel extends Render implements Runnable {
 					m.getPosition()[i] *= factor;
 
 			for (Geldsack gs : aktuelles_level.getMap().getGeldsaecke()) {
+
+				if (gs.getPosition() == null)
+					gs.setPosition(getCenterOf(gs.getField()));
+
 				for (int i= 0; i<= gs.getPosition().length -1; i++)
 					gs.getPosition()[i] *= factor;
 			}
