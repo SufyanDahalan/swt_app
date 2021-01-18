@@ -25,6 +25,8 @@ public class Spiel extends Render implements Runnable {
 
 	Netzwerksteuerung netControl;
 
+	GameListener gl;
+
 	// Speed
 
 	int feuerball_steps;
@@ -58,16 +60,18 @@ public class Spiel extends Render implements Runnable {
 
 	private Level aktuelles_level;
 
-	public Spiel(){
-		this(true, false, null);
+	public Spiel(GameListener gl){
+		this( gl,true, false, null);
 	}
 
-	public Spiel(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
+	public Spiel(GameListener gl, boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
 		// initalisiere game setup
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
 		bounsRemTime=bounsTime;
+
+		this.gl = gl;
 
 		// initialisiere Netzwerksteuerung
 		netControl = netC;
@@ -868,11 +872,15 @@ public class Spiel extends Render implements Runnable {
 			// ---- Counter ende
 
 
-			if (!sp1.isAlive() && !sp2.isAlive()) {
-				System.out.println("Beide tot. Loop beendet");
+			if ( (!sp1.isAlive() && !isMultiplayer) || (!sp1.isAlive() && isMultiplayer && !sp2.isAlive())) {
+
+				// informiere system
+				if (gl != null) {
+					gl.onCompleted("Beide tot. Loop beendet");
+				}
 				return false; // Spiel beendet
 			}
-			if(spielers.size() == 0) {
+			else if(spielers.size() == 0) {
 				System.out.println("kein Spieler gespawnt. Loop beendet");
 				return false;
 			}
@@ -1195,8 +1203,8 @@ public class Spiel extends Render implements Runnable {
 			}
 			else {
 				// gegen Geist ersetzen
-				Animation ani_grave = current_skin.getAnimation("Grave");
-				BufferedImage sp1Img = ani_grave.nextFrame(field_size);
+				//Animation ani_grave = current_skin.getAnimation("Grave");
+				BufferedImage sp1Img = current_skin.getImage("grave_f5");
 				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
 				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
 				g.drawImage(sp1Img, x_pixel, y_pixel, null);

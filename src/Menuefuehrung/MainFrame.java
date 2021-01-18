@@ -1,5 +1,6 @@
 package Menuefuehrung;
 
+import Spielbereitstellug.GameListener;
 import Spielbereitstellug.Lokalsteuerung;
 import Spielbereitstellug.Netzwerksteuerung;
 import Spielbereitstellug.Spiel;
@@ -74,7 +75,10 @@ public class MainFrame extends JFrame {
         int height = getContentPane().getPreferredSize().height;
         int width = getContentPane().getPreferredSize().width;
 
-        Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
+        // füge Listener hinzu für Pause eund Ende
+        GameListener gl = text -> System.out.println("Listener says: " + text);
+
+        Spiel spiel = new Spiel(gl, isHost, isMultiplayer, netCont);
 
         // Naiv-Testing Area:
         Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost);
