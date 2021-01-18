@@ -132,6 +132,8 @@ public class Spiel extends Render implements Runnable {
 		// Take Time, set period
 		long beginTime = System.currentTimeMillis();
 
+
+
 		if(isHost) {
 			// link current lists
 			ArrayList<Diamant> diamants = aktuelles_level.getMap().getDiamonds();
@@ -887,9 +889,12 @@ public class Spiel extends Render implements Runnable {
 
 			// Sende Mapobj
 			if(isMultiplayer && netControl != null)
-				netControl.send(aktuelles_level.getMap());
+				netControl.serverSend(aktuelles_level.getMap(), spielstand);
 
 
+		}
+		else{ // !isHost
+			netControl.clientGetContent(this);
 		}
 
 		super.obj = aktuelles_level.getMap().exportStaticsAsJSON();
@@ -904,6 +909,10 @@ public class Spiel extends Render implements Runnable {
 		}
 
 		return true;
+	}
+
+	public Level getLevel() {
+		return aktuelles_level;
 	}
 
 	public void spawnSpieler() {
@@ -1328,5 +1337,21 @@ public class Spiel extends Render implements Runnable {
 
 	public void pause() {
 		System.out.println("Pause wurde gedrückt");
+	}
+
+	public void setMap( Map m ) {
+		aktuelles_level = new Level(0,0,0,0,  m);
+	}
+
+	public void setSpielstand(int st) {
+		spielstand = st;
+	}
+
+	public int getSpielstand() {
+		return spielstand;
+	}
+
+	public void setClientPos(int[] c_pos) {
+		sp2.setPosition(c_pos);
 	}
 }

@@ -25,19 +25,6 @@ public class Level {
 		regeneration_monster = reg_mon;
 	}
 
-	public void loop() {
-
-		if (karte.getMonsterAmmount() < max_monster ) {
-			// karte.spawnMonster(new Nobbin(karte.getSpawn_monster()));
-		}
-
-		if (temp_kills == 4) { // TODO: Spielverhalten abstimmen udn Bedingung anpassen
-			//karte.setKirsche();
-			temp_kills = 0;
-		}
-
-	}
-
 
 	public int getSpeed() {
 		return geschwindigkeit;
@@ -58,4 +45,5 @@ public class Level {
 	public Map getMap() {
 		return karte;
 	}
+
 }

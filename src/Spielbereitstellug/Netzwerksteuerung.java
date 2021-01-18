@@ -1,5 +1,6 @@
 package Spielbereitstellug;
 
+import Spielverlauf.Feuerball;
 import Spielverlauf.Map;
 
 import java.io.*;
@@ -143,7 +144,44 @@ public class Netzwerksteuerung {
 	}
 
 
-    public void send( Map m ) {
-		// sende Map an SP2 via net
+    public void serverSend( Map map, int spielstand ) {
+
+		// Server OUT
+		// Hier möchte der Server seine Kartendaten und den Spielstand senden
+
     }
+
+    public void serverGetContent(Spiel s){
+
+		// Server IN
+
+		int[] c_pos = {0,0}; // lese aktuelle pos aus netz
+
+		s.setClientPos(c_pos);
+
+		// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
+		boolean rx_fb = false;
+		if(rx_fb)
+			s.spawnFeuerball(s.sp2);
+	}
+
+	public void clientSend(int pos, boolean try_fb){
+		// Client OUT
+		// Hier pos und fb senden (Feuerball)
+		if(try_fb){}
+	}
+
+	public void clientGetContent(Spiel s) {
+
+		// Client IN
+		// Hier fragt ein Client regelmäßig die aktuellen Inhalte an. es liefert eine Ref. auf sich selbst, sodass die notwendigen Attribute aktualisiert werden können
+
+		Map m = null; /*hier kommt die empange map rein*/
+		s.setMap(m);
+
+		int spielstand = 0; /*hier kommt der empf. Spielsand rein*/
+		s.setSpielstand(spielstand);
+	}
+
+
 }
