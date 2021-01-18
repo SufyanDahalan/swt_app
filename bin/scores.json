@@ -1,0 +1,10 @@
+{
+  "data":[
+    {
+      "name": "John Doe",
+      "date": "18. Januar 2021",
+      "age": 30,
+      "score": 1000
+    }
+  ]
+}

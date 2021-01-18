@@ -1,13 +1,12 @@
 package Menuefuehrung;
 
-import Spielbereitstellug.GameListener;
-import Spielbereitstellug.Lokalsteuerung;
-import Spielbereitstellug.Netzwerksteuerung;
-import Spielbereitstellug.Spiel;
+import Spielbereitstellug.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
 
 
 public class MainFrame extends JFrame {
@@ -75,10 +74,47 @@ public class MainFrame extends JFrame {
         int height = getContentPane().getPreferredSize().height;
         int width = getContentPane().getPreferredSize().width;
 
-        // füge Listener hinzu für Pause eund Ende
-        GameListener gl = text -> System.out.println("Listener says: " + text);
+        final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
 
-        Spiel spiel = new Spiel(gl, isHost, isMultiplayer, netCont);
+        EndListener el = spielstand -> {
+
+            JTextField name = new JTextField(8);
+            JTextField age = new JTextField(2);
+
+            JPanel myPanel = new JPanel();
+            myPanel.add(new JLabel("Your name :"));
+            myPanel.add(name);
+            myPanel.add(new JLabel("Your Age :"));
+            myPanel.add(age);
+            myPanel.add(Box.createHorizontalStrut(10));
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "please enter ..", JOptionPane.OK_CANCEL_OPTION);
+
+            // Click on OK
+            if(result == JOptionPane.OK_OPTION) {
+                // der Name und der Alter werden dann im Scoreboard eingespeichert.
+                // Fraglich, ob bei Abbruch des Spieles der Eintrag tz. eingespeichert bleibt.
+
+                GregorianCalendar now = new GregorianCalendar();
+                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);      // 14. April 2012
+                //DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM)   // 14.04.2012
+
+                final String _date = df.format(now.getTime());
+                final int _endspielstand = spielstand;
+                final String _name = name.getText();
+                final String _age = age.getText();
+
+                // Auf jeden Fall Exceptions einbauen: Alter keine Zahl ect...
+
+                System.out.println("Eintragung: " + _name + ", " + _age + ", " + _date + ", " + _endspielstand);
+
+            }
+
+
+        };
+
+
+        spiel.addListener(el);
 
         // Naiv-Testing Area:
         Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost);
@@ -111,6 +147,13 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lok.shoot();
+            }
+        });
+
+        addKeyBinding(spiel, "ESC", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                spiel.pause();
             }
         });
 

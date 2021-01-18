@@ -1,6 +1,8 @@
 package Menuefuehrung;
 
 import Spielverlauf.Skin;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,12 +10,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class Scoreboard extends JPanel {
     private final String skinName = "original_skin"; // Skinnname
-    private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
+    private final String rootfolder_name = "bin/"; // ./skin/sink_original.json,...
+    private final String skinfolder_name = rootfolder_name+"skins/"; // ./skin/sink_original.json,...
     private Skin current_skin;
         Scoreboard(){
             current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
@@ -29,8 +34,18 @@ public class Scoreboard extends JPanel {
             String[] CHeader = {"Name", "Age", "Date", "Score"};
             dtm.setColumnIdentifiers(CHeader);
 
-            for (int count = 1; count <= 10; count++) {
-                dtm.addRow(new Object[]{"Name " + count, "Age " + count, "Date " + count, "Score " + count});
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JSONArray scores = obj.getJSONArray("data");
+
+            for (int i = 0; i < scores.length() && i < 10; i++) {
+                JSONObject s = scores.getJSONObject(i);
+                dtm.addRow(new Object[]{s.get("name"), s.get("age"), s.get("date"), s.get("score")});
             }
             JTable Table = new JTable (dtm);
             Table.setModel(dtm);
