@@ -17,8 +17,14 @@ import java.util.Scanner;
 public class Netzwerksteuerung {
 
 	public static final int PORT = 1337;
-	// private Spiel spiel;
+	public ObjectOutputStream objectOutputStream_outToServer;
+	public ObjectInputStream objectInputStream_inFromClient;
+	public ObjectOutputStream objectOutputStream_outToClient;
+	public ObjectInputStream getObjectInputStream_inFromClient;
+	public String type;
 
+	private ServerSocket serverSocket;
+	private Socket client;
 
 
 	void displayMyIP() {
@@ -50,9 +56,10 @@ public class Netzwerksteuerung {
 		try {
 
 			if (isHost) {
+				type = "Host";
 
-				ServerSocket serverSocket = new ServerSocket(PORT); // serverSocket startet TCP-Verbindungsaufbau (UDP wäre Datagram Socket)
-				Socket client = awaitingConnection(serverSocket); // hier kann sich der Client verbinden
+				serverSocket = new ServerSocket(PORT); // serverSocket startet TCP-Verbindungsaufbau (UDP wäre Datagram Socket)
+				client = awaitingConnection(serverSocket); // hier kann sich der Client verbinden
 
 				// displayMyIP();
 
@@ -61,46 +68,54 @@ public class Netzwerksteuerung {
 				// hier müsen wir statt einem OutputStream einen ObjectOutputStream nutzen um ganze objekte zu versenden
 
 				OutputStream outToClient = client.getOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(outToClient);
+				objectOutputStream_outToClient = new ObjectOutputStream(outToClient);
 
-				PrintWriter writer = new PrintWriter(outToClient);
+				//PrintWriter writer = new PrintWriter(outToClient);
 
 				InputStream inFromClient = client.getInputStream();
+				objectInputStream_inFromClient = new ObjectInputStream(inFromClient);
+
+
+				/*
 				BufferedReader reader = new BufferedReader(new InputStreamReader(inFromClient));
-
 				String s = null;
-
 				while ((s = reader.readLine()) != null) {
 					writer.write(s + "\n");
 					writer.flush();
 					System.out.println("Empfangen vom Client:" + s + "\n");
 				}
 
-				/*System.out.println("Server sendet nun etwas zurück.\n");
+				System.out.println("Server sendet nun etwas zurück.\n");
 
 				writer.write("Hallo Client! Hier ist eine lange zahl: 1234567899876563213456789\n"); // s.u.
-				writer.flush();*/
+				writer.flush();
 
 				writer.close();
 				reader.close();
+				*/
 
 				serverSocket.close();
 
 			} else {    /*in diesem Fall ist unsere Instanz der Client*/
+				type = "Client";
 
-				Socket client = new Socket("localhost", PORT);
+				client = new Socket("localhost", PORT);
 
 
 				//Streams
+				// werden zu Objekt Streams umgebaut
 
 				OutputStream outToServer = client.getOutputStream();
-				PrintWriter writer = new PrintWriter(outToServer);
+				objectOutputStream_outToServer = new ObjectOutputStream(outToServer);
+				//PrintWriter writer = new PrintWriter(outToServer);
 
 				InputStream inFromServer = client.getInputStream();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(inFromServer));
+				objectInputStream_inFromClient = new ObjectInputStream(inFromServer);
+				//BufferedReader reader = new BufferedReader(new InputStreamReader(inFromServer));
 
 				System.out.println("Client ist online!\n");
 
+				/*
 				writer.write("Hallo Server!\n"); // ohne das "\n" blockiert die Verbindung, weil der Server auf ein Zeilenende wartet!
 				writer.flush(); // damit es auch abgeschickt wird d.h. der Stream wird aktualisiert
 
@@ -114,6 +129,7 @@ public class Netzwerksteuerung {
 
 				reader.close();
 				writer.close();
+				*/
 
 				client.close();
 
@@ -155,12 +171,29 @@ public class Netzwerksteuerung {
 		// Server OUT
 		ServerPackage sp = new ServerPackage(map, spielstand);
 
-    }
+		// Sende sp hier mit objectOutputStream_outToClient
+		try {
+			objectOutputStream_outToClient.writeObject(sp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-    public void serverGetContent(Spiel s){
+	}
+
+    public void serverGetContent(Spiel s) {
 
 		// Server IN
 		ClientPackage sp= null; // get this package
+
+		// Empfange sp hier mit objectInputStream_inFromClient
+		try {
+			sp = (ClientPackage) objectInputStream_inFromClient.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
 
 		s.setClientPos(sp.getPos());
 
@@ -169,10 +202,17 @@ public class Netzwerksteuerung {
 			s.spawnFeuerball(s.sp2);
 	}
 
-	public void clientSend(int[] pos, boolean try_fb){
+	public void clientSend(int[] pos, boolean try_fb) {
 
 		// Client OUT
 		ClientPackage cp = new ClientPackage(pos,try_fb);
+
+		// Sende cp hier mit objectOutputStream_outToServer
+		try {
+			objectOutputStream_outToServer.writeObject(cp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -181,9 +221,35 @@ public class Netzwerksteuerung {
 		// Client IN
 		ServerPackage sp = null; // get this package
 
+		// Empfange sp hier mit getObjectInputStream_inFromClient
+		try {
+			sp = (ServerPackage) getObjectInputStream_inFromClient.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		s.setMap(sp.getMap());
 
 		s.setSpielstand(sp.getSpielstand());
+	}
+
+	public void killConnection() {
+		if (type.equals("Host")){
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else if (type.equals("Client")) {
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 
