@@ -59,8 +59,14 @@ public class Spieler {
 		return leben;
 	}
 
-    public void decrementLife() {
+    public boolean decrementLife() {
     	leben -= 1;
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return isAlive();
 	}
 
 	public Animation getAnimation(){
