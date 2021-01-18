@@ -3,11 +3,12 @@ package Spielverlauf;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Map {
+public class Map implements Serializable {
 
 	private Skin skin;
 

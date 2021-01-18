@@ -1,7 +1,9 @@
 package Spielbereitstellug;
 
+import Spielverlauf.ClientPackage;
 import Spielverlauf.Feuerball;
 import Spielverlauf.Map;
+import Spielverlauf.ServerPackage;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -56,7 +58,11 @@ public class Netzwerksteuerung {
 
 				//Streams
 
+				// hier müsen wir statt einem OutputStream einen ObjectOutputStream nutzen um ganze objekte zu versenden
+
 				OutputStream outToClient = client.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(outToClient);
+
 				PrintWriter writer = new PrintWriter(outToClient);
 
 				InputStream inFromClient = client.getInputStream();
@@ -147,40 +153,37 @@ public class Netzwerksteuerung {
     public void serverSend( Map map, int spielstand ) {
 
 		// Server OUT
-		// Hier möchte der Server seine Kartendaten und den Spielstand senden
+		ServerPackage sp = new ServerPackage(map, spielstand);
 
     }
 
     public void serverGetContent(Spiel s){
 
 		// Server IN
+		ClientPackage sp= null; // get this package
 
-		int[] c_pos = {0,0}; // lese aktuelle pos aus netz
-
-		s.setClientPos(c_pos);
+		s.setClientPos(sp.getPos());
 
 		// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
-		boolean rx_fb = false;
-		if(rx_fb)
+		if(sp.isFb_try())
 			s.spawnFeuerball(s.sp2);
 	}
 
-	public void clientSend(int pos, boolean try_fb){
+	public void clientSend(int[] pos, boolean try_fb){
+
 		// Client OUT
-		// Hier pos und fb senden (Feuerball)
-		if(try_fb){}
+		ClientPackage cp = new ClientPackage(pos,try_fb);
+
 	}
 
 	public void clientGetContent(Spiel s) {
 
 		// Client IN
-		// Hier fragt ein Client regelmäßig die aktuellen Inhalte an. es liefert eine Ref. auf sich selbst, sodass die notwendigen Attribute aktualisiert werden können
+		ServerPackage sp = null; // get this package
 
-		Map m = null; /*hier kommt die empange map rein*/
-		s.setMap(m);
+		s.setMap(sp.getMap());
 
-		int spielstand = 0; /*hier kommt der empf. Spielsand rein*/
-		s.setSpielstand(spielstand);
+		s.setSpielstand(sp.getSpielstand());
 	}
 
 
