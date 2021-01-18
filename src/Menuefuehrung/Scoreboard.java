@@ -20,13 +20,15 @@ public class Scoreboard extends JPanel {
     private final String rootfolder_name = "bin/"; // ./skin/sink_original.json,...
     private final String skinfolder_name = rootfolder_name+"skins/"; // ./skin/sink_original.json,...
     private Skin current_skin;
+    private JTable Table;
+    private DefaultTableModel dtm;
         Scoreboard(){
             current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
             setOpaque(false);
-            DefaultTableModel dtm = new DefaultTableModel(0,0) {
+            dtm = new DefaultTableModel(0,0) {
                 public boolean isCellEditable(int rowIndex, int mColIndex) {
                     return false;
                 }
@@ -34,20 +36,8 @@ public class Scoreboard extends JPanel {
             String[] CHeader = {"Name", "Age", "Date", "Score"};
             dtm.setColumnIdentifiers(CHeader);
 
-            JSONObject obj = null;
-            try {
-                obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            refeshScores();
 
-            JSONArray scores = obj.getJSONArray("data");
-
-            for (int i = 0; i < scores.length() && i < 10; i++) {
-                JSONObject s = scores.getJSONObject(i);
-                dtm.addRow(new Object[]{s.get("name"), s.get("age"), s.get("date"), s.get("score")});
-            }
-            JTable Table = new JTable (dtm);
             Table.setModel(dtm);
             Table.setFillsViewportHeight(true);
             Table.setForeground(Color.white);
@@ -78,6 +68,23 @@ public class Scoreboard extends JPanel {
 
             add(Header);
             add(Table);
+        }
+
+        void refeshScores(){
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JSONArray scores = obj.getJSONArray("data");
+
+            for (int i = 0; i < scores.length() && i < 10; i++) {
+                JSONObject s = scores.getJSONObject(i);
+                dtm.addRow(new Object[]{s.get("name"), s.get("age"), s.get("date"), s.get("score")});
+            }
+            Table = new JTable (dtm);
         }
 
 }

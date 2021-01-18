@@ -1,11 +1,17 @@
 package Menuefuehrung;
 
 import Spielbereitstellug.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 
@@ -106,7 +112,50 @@ public class MainFrame extends JFrame {
 
                 // Auf jeden Fall Exceptions einbauen: Alter keine Zahl ect...
 
-                System.out.println("Eintragung: " + _name + ", " + _age + ", " + _date + ", " + _endspielstand);
+                JSONObject score = new JSONObject();
+
+                score.put("name", _name);
+                score.put("age", _age);
+                score.put("date", _date);
+                score.put("score", _endspielstand);
+
+
+                // Save score
+                String rootfolder_name = "bin/";
+
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                JSONArray scores;
+
+                if(obj.has("data")) {
+                    scores = obj.getJSONArray("data");
+
+                    if (scores.length() > 10)
+                        scores.remove(0);
+                }
+                else
+                    scores = new JSONArray("data");
+
+                scores.put(score);
+
+                try {
+                    Files.write(Paths.get(rootfolder_name + "scores.json"), obj.toString(4).getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                // go back to Main
+                getContentPane().remove(spiel);
+                CardLayout layout = (CardLayout) getContentPane().getLayout();
+                layout.show(getContentPane(), "panel");
 
             }
 
