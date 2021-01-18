@@ -23,7 +23,7 @@ public class Spiel extends Render implements Runnable {
 
 	Netzwerksteuerung netControl;
 
-	GameListener gl;
+	private EndListener el;
 
 	// Speed
 
@@ -45,7 +45,7 @@ public class Spiel extends Render implements Runnable {
 	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 
-	
+
 
 	// loop global
 	int anzMon = 0;
@@ -58,18 +58,16 @@ public class Spiel extends Render implements Runnable {
 
 	private Level aktuelles_level;
 
-	public Spiel(GameListener gl){
-		this( gl,true, false, null);
+	public Spiel(){
+		this(true, false, null);
 	}
 
-	public Spiel(GameListener gl, boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
+	public Spiel( boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
 		// initalisiere game setup
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
 		bounsRemTime=bounsTime;
-
-		this.gl = gl;
 
 		// initialisiere Netzwerksteuerung
 		netControl = netC;
@@ -874,8 +872,8 @@ public class Spiel extends Render implements Runnable {
 			if ( (!sp1.isAlive() && !isMultiplayer) || (!sp1.isAlive() && isMultiplayer && !sp2.isAlive())) {
 
 				// informiere system
-				if (gl != null) {
-					gl.onCompleted("Beide tot. Loop beendet");
+				if (el != null) {
+					el.onCompleted(spielstand);
 				}
 				return false; // Spiel beendet
 			}
@@ -1324,4 +1322,11 @@ public class Spiel extends Render implements Runnable {
 
 	}
 
+	public void addListener(EndListener el) {
+		this.el = el;
+	}
+
+	public void pause() {
+		System.out.println("Pause wurde gedrückt");
+	}
 }

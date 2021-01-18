@@ -119,34 +119,6 @@ public class Options extends JPanel implements ActionListener {
             }
         });
 
-        b4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTextField name = new JTextField(8);
-                JTextField age = new JTextField(2);
-                //JTextField date = new JTextField(8);
-
-                JPanel myPanel = new JPanel();
-                myPanel.add(new JLabel("Your name :"));
-                myPanel.add(name);
-                myPanel.add(new JLabel("Your Age :"));
-                myPanel.add(age);
-               // myPanel.add(new JLabel("the date"));
-                //myPanel.add(date);
-                myPanel.add(Box.createHorizontalStrut(10));
-
-                int result = JOptionPane.showConfirmDialog(null, myPanel, "please enter ..", JOptionPane.OK_CANCEL_OPTION);
-
-                // Click on OK
-                if(result == JOptionPane.OK_OPTION) {
-                    // der Name und der Alter werden dann im Scoreboard eingespeichert.
-                    // Fraglich, ob bei Abbruch des Spieles der Eintrag tz. eingespeichert bleibt.
-
-                }
-            }
-        });
-
-
 
         b5.addActionListener(new ActionListener() {
             @Override
