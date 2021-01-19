@@ -5,8 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 import Spielbereitstellug.Netzwerksteuerung;
 import javafx.scene.control.DialogPane;
@@ -127,20 +133,43 @@ public class Options extends JPanel implements ActionListener {
 
                 CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
 
+                InetAddress ipv4 = null;
+
+                try{
+                    URL ipstring = new URL("http://checkip.amazonaws.com");
+                    BufferedReader in = new BufferedReader(new InputStreamReader(ipstring.openStream()));
+                    ipv4 = InetAddress.getByName(in.readLine()); // you get the IP as a String
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                    System.out.println("Konnte IP-Adresse nicht herausfinden");
+                }
+
                 if(choice == 0) {
                     // Host ausgewählt
-                    //System.out.println("Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation..." );
-                    int Host = JOptionPane.showConfirmDialog(null,"Your IP Address: xxx.xxx.xxx.xxx \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION );
 
-                    Netzwerksteuerung netCont = new Netzwerksteuerung(true);
+                    if(ipv4 != null) {
+                        JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
 
-                    babaFrame.prepareMap(true, true, netCont);
+                        Netzwerksteuerung netCont = new Netzwerksteuerung();
+
+                        babaFrame.prepareMap(true, true, netCont);
+                    }
+                    else{
+                        JOptionPane.showConfirmDialog(null, "Keine Verb. mögl.", "Host", JOptionPane.DEFAULT_OPTION);
+                    }
                 }
                 else {
                     // Local ausgewählt
-                    String name = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
+                    String ipstring = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
 
-                    Netzwerksteuerung netCont = new Netzwerksteuerung(false);
+                    InetAddress ipImp = null;
+                    try {
+                        ipImp = InetAddress.getByName(ipstring);
+                    } catch (UnknownHostException unknownHostException) {
+                        unknownHostException.printStackTrace();
+                    }
+
+                    Netzwerksteuerung netCont = new Netzwerksteuerung(ipImp);
 
                     babaFrame.prepareMap(false, true, netCont);
                 }

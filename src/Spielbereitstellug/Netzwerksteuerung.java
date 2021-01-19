@@ -6,6 +6,7 @@ import Spielverlauf.Map;
 import Spielverlauf.ServerPackage;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
@@ -25,6 +26,8 @@ public class Netzwerksteuerung {
 
 	private ServerSocket serverSocket;
 	private Socket client;
+
+	private InetAddress ip;
 
 
 	void displayMyIP() {
@@ -49,9 +52,17 @@ public class Netzwerksteuerung {
 		return null;
 	}*/
 
-	public Netzwerksteuerung( /*Spiel m,*/ boolean isHost) {
 
-		//spiel = m;
+	public Netzwerksteuerung(){
+		this(true, null);
+	}
+
+	public Netzwerksteuerung(InetAddress ip){
+		this(false, ip);
+	}
+	public Netzwerksteuerung(boolean isHost, InetAddress ip) {
+
+		this.ip =ip;
 
 		try {
 
@@ -99,7 +110,7 @@ public class Netzwerksteuerung {
 			} else {    /*in diesem Fall ist unsere Instanz der Client*/
 				type = "Client";
 
-				client = new Socket("localhost", PORT);
+				client = new Socket(ip, PORT);
 
 
 				//Streams
@@ -146,7 +157,7 @@ public class Netzwerksteuerung {
 		// TODO - implement Netzwerksteuerung.befehlempfangen
 		throw new UnsupportedOperationException();
 	}
-
+/*
 	//Main Methode zum Teseten:
 	public static void main(String[] args){
 
@@ -164,7 +175,7 @@ public class Netzwerksteuerung {
 			Netzwerksteuerung n1 = new Netzwerksteuerung(false);}
 
 	}
-
+*/
 
     public void serverSend( Map map, int spielstand ) {
 

@@ -218,7 +218,7 @@ public class Spiel extends Render implements Runnable {
 					}
 				}
 
-/*--------------------------------------------------------------------------------------------------------------------*/
+				/*--------------------------------------------------------------------------------------------------------------------*/
 
 				///Geldsack:
 
@@ -249,7 +249,8 @@ public class Spiel extends Render implements Runnable {
 							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
 								if (newField1[0] + newField2[0] < PGSize[0]) {
 									g2.addPosOff(field_size, 0);
-								}if (1 < newField2[0] + newField1[0]) {
+								}
+								if (1 < newField2[0] + newField1[0]) {
 									g2.addPosOff(-field_size, 0);
 								}
 							}
@@ -284,31 +285,29 @@ public class Spiel extends Render implements Runnable {
 
 				// prüfe sp regteimes
 
-				if(sp.getFired()){
+				if (sp.getFired()) {
 
-					if(sp.getRegTime() < (long)0){
+					if (sp.getRegTime() < (long) 0) {
 						sp.setFired(false);
 						sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
-					}
-					else
+					} else
 						sp.decRegTime(DELAY_PERIOD);
 				}
 
-/*--------------------------------------------------------------------------------------------------------------------*/
+				/*--------------------------------------------------------------------------------------------------------------------*/
 				///Monster:
 
 
-				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext();) {
+				for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext(); ) {
 					Monster mon = iterator.next();
 
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(mon.getPosition()))) {
-						if(bounsmodus) {
+						if (bounsmodus) {
 							spielstand += mon.getWertung();
 							iterator.remove();
-						}
-						else {
+						} else {
 							//Monster trifft Spieler
-							if(sp.isAlive()) {
+							if (sp.isAlive()) {
 								if (sp.decrementLife())
 									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
@@ -331,7 +330,7 @@ public class Spiel extends Render implements Runnable {
 			// Bitte für den Monsteroffset die globale Varable feuerball_steps nutzen. So kann die Monstergeschw. global angepasst werden.
 			//
 
-			for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext();) {
+			for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 				Monster h = iterator.next();
 
 				int[] h_pos = h.getPosition();
@@ -351,18 +350,16 @@ public class Spiel extends Render implements Runnable {
 					y_off = 1;
 				TUNNELTYP arrangement = TUNNELTYP.HORIZONTAL;
 
-				if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], h_pos[1]})).isEmpty())
-				{
-					if (x_off!=0)
+				if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + h_pos[0], h_pos[1]})).isEmpty()) {
+					if (x_off != 0)
 						arrangement = TUNNELTYP.HORIZONTAL;
 
 
 					aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
 
 				}
-				if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ h_pos[0], y_off + h_pos[1]})).isEmpty())
-				{
-					if (y_off!=0)
+				if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{h_pos[0], y_off + h_pos[1]})).isEmpty()) {
+					if (y_off != 0)
 						arrangement = TUNNELTYP.VERTICAL;
 
 
@@ -376,7 +373,7 @@ public class Spiel extends Render implements Runnable {
 
 
 			// Monster(Nobbin) verfolgt Spieler // still a little buggy 
-			for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext();) {
+			for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext(); ) {
 				Nobbin m = iterator.next();
 
 				int[] m_pos = m.getPosition();
@@ -392,79 +389,70 @@ public class Spiel extends Render implements Runnable {
 				if (m_pos[1] > s_pos[1])
 
 					y_off = -1;
-				else
-				if(m.z==0){
+				else if (m.z == 0) {
 					y_off = 1;
 
-				}
-				else y_off=-1;
-				if (m.z !=0){
+				} else y_off = -1;
+				if (m.z != 0) {
 
 					m.addPosOff(0, 1);
 					//System.out.print(z);
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()){
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
 						m.addPosOff(0, 1);
-						m.z=0;
+						m.z = 0;
 					}
 
 
-				}
-				else if(m.u !=0){
-					if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] -1, m_pos[1]})).isEmpty()){
+				} else if (m.u != 0) {
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - 1, m_pos[1]})).isEmpty()) {
 						//System.out.print(u);
 						m.addPosOff(-1, 0);
-						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
 							m.addPosOff(-1, 0);
-							m.u=0;
+							m.u = 0;
 						}
 
 
-					}
-					else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1]+1})).isEmpty()){
+					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] + 1})).isEmpty()) {
 						m.addPosOff(0, 1);
 
 					}
 
 
-
-				}
-				else if(m.x!=0){
-					if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] , m_pos[1] - y_off})).isEmpty()){
+				} else if (m.x != 0) {
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] - y_off})).isEmpty()) {
 						//System.out.print(x);
 						m.addPosOff(0, -y_off);
-						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0]+x_off, m_pos[1]})).isEmpty()){
+						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] + x_off, m_pos[1]})).isEmpty()) {
 							m.addPosOff(0, -y_off);
-							m.u=0;
+							m.u = 0;
 						}
 
 
-					}
-					else if(!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0] - x_off, m_pos[1]})).isEmpty()){
+					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - x_off, m_pos[1]})).isEmpty()) {
 						//System.out.print(m.x);
 						m.addPosOff(-x_off, 0);
-						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],y_off+ m_pos[1]})).isEmpty()){
+						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
 							m.addPosOff(-x_off, 0);
-							m.x=0;
+							m.x = 0;
 						}
 
 
 					}
 
 
-				}
-				else {
-					if (m_pos[1] == s_pos[1] )
-					{
-						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0],  m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+				} else {
+					if (m_pos[1] == s_pos[1]) {
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
 							m.z++;
 							//System.out.print(m.z);
 
 
-						}}
-					if (m_pos[0] == s_pos[0] )
-					{
-						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0],  y_off+m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
+						}
+					}
+					if (m_pos[0] == s_pos[0]) {
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
 							m.u++;
 							//System.out.print(m.u);
@@ -472,28 +460,24 @@ public class Spiel extends Render implements Runnable {
 					}
 
 
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()){//check if nextpos is a tunnel or no, and then choose to execute the move or no
-
-						if(m.z==0 && m.u ==0){
+						if (m.z == 0 && m.u == 0) {
 							m.addPosOff(x_off, y_off);
 							if (x_off > 0)
 								m.setMoveDir(DIRECTION.RIGHT);
 							else
 								m.setMoveDir(DIRECTION.LEFT);
-						}
-						else {
+						} else {
 							//m.addPosOff(0, -1);
 							System.out.print("test");
 
 						}
-					}
-					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-						if(m.z==0&& m.u==0){
+					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
+						if (m.z == 0 && m.u == 0) {
 							m.addPosOff(0, y_off);
 
-						}
-						else {
+						} else {
 							//y_off = -1;
 							m.setMoveDir(DIRECTION.DOWN);
 							//m.addPosOff(0,  y_off);
@@ -501,23 +485,22 @@ public class Spiel extends Render implements Runnable {
 
 						}
 
-					}
-					else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
-						if(m.z==0 && m.u==0){
+					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
+						if (m.z == 0 && m.u == 0) {
 							//m.addPosOff(0, y_off);
 							m.addPosOff(x_off, 0);
-							m.z=0;
-							if(x_off >0 )
+							m.z = 0;
+							if (x_off > 0)
 								m.setMoveDir(DIRECTION.RIGHT);
 							else
 								m.setMoveDir(DIRECTION.LEFT);
 
-						}}
-					else m.x++;
+						}
+					} else m.x++;
 
 
-
-				}}
+				}
+			}
 
 
 					/*
@@ -670,17 +653,15 @@ public class Spiel extends Render implements Runnable {
 
 
 				if (gs.getFalling()) {
-					if(gs.getPosition()[1]<getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1]>=getCenterOf(getFieldOf(gs.getPosition()))[1]&& aktuelles_level.getMap().getTunnel(check_field).size() > 0) ) {
+					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)) {
 						//0,7 sec vor dem fallen
 						if (gs.outOfTime()) {
 							gs.addPosOff(0, geldsack_steps);
 							gs.incFallHeight();
-						}
-						else
+						} else
 							gs.decRemainingTime(DELAY_PERIOD);
-					}
-					else {
-						if (gs.getFallHeight() > field_size-25) {
+					} else {
+						if (gs.getFallHeight() > field_size - 25) {
 							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition()), current_skin));
 							iterator.remove();
 						} else
@@ -690,9 +671,9 @@ public class Spiel extends Render implements Runnable {
 
 
 				//Geldsack fällt auf Monster
-				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext();){
+				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
 					Monster m = m_iter.next();
-					if (Arrays.equals(getFieldOf(gs.getPosition()),getFieldOf(m.getPosition())) && gs.getFalling()){
+					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(m.getPosition())) && gs.getFalling()) {
 						m_iter.remove();
 						anzMon++;
 						break;
@@ -751,17 +732,17 @@ public class Spiel extends Render implements Runnable {
 				}
 
 				//Feuerball trifft Boden
-				int [] fb_pos = getFieldOf(fb.getPosition());
-				if (aktuelles_level.getMap().getTunnel(fb_pos).isEmpty()){
+				int[] fb_pos = getFieldOf(fb.getPosition());
+				if (aktuelles_level.getMap().getTunnel(fb_pos).isEmpty()) {
 					iterator.remove();
 					break breakoutpoint;
 				}
 			}
 
 			//add Kirsche
-			if (anzMon == aktuelles_level.getMaxMonster()){
+			if (anzMon == aktuelles_level.getMaxMonster()) {
 				aktuelles_level.getMap().setKirsche(new Kirsche(aktuelles_level.getMap().getSpawn_cherry(), current_skin));
-				anzMon=0;
+				anzMon = 0;
 			}
 
 			// MOnster
@@ -809,24 +790,24 @@ public class Spiel extends Render implements Runnable {
 			}
 
 			// Nobbin trifft Nobbin && Hobbin setzen
-			Monster m1=null;
-			for(Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
+			Monster m1 = null;
+			for (Iterator<Nobbin> iter = nobbins.iterator(); iter.hasNext(); ) {
 				Nobbin n1 = iter.next();
-				for(Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
+				for (Iterator<Nobbin> it = nobbins.iterator(); it.hasNext(); ) {
 					Nobbin n2 = it.next();
 					if (n1 != n2) {
 						if (monsters.size() <= Max_Monster && !Arrays.equals(getFieldOf(n1.getPosition()), MSpoint)
 								&& !Arrays.equals(getFieldOf(n2.getPosition()), MSpoint)) {
 							if (Arrays.equals(getFieldOf(n1.getPosition()), getFieldOf(n2.getPosition()))) {
 								aktuelles_level.getMap().setzeHobbin(getCenterOf(getFieldOf(n1.getPosition())));
-								m1=n1;
+								m1 = n1;
 								break;
 							}
 						}
 					}
 				}
 			}
-			if (m1!=null){
+			if (m1 != null) {
 				monsters.remove(m1);
 			}
 
@@ -834,18 +815,17 @@ public class Spiel extends Render implements Runnable {
 			// ------- Counter
 
 			//Monster Anzahl aktualisieren
-			if (aktuelles_level.getMap().getMonsterAmmount()<aktuelles_level.getMaxMonster() && kirsche == null) {
-				if(monRTime < 0) {
+			if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
+				if (monRTime < 0) {
 					monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
 					monRTime = aktuelles_level.getRegenTimeMonster();
-				}
-				else
+				} else
 					monRTime -= DELAY_PERIOD;
 			}
 
 			// Monster trifft Spieler im Bonusmode
 			if (bounsmodus) {
-				if (bounsRemTime < (long)0) {
+				if (bounsRemTime < (long) 0) {
 					bounsRemTime = bounsTime;
 					bounsmodus = false;
 				} else
@@ -869,22 +849,20 @@ public class Spiel extends Render implements Runnable {
 				if (kirsche.outOfTime()) {
 					aktuelles_level.getMap().removeKirsche();
 					anzMon = 0;
-				}
-				else
+				} else
 					kirsche.decRemainingTime(DELAY_PERIOD);
 			}
 			// ---- Counter ende
 
 
-			if ( (!sp1.isAlive() && !isMultiplayer) || (!sp1.isAlive() && isMultiplayer && !sp2.isAlive())) {
+			if ((!sp1.isAlive() && !isMultiplayer) || (!sp1.isAlive() && isMultiplayer && !sp2.isAlive())) {
 
 				// informiere system
 				if (el != null) {
 					el.onCompleted(spielstand);
 				}
 				return false; // Spiel beendet
-			}
-			else if(spielers.size() == 0) {
+			} else if (spielers.size() == 0) {
 				System.out.println("kein Spieler gespawnt. Loop beendet");
 				return false;
 			}
@@ -893,13 +871,17 @@ public class Spiel extends Render implements Runnable {
 			// alle Änderungen sind nun vollzogen. Die Map kann nun an die Netzwerksteuerung gegeben und zum zweiten Spieler gesendet werden.
 
 			// Sende Mapobj
-			if(isMultiplayer && netControl != null)
-				netControl.serverSend(aktuelles_level.getMap(), spielstand);
-
+			if (isMultiplayer && netControl != null){
+					//netControl.serverSend(aktuelles_level.getMap(), spielstand);
+					//netControl.serverGetContent(this);
+			}
 
 		}
 		else{ // !isHost
-			netControl.clientGetContent(this);
+			if (isMultiplayer && netControl != null){
+				//netControl.clientSend(sp2.getPosition(), false);
+				//netControl.clientGetContent(this);
+			}
 		}
 
 		super.obj = aktuelles_level.getMap().exportStaticsAsJSON();
@@ -949,9 +931,14 @@ public class Spiel extends Render implements Runnable {
 
 	public void spawnFeuerball( Spieler sp) {
 		if(!sp.getFired() && sp.isAlive()){
-			sp.setFired(true);
-			sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
-			aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
+			if(isHost) {
+				sp.setFired(true);
+				sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
+			}
+			else{
+				netControl.clientSend(sp2.getPosition(), true);
+			}
 		}
 	}
 
@@ -965,7 +952,6 @@ public class Spiel extends Render implements Runnable {
 		int new_mr;
 		Map nextMap;
 		current_map = (current_map+1)%mapChain.size();
-		System.out.println("Feldgröße: " + field_size);
 		nextMap = new Map(mapChain.get(current_map)); // nächste Map als KOPIE!!! einsetzen. Sonst wird die Mapchain manipuliert und Folgelevel sind verändert.
 
 		if (aktuelles_level != null) {
