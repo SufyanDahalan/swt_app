@@ -200,6 +200,14 @@ public class Skin {
 
 		animations.put("Geld", new Animation(animation_measure, geld_bilder, this, null, false));
 
+		BufferedImage[] gs_bilder = new BufferedImage[3];
+		gs_bilder[0] = getImage("money_static");
+		gs_bilder[1] = getImage("money_fall_f1");
+		gs_bilder[2] = getImage("money_fall_f3");
+		//gs_bilder[3] = getImage("money_fall_f3");
+
+		animations.put("money_shaking", new Animation(animation_measure+7, gs_bilder, this, null, true));
+
 	}
 
 	public BufferedImage getImage(String name, int fs) {

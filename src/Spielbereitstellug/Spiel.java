@@ -673,7 +673,7 @@ public class Spiel extends Render implements Runnable {
 				//Geldsack fällt auf Monster
 				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
 					Monster m = m_iter.next();
-					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(m.getPosition())) && gs.getFalling()) {
+					if (gs.getFalling() && Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(m.getPosition()))) {
 						m_iter.remove();
 						anzMon++;
 						break;
