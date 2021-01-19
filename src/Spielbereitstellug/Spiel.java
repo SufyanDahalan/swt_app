@@ -16,6 +16,11 @@ import java.util.Iterator;
 
 public class Spiel extends Render implements Runnable {
 
+	// dev ops
+
+	final boolean monsterSpawn = true;
+	final boolean dieing = true;
+
 	// game setup
 
 	boolean isMultiplayer;
@@ -307,7 +312,7 @@ public class Spiel extends Render implements Runnable {
 							iterator.remove();
 						} else {
 							//Monster trifft Spieler
-							if (sp.isAlive()) {
+							if (sp.isAlive() && dieing) {
 								if (sp.decrementLife())
 									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
@@ -647,25 +652,54 @@ public class Spiel extends Render implements Runnable {
 				int[] check_field = current_field.clone();
 				check_field[1]++;
 
-				if (!gs.getFalling() && aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
-					gs.setFalling(true);
+				if (!gs.getFalling() && !gs.getShaking() && aktuelles_level.getMap().getTunnel(check_field).size() > 0) {
+
+					boolean secureFlag = false;
+
+					for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
+						Monster m = m_iter.next();
+
+						if(Arrays.equals(getFieldOf(m.getPosition()),check_field))
+							secureFlag = true;
+					}
+
+					for (Iterator<Spieler> s_iter = spielers.iterator(); s_iter.hasNext(); ) {
+						Spieler s = s_iter.next();
+
+						if(Arrays.equals(getFieldOf(s.getPosition()),check_field))
+							secureFlag = true;
+					}
+
+					if (secureFlag)
+						gs.setShaking(true);
+					else
+						gs.setFalling(true);
+
 				}
 
+				if(gs.getShaking()){
+					if (gs.outOfTime()){
+						gs.setShaking(false);
+						gs.setFalling(true);
+					}
+					else
+						gs.decRemainingTime(DELAY_PERIOD);
+				}
 
-				if (gs.getFalling()) {
-					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)) {
-						//0,7 sec vor dem fallen
-						if (gs.outOfTime()) {
-							gs.addPosOff(0, geldsack_steps);
-							gs.incFallHeight();
-						} else
-							gs.decRemainingTime(DELAY_PERIOD);
-					} else {
-						if (gs.getFallHeight() > field_size - 25) {
+				else if (gs.getFalling()) {
+					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)){
+						gs.addPosOff(0, geldsack_steps);
+						gs.incFallHeight(geldsack_steps);
+					}
+					else {
+						if (gs.getFallHeight()-2 > field_size) {
 							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition()), current_skin));
 							iterator.remove();
-						} else
+						} else {
 							gs.resetFallHeight();
+							gs.resetLiveTime();
+							gs.setFalling(false);
+						}
 					}
 				}
 
@@ -817,7 +851,8 @@ public class Spiel extends Render implements Runnable {
 			//Monster Anzahl aktualisieren
 			if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
 				if (monRTime < 0) {
-					monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
+					if(monsterSpawn)
+						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
 					monRTime = aktuelles_level.getRegenTimeMonster();
 				} else
 					monRTime -= DELAY_PERIOD;
@@ -1045,7 +1080,15 @@ public class Spiel extends Render implements Runnable {
 
 			Geldsack single_item = geldsaecke.get(i);
 
-			BufferedImage moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
+
+			BufferedImage moneyPodImg;
+
+			if(single_item.getShaking()) {
+				Animation a = single_item.getAnimation();
+				moneyPodImg = a.nextFrame(field_size);
+			}
+			else
+				moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
 
 			int[] field = single_item.getField();
 			int[] middle = single_item.getPosition();

@@ -11,19 +11,24 @@ public class Geldsack{
 	private boolean falling;
 	private int fallHeight;
 	private BufferedImage bild;
-	private long liveTime = 700;
+	private Animation animation;
+	final private long liveTime = 1000;
+	private long remLiveTime;
+	private boolean shaking;
 
 	public Geldsack(int[] fp, Skin sk) {
 		position=null;
 		falling = false;
+		shaking = false;
 		fallHeight = 0;
 		field=fp;
 		bild=sk.getImage("money_static");
+		animation=sk.getAnimation("money_shaking");
+		remLiveTime = liveTime;
 	}
 
 	public void setPosition(int[] pos) {
 		position = pos;
-
 	}
 
 	public int[] getPosition(){return position;}
@@ -37,15 +42,6 @@ public class Geldsack{
 		return field;
 	}
 
-	public void setField(int[] i) {
-		i = field;
-	}
-
-	public void addFieldPosOff(int x, int y) {
-		field[0] += x;
-		field[1] += y;
-	}
-
 	public void setFalling(boolean f) {
 		falling = f;
     }
@@ -55,8 +51,8 @@ public class Geldsack{
 		return falling;
 	}
 
-	public void incFallHeight() {
-		fallHeight++;
+	public void incFallHeight(int fh) {
+		fallHeight += fh;
 	}
 
 	public int getFallHeight() {
@@ -72,10 +68,26 @@ public class Geldsack{
 	}
 
 	public void decRemainingTime(long delay_period) {
-		liveTime -= delay_period;
+		remLiveTime -= delay_period;
 	}
 
 	public boolean outOfTime(){
-		return liveTime>0?false:true;
+		return remLiveTime>0?false:true;
+	}
+
+	public void resetLiveTime(){
+		remLiveTime = liveTime;
+	}
+
+	public void setShaking(boolean s){
+		shaking  = s;
+	}
+
+	public Animation getAnimation() {
+		return animation;
+	}
+
+	public boolean getShaking() {
+		return shaking;
 	}
 }
