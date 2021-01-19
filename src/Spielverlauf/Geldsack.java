@@ -11,6 +11,7 @@ public class Geldsack{
 	private boolean falling;
 	private int fallHeight;
 	private BufferedImage bild;
+	private long liveTime = 700;
 
 	public Geldsack(int[] fp, Skin sk) {
 		position=null;
@@ -68,5 +69,13 @@ public class Geldsack{
 
 	public BufferedImage getImage() {
 		return bild;
+	}
+
+	public void decRemainingTime(long delay_period) {
+		liveTime -= delay_period;
+	}
+
+	public boolean outOfTime(){
+		return liveTime>0?false:true;
 	}
 }

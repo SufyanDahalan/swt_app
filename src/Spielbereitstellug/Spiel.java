@@ -671,8 +671,13 @@ public class Spiel extends Render implements Runnable {
 
 				if (gs.getFalling()) {
 					if(gs.getPosition()[1]<getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1]>=getCenterOf(getFieldOf(gs.getPosition()))[1]&& aktuelles_level.getMap().getTunnel(check_field).size() > 0) ) {
-						gs.addPosOff(0, geldsack_steps);
-						gs.incFallHeight();
+						//0,7 sec vor dem fallen
+						if (gs.outOfTime()) {
+							gs.addPosOff(0, geldsack_steps);
+							gs.incFallHeight();
+						}
+						else
+							gs.decRemainingTime(DELAY_PERIOD);
 					}
 					else {
 						if (gs.getFallHeight() > field_size-25) {
