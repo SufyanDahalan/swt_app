@@ -1,6 +1,8 @@
 package Spielverlauf;
 
-public class ServerPackage {
+import java.io.Serializable;
+
+public class ServerPackage implements Serializable {
     private Map map;
     private int spielstand;
 

@@ -907,14 +907,14 @@ public class Spiel extends Render implements Runnable {
 
 			// Sende Mapobj
 			if (isMultiplayer && netControl != null){
-					//netControl.serverSend(aktuelles_level.getMap(), spielstand);
-					//netControl.serverGetContent(this);
+				//netControl.serverSend(aktuelles_level.getMap(), spielstand);
+				netControl.serverGetContent(this);
 			}
 
 		}
 		else{ // !isHost
 			if (isMultiplayer && netControl != null){
-				//netControl.clientSend(sp2.getPosition(), false);
+				netControl.clientSend(sp2, false);
 				//netControl.clientGetContent(this);
 			}
 		}
@@ -972,7 +972,7 @@ public class Spiel extends Render implements Runnable {
 				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
 			}
 			else{
-				netControl.clientSend(sp2.getPosition(), true);
+				netControl.clientSend(sp2, true);
 			}
 		}
 	}
@@ -1387,5 +1387,9 @@ public class Spiel extends Render implements Runnable {
 
 	public void setClientPos(int[] c_pos) {
 		sp2.setPosition(c_pos);
+	}
+
+	public void setClientMoveDir(DIRECTION moveDir) {
+		sp2.setMoveDir(moveDir);
 	}
 }

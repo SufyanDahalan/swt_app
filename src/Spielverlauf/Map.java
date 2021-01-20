@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Map implements Serializable {
+public class Map {
 
 	private Skin skin;
 

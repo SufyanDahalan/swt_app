@@ -1,12 +1,16 @@
 package Spielverlauf;
 
-public class ClientPackage {
+import java.io.Serializable;
+
+public class ClientPackage implements Serializable {
     private int[] pos;
+    private DIRECTION dir;
     private boolean fb_try;
 
-    public ClientPackage(int[] pos, boolean fb_try){
-        this.pos = pos;
+    public ClientPackage(Spieler s, boolean fb_try){
+        this.pos = s.getPosition();
         this.fb_try = fb_try;
+        this.dir = s.getMoveDir();
     }
 
     public int[] getPos() {
@@ -17,5 +21,7 @@ public class ClientPackage {
         return fb_try;
     }
 
-
+    public DIRECTION getMoveDir() {
+        return dir;
+    }
 }
