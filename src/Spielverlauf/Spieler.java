@@ -61,11 +61,14 @@ public class Spieler {
 
     public boolean decrementLife() {
     	leben -= 1;
-		try {
+		/*
+    	try {
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		 */
 		return isAlive();
 	}
 

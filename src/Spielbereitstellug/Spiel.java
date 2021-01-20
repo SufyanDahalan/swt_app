@@ -908,13 +908,13 @@ public class Spiel extends Render implements Runnable {
 			// Sende Mapobj
 			if (isMultiplayer && netControl != null){
 				//netControl.serverSend(aktuelles_level.getMap(), spielstand);
-				netControl.serverGetContent(this);
+				netControl.serverExchange(this);
 			}
 
 		}
 		else{ // !isHost
 			if (isMultiplayer && netControl != null){
-				netControl.clientSend(sp2, false);
+				netControl.clientExchange(this);
 				//netControl.clientGetContent(this);
 			}
 		}
@@ -972,7 +972,7 @@ public class Spiel extends Render implements Runnable {
 				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
 			}
 			else{
-				netControl.clientSend(sp2, true);
+				sp.setFired(true);
 			}
 		}
 	}
