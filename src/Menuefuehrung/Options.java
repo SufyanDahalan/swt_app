@@ -2,6 +2,8 @@ package Menuefuehrung;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,28 +15,30 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-
 import Spielbereitstellug.Netzwerksteuerung;
-import javafx.scene.control.DialogPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+
 import static java.awt.Toolkit.getDefaultToolkit;
 
 
 public class Options extends JPanel implements ActionListener {
 
-    MediaPlayer clip;
+    MediaPlayer clip, sound;
+    int soundVolume = 10;
+    int musicVolume = 10;
     boolean music = true;
-    MainFrame digger;
+    JDialog digger;
 
     Options(MainFrame babaFrame){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
         try {
             clip = Music();
+            playSound();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
             e1.printStackTrace();
         }
-
 
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
@@ -54,14 +58,16 @@ public class Options extends JPanel implements ActionListener {
         button b8 = new button("", 17);
 
 
-        b1.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b2.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b3.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b4.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b5.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b6.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b7.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
-        b8.addActionListener(e -> this.playSound("bin/music/button-09.wav"));
+
+
+        b1.addActionListener(e -> playSound());
+        b2.addActionListener(e -> playSound());
+        b3.addActionListener(e -> playSound());
+        b4.addActionListener(e -> playSound());
+        b5.addActionListener(e -> playSound());
+        b6.addActionListener(e -> playSound());
+        b7.addActionListener(e -> playSound());
+        b8.addActionListener(e -> playSound());
         add(b1);
         add(b6);
         add(b2);
@@ -120,8 +126,38 @@ public class Options extends JPanel implements ActionListener {
         b2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //String name = JOptionPane.showInputDialog(digger, "Option", null);
-                //JOptionPane
+                JDialog settings = new JDialog();
+                settings.setTitle("Options");
+                JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, soundVolume);
+                JSlider musicSlider = new JSlider(JSlider.HORIZONTAL,0, 10, musicVolume);
+
+                musicSlider.addChangeListener(new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        musicVolume = musicSlider.getValue();
+                        clip.setVolume((musicSlider.getValue()/10.0));
+                    }
+                });
+
+                soundSlider.addChangeListener(new ChangeListener() {
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        soundVolume = soundSlider.getValue();
+                        sound.setVolume((soundSlider.getValue()/10.0));
+                    }
+                });
+
+
+                settings.setLayout(new BoxLayout(settings.getContentPane(), BoxLayout.PAGE_AXIS));
+                settings.add(new JLabel("Sound"));
+                settings.add(soundSlider);
+                settings.add(new JLabel("Music"));
+                settings.add(musicSlider);
+                settings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                settings.setResizable(false);
+                settings.setSize(new Dimension(500,200));
+                settings.setLocationRelativeTo(null);
+                settings.setVisible(true);
             }
         });
 
@@ -131,7 +167,7 @@ public class Options extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 int choice = JOptionPane.showOptionDialog(null ,"Host or Client ?", "choose a on", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Host", "Client"},  "Host");
 
-                CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
+                CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
 
                 InetAddress ipv4 = null;
 
@@ -182,9 +218,7 @@ public class Options extends JPanel implements ActionListener {
             CardLayout layout = (CardLayout) frame.getLayout();
             layout.show(frame, "editor");
         });
-
         b3.addActionListener(e -> System.exit(0));
-
         editorButton(b6, babaFrame);
     }
 
@@ -193,39 +227,32 @@ public class Options extends JPanel implements ActionListener {
 
         LevelEditor editor = new LevelEditor();
         babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
-        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();/* frame.getLayout(); */
-
+        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
         layout.show(babaFrame.getContentPane(), "editor");
 
     }
 
-    public void playSound(String soundName)
+    public void playSound()
     {
-        try
-        {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip( );
-            clip.open(audioInputStream);
-            clip.start( );
+        if(sound == null) {
+            String bip = "bin/music/button-09.wav";
+            Media hit = new Media(new File(bip).toURI().toString());
+            sound = new MediaPlayer(hit);
+        }else{
+            sound.play();
+            sound.seek(Duration.ZERO);
         }
-        catch(Exception ex)
-        {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace( );
-        }
-
-
     }
 
-        public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-            String bip = "bin/music/Popcorn01.wav";
-            Media hit = new Media(new File(bip).toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(hit);
-            mediaPlayer.setCycleCount(50000000);
-            mediaPlayer.play();
-            return mediaPlayer;
-        }
-    
+    public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        String bip = "bin/music/Popcorn01.wav";
+        Media hit = new Media(new File(bip).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(hit);
+        mediaPlayer.setCycleCount(50000000);
+        mediaPlayer.play();
+        return mediaPlayer;
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
