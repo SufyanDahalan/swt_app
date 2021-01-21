@@ -236,17 +236,19 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
 						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							if (newField1[0] < PGSize[0]) {
-								gs.addPosOff(field_size, 0);
-								sp.addPosOff(-4, 0);
+							newPos[0] += sack_steps;
+							if (newPos[0] < getCenterOf(pGSize)[0]+(spieler_steps/2)) {
+								gs.addPosOff(sack_steps, 0);
+								//sp.addPosOff(-spieler_steps/2, 0);
 							}
-							else sp.addPosOff(-6,0);
+							else sp.addPosOff(-sack_steps,0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							if (1 < newField1[0]) {
-								gs.addPosOff(-field_size, 0);
-								sp.addPosOff(4,0);
+							newPos[0] -= sack_steps;
+							if (getCenterOf(new int[]{1,1})[0]-(spieler_steps/2) < newPos[0]) {
+								gs.addPosOff(-sack_steps, 0);
+								//sp.addPosOff(spieler_steps/2,0);
 							}
-							else sp.addPosOff(6,0);
+							else sp.addPosOff(sack_steps,0);
 						}
 					}
 
@@ -259,10 +261,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						if (gs != g2) {
 							if (Arrays.equals(newField1, newField2)) {
 								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
-									g2.addPosOff(field_size, 0);
+									g2.addPosOff(1, 0);
 								}
 								if (sp.getMoveDir()==DIRECTION.LEFT && 1 < newField2[0]) {
-									g2.addPosOff(-field_size, 0);
+									g2.addPosOff(-1, 0);
 								}
 							}
 						}
