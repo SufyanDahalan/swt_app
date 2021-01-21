@@ -101,4 +101,9 @@ public class Spieler {
 	public void decRegTime(long delay_period) {
 		fbRegeneration -= delay_period;
 	}
+
+    public void incrementLife() {
+		if(leben < 3)
+			leben++;
+    }
 }

@@ -37,6 +37,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	final int geldsack_steps = 3;
 	int monster_steps = 5;
 	final long DELAY_PERIOD = 15;
+	final int newLifeScore = 20000;
 
 	protected Spieler sp1;
 	protected Spieler sp2;
@@ -53,6 +54,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private long bounsRemTime;
 	private final long bounsTime = 10000;
 	long monRTime;
+	private int incLifeCount = 0;
 
 	private int spielstand;
 
@@ -181,7 +183,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Diamant single_item = iterator.next();
 					if (Arrays.equals(single_item.getField(), getFieldOf(sp.getPosition()))) {
 						iterator.remove();
-						spielstand += single_item.getValue();
+						incScore(single_item.getValue());
 					}
 				}
 
@@ -219,7 +221,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geld gd = iterator.next();
 					if (Arrays.equals(gd.getField(), getFieldOf(sp.getPosition()))) {
 						iterator.remove();
-						spielstand += gd.getValue();
+						incScore(gd.getValue());
 					}
 				}
 
@@ -230,6 +232,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				//Geldsack trifft Tunnel // Geldscak trifft Spieler 1 // Geldscak trifft Spieler 2 //Geld erstellen
 				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 					Geldsack gs = iterator.next();
+
 
 					// nach l/r bewegen
 					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
@@ -245,6 +248,12 @@ public class Spiel extends Render implements Runnable, Filesystem {
 							}
 							else
 								sp.addPosOff(field_size/2,0);
+						}
+						else if (sp.getMoveDir() == DIRECTION.DOWN) {
+							sp.addPosOff(0, -field_size/2);
+						}
+						else{
+							sp.addPosOff(0, field_size/2);
 						}
 					}
 					// Geldsack trifft Geldsack
@@ -286,7 +295,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				if (kirsche != null) {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().removeKirsche();
-						spielstand += kirsche.getValue();
+						incScore(kirsche.getValue());
 						bounsmodus = true;
 					}
 				}
@@ -311,7 +320,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(mon.getPosition()))) {
 						if (bounsmodus) {
-							spielstand += mon.getWertung();
+							incScore(mon.getWertung());
 							iterator.remove();
 						} else {
 							//Monster trifft Spieler
@@ -331,6 +340,14 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			}
 
 			// ----- end for (Spieler)
+
+
+			if( incLifeCount > newLifeScore  ) {
+				sp1.incrementLife();
+				if(sp2 != null)
+					sp2.incrementLife();
+				incLifeCount = 0;
+			}
 
 			// Hobbin verfolgt Spieler
 
@@ -727,7 +744,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				for (Iterator<Monster> iter = monsters.iterator(); iter.hasNext(); ) {
 					Monster m = iter.next();
 					if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(m.getPosition()))) {
-						spielstand += m.getWertung();
+						incScore(m.getWertung());
 						anzMon++;
 						iterator.remove();
 						iter.remove();
@@ -1415,5 +1432,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	public void setClientMoveDir(DIRECTION moveDir) {
 		sp2.setMoveDir(moveDir);
+	}
+
+	private void incScore(int s){
+		spielstand += s;
+		incLifeCount += s;
 	}
 }
