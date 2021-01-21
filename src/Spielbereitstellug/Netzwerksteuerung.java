@@ -1,9 +1,7 @@
 package Spielbereitstellug;
 
 import Spielverlauf.ClientPackage;
-import Spielverlauf.Map;
 import Spielverlauf.ServerPackage;
-import Spielverlauf.Spieler;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -156,10 +154,28 @@ public class Netzwerksteuerung {
 			OutputStream outStream = streamSocket.getOutputStream();
 			objectOutputStream = new ObjectOutputStream(outStream);
 
-			//PrintWriter writer = new PrintWriter(outToClient);
+			//PrintWriter writer = new PrintWriter(outStream);
 
 			InputStream inStream = streamSocket.getInputStream();
 			objectInputStream = new ObjectInputStream(inStream);
+
+			/*
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+				String s = null;
+				while ((s = reader.readLine()) != null) {
+					writer.write(s + "\n");
+					writer.flush();
+					System.out.println("Empfangen vom Client:" + s + "\n");
+				}
+
+				System.out.println("Server sendet nun etwas zurück.\n");
+
+				writer.write("Hallo Client! Hier ist eine lange zahl: 1234567899876563213456789\n"); // s.u.
+				writer.flush();
+
+				writer.close();
+				reader.close();
+			*/
 
 		}catch(IOException e){e.printStackTrace();}
 	}
