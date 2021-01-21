@@ -232,9 +232,21 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geldsack gs = iterator.next();
 
 					// nach l/r bewegen
-					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
-						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						int[] newField1 = getFieldOf(gs.getPosition());
+
+					int[] gs_pos = gs.getPosition();
+					int[] sp_pos = sp.getPosition();
+
+					int gs_img_size = current_skin.getImage("money_static", field_size).getWidth();
+					int sp_img_size = current_skin.getImage("dig_gre_rgt_f6", field_size).getWidth();
+
+					int off = spieler_steps/2;
+
+					int sack_steps = spieler_steps/2;
+
+
+					if ( ((gs_pos[0]+gs_img_size > sp_pos[0] && sp_pos[0] > gs_pos[0])  || (sp_pos[0]+sp_img_size > gs_pos[0] && gs_pos[0] > sp_pos[0])) && gs_pos[1]+off > sp_pos[1] && gs_pos[1]-off < sp_pos[1] ) {
+						int[] pGSize = aktuelles_level.getMap().getPGSize();
+						int[] newPos = gs.getPosition().clone();
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
 							newPos[0] += sack_steps;
 							if (newPos[0] < getCenterOf(pGSize)[0]+(spieler_steps/2)) {
