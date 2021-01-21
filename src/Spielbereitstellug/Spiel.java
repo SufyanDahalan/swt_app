@@ -32,7 +32,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private EndListener el;
 
 	// Speed
-
+	int spieler_steps;
 	int feuerball_steps;
 	final int geldsack_steps = 3;
 	int monster_steps = 5;
@@ -106,6 +106,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		obj = aktuelles_level.getMap().exportStaticsAsJSON();
 
 		feuerball_steps = field_size/15;
+		spieler_steps = field_size/10;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
 
 		System.out.println(field_size);
@@ -125,6 +126,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		if(sp2!=null)
 			sp2.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+	}
+
+	public int getSPSteps(){
+		return spieler_steps;
 	}
 
 	private boolean loop() {
@@ -252,7 +257,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						int[] newField1 = getFieldOf(gs.getPosition());
 						int[] newField2 = getFieldOf(g2.getPosition());
 						if (gs != g2) {
-							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
+							if (Arrays.equals(newField1, newField2)) {
 								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
 									g2.addPosOff(field_size, 0);
 								}
@@ -939,9 +944,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		int tolerance = monster_steps;
 		int[] field_middle = getCenterOf(getFieldOf(pos));
 
-		System.out.println("Mitte: "+ field_middle[0] + " "+ field_middle[1]);
-		System.out.println("Monster: "+ pos[0] +" "+ pos[1] );
-
 		if (field_middle[0] - tolerance <= pos[0] && pos[0] <= field_middle[0] + tolerance && field_middle[1] - tolerance <= pos[1] && pos[1] <= field_middle[1] + tolerance)
 			return true;
 		else
@@ -1074,11 +1076,19 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		spPos[0] += velx;
 		spPos[1] += vely;
 
-		int[] newField = getFieldOf(spPos);
-		int[] pgSize = aktuelles_level.getMap().getPGSize();
-		if(0 < newField[0] && newField[0] <= pgSize[0] && 0 < newField[1] && newField[1] <= pgSize[1])
-			s.addPosOff(velx,vely);
+		int[] boundaries = new int[4];
+		int offset = spieler_steps/2;
 
+		int[] bottomright = getCenterOf(aktuelles_level.getMap().getPGSize()); // untere Rechte Ecke
+		int[] topleft = getCenterOf(new int[]{1,1});
+
+		boundaries[0] = topleft[1]-= offset; // Grenze oben
+		boundaries[1] = bottomright[0]+= offset; // Grenze Rechts
+		boundaries[2] = bottomright[1]+= offset; // Grenze unten
+		boundaries[3] = topleft[0]-= offset; // Grenze Links
+
+		if(boundaries[3] < spPos[0] && spPos[0] < boundaries[1] && boundaries[0] < spPos[1] && spPos[1] < boundaries[2])
+			s.addPosOff(velx,vely);
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -1377,6 +1387,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		//monster_steps = field_size/aktuelles_level.getSpeed();
 		feuerball_steps = field_size/15;
+
+		spieler_steps = field_size/10;
 
 	}
 
