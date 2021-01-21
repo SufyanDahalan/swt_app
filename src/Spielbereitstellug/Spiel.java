@@ -231,11 +231,17 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
 						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							if (newField1[0] < PGSize[0])
+							if (newField1[0] < PGSize[0]) {
 								gs.addPosOff(field_size, 0);
+								sp.addPosOff(-4, 0);
+							}
+							else sp.addPosOff(-6,0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							if (1 < newField1[0])
+							if (1 < newField1[0]) {
 								gs.addPosOff(-field_size, 0);
+								sp.addPosOff(4,0);
+							}
+							else sp.addPosOff(6,0);
 						}
 					}
 
@@ -247,10 +253,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						int[] newField2 = getFieldOf(g2.getPosition());
 						if (gs != g2) {
 							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
-								if (newField1[0] + newField2[0] < PGSize[0]) {
+								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
 									g2.addPosOff(field_size, 0);
 								}
-								if (1 < newField2[0] + newField1[0]) {
+								if (sp.getMoveDir()==DIRECTION.LEFT && 1 < newField2[0]) {
 									g2.addPosOff(-field_size, 0);
 								}
 							}
