@@ -30,6 +30,7 @@ public class MainFrame extends JFrame {
 
     protected JRootPane createRootPane() {
         JRootPane rootPane = new JRootPane();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
         Action actionListener = new AbstractAction() {
             public void actionPerformed(ActionEvent actionEvent) {
@@ -40,10 +41,12 @@ public class MainFrame extends JFrame {
                        "Do you want to leave the game?? ", "exit game",
                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"resume","exit"}, "resume" );
 
+               ;
+
                if (choice == 0) {
                    // Spiel fortsetzen
 
-               } else System.exit(0);
+               } if (choice == 1) System.exit(0);
             }
         };
         InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
