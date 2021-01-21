@@ -1,6 +1,9 @@
 package Menuefuehrung;
 
-import Spielbereitstellug.*;
+import Spielbereitstellug.EndListener;
+import Spielbereitstellug.Lokalsteuerung;
+import Spielbereitstellug.Netzwerksteuerung;
+import Spielbereitstellug.Spiel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 
 
@@ -24,6 +26,32 @@ public class MainFrame extends JFrame {
         c.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), key);
         c.getActionMap().put(key, action);
         c.setFocusable(true);
+    }
+
+    protected JRootPane createRootPane() {
+        JRootPane rootPane = new JRootPane();
+        KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+        Action actionListener = new AbstractAction() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                // Spiel pausieren. Die Funktion pausieren() in class Spiel ist noch zu implementieren.
+
+
+               int choice = JOptionPane.showOptionDialog(null,
+                       "Do you want to leave the game?? ", "exit game",
+                       JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"resume","exit"}, "resume" );
+
+               if (choice == 0) {
+                   // Spiel fortsetzen
+
+               } else System.exit(0);
+            }
+        };
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(stroke, "ESCAPE");
+        rootPane.getActionMap().put("ESCAPE", actionListener);
+
+        return rootPane;
+
     }
 
     public static void main(String[] args) throws Exception {
@@ -205,6 +233,8 @@ public class MainFrame extends JFrame {
                 spiel.pause();
             }
         });
+
+
 
         if(isMultiplayer)
             getContentPane().add(spiel, "multiplayer");
