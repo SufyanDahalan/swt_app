@@ -232,38 +232,21 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geldsack gs = iterator.next();
 
 					// nach l/r bewegen
-
-					int[] gs_pos = gs.getPosition();
-					int[] sp_pos = sp.getPosition();
-
-					int gs_img_size = current_skin.getImage("money_static", field_size).getWidth();
-					int sp_img_size = current_skin.getImage("dig_gre_rgt_f6", field_size).getWidth();
-
-					int off = spieler_steps/2;
-
-					int sack_steps = spieler_steps/2;
-
-
-					if ( ((gs_pos[0]+gs_img_size > sp_pos[0] && sp_pos[0] > gs_pos[0])  || (sp_pos[0]+sp_img_size > gs_pos[0] && gs_pos[0] > sp_pos[0])) && gs_pos[1]+off > sp_pos[1] && gs_pos[1]-off < sp_pos[1] ) {
-						int[] pGSize = aktuelles_level.getMap().getPGSize();
-						int[] newPos = gs.getPosition().clone();
+					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
+						int[] PGSize = aktuelles_level.getMap().getPGSize();
+						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							newPos[0] += sack_steps;
-							if (newPos[0] < getCenterOf(pGSize)[0]+(spieler_steps/2)) {
-								gs.addPosOff(sack_steps, 0);
-								//sp.addPosOff(-spieler_steps/2, 0);
-							}
-							else sp.addPosOff(-sack_steps,0);
+							if (newField1[0] < PGSize[0]) {
+								gs.addPosOff(field_size, 0);
+							}else sp.addPosOff(-field_size/2,0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							newPos[0] -= sack_steps;
-							if (getCenterOf(new int[]{1,1})[0]-(spieler_steps/2) < newPos[0]) {
-								gs.addPosOff(-sack_steps, 0);
-								//sp.addPosOff(spieler_steps/2,0);
+							if (1 < newField1[0]) {
+								gs.addPosOff(-field_size, 0);
 							}
-							else sp.addPosOff(sack_steps,0);
+							else
+								sp.addPosOff(field_size/2,0);
 						}
 					}
-
 					// Geldsack trifft Geldsack
 					for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
 						Geldsack g2 = it.next();
