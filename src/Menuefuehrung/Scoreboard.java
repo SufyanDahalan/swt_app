@@ -15,10 +15,8 @@ import java.nio.file.Paths;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
-public class Scoreboard extends JPanel {
-    private final String skinName = "original_skin"; // Skinnname
-    private final String rootfolder_name = "bin/"; // ./skin/sink_original.json,...
-    private final String skinfolder_name = rootfolder_name+"skins/"; // ./skin/sink_original.json,...
+public class Scoreboard extends JPanel implements Filesystem {
+
     private Skin current_skin;
     private JTable Table;
     private DefaultTableModel dtm;
@@ -73,7 +71,7 @@ public class Scoreboard extends JPanel {
         void refeshScores(){
             JSONObject obj = null;
             try {
-                obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
+                obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootDir + "scores.json"))));
             } catch (Exception e) {
                 e.printStackTrace();
             }

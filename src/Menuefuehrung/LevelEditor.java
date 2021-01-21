@@ -19,7 +19,7 @@ import java.util.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class LevelEditor extends /*JPanel*/ Render implements MouseListener {
+public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Filesystem {
 
     final static Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
     MouseAdapter globalMouseAdapter;
@@ -28,11 +28,7 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener {
     private int[] spawn_monster;
     private int[] spawn_sp1;
     private int[] spawn_sp2;
-    private final String levelfolder_name = "bin/level/"; // ./level/level-01.json ...
 
-
-    private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
-    private final String skinName = "original_skin"; // Skinnname
     // static content
     private final Skin current_skin = new Skin(new File(skinfolder_name), skinName);
 

@@ -9,10 +9,8 @@ import java.awt.*;
 import static java.awt.Toolkit.getDefaultToolkit;
 
 
-public class button extends JButton {
+public class button extends JButton implements Filesystem {
 
-    private final String skinName = "original_skin";
-    private final String skinfolder_name = "bin/skins/";
     private Skin current_skin;
 
     button(String Name, int Size){

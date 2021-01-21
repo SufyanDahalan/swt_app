@@ -23,7 +23,7 @@ import javafx.util.Duration;
 import static java.awt.Toolkit.getDefaultToolkit;
 
 
-public class Options extends JPanel implements ActionListener {
+public class Options extends JPanel implements ActionListener, Filesystem {
 
     MediaPlayer clip, sound;
     int soundVolume = 10;
@@ -76,7 +76,7 @@ public class Options extends JPanel implements ActionListener {
         add(b8);
 
 
-        ImageIcon icon = new ImageIcon("bin/images/VolumeIcon.png");
+        ImageIcon icon = new ImageIcon(imageDir+"VolumeIcon.png");
         b8.setIcon(icon);
         b8.addActionListener(this);
 
@@ -235,7 +235,7 @@ public class Options extends JPanel implements ActionListener {
     public void playSound()
     {
         if(sound == null) {
-            String bip = "bin/music/button-09.wav";
+            String bip = musicDir+"button-09.wav";
             Media hit = new Media(new File(bip).toURI().toString());
             sound = new MediaPlayer(hit);
         }else{
@@ -245,7 +245,7 @@ public class Options extends JPanel implements ActionListener {
     }
 
     public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        String bip = "bin/music/Popcorn01.wav";
+        String bip = musicDir+"Popcorn01.wav";
         Media hit = new Media(new File(bip).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(hit);
         mediaPlayer.setCycleCount(50000000);

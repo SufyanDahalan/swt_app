@@ -1,5 +1,6 @@
 package Spielbereitstellug;
 
+import Menuefuehrung.Filesystem;
 import Spielverlauf.*;
 import org.json.JSONObject;
 
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 
-public class Spiel extends Render implements Runnable {
+public class Spiel extends Render implements Runnable, Filesystem {
 
 	// dev ops
 
@@ -39,12 +40,6 @@ public class Spiel extends Render implements Runnable {
 
 	protected Spieler sp1;
 	protected Spieler sp2;
-
-
-
-	// System-/ Filestructure
-
-	private final String levelfolder_name = "bin/level/"; // ./level/level-01.json ...
 
 	// static content
 	private final ArrayList<Map> mapChain;
@@ -376,8 +371,6 @@ public class Spiel extends Render implements Runnable {
 
 			}
 
-
-			// Monster(Nobbin) verfolgt Spieler // still a little buggy 
 			for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext(); ) {
 				Nobbin m = iterator.next();
 
@@ -851,8 +844,10 @@ public class Spiel extends Render implements Runnable {
 			//Monster Anzahl aktualisieren
 			if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
 				if (monRTime < 0) {
-					if(monsterSpawn)
+					if(monsterSpawn) {
 						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
+						System.out.println(getCenterOf(aktuelles_level.getMap().getSpawn_monster())[0]+" "+getCenterOf(aktuelles_level.getMap().getSpawn_monster())[1]);
+					}
 					monRTime = aktuelles_level.getRegenTimeMonster();
 				} else
 					monRTime -= DELAY_PERIOD;
@@ -931,6 +926,20 @@ public class Spiel extends Render implements Runnable {
 		}
 
 		return true;
+	}
+
+	private boolean isOnCrossroad(int[] pos) {
+
+		int tolerance = monster_steps;
+		int[] field_middle = getCenterOf(getFieldOf(pos));
+
+		System.out.println("Mitte: "+ field_middle[0] + " "+ field_middle[1]);
+		System.out.println("Monster: "+ pos[0] +" "+ pos[1] );
+
+		if (field_middle[0] - tolerance <= pos[0] && pos[0] <= field_middle[0] + tolerance && field_middle[1] - tolerance <= pos[1] && pos[1] <= field_middle[1] + tolerance)
+			return true;
+		else
+			return false;
 	}
 
 	public Level getLevel() {

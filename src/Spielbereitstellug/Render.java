@@ -1,5 +1,6 @@
 package Spielbereitstellug;
 
+import Menuefuehrung.Filesystem;
 import Spielverlauf.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public abstract class Render extends JPanel {
+public abstract class Render extends JPanel implements Filesystem {
 
     protected int field_size;
     protected int old_field_size;
@@ -20,11 +21,7 @@ public abstract class Render extends JPanel {
     protected final double topbarHeight = 1; // Faktor von Feldgröße
     protected JSONObject obj;
 
-
-    private final String skinName = "original_skin"; // Skinnname
-    private final String skinfolder_name = "bin/skins/"; // ./skin/sink_original.json,...
-
-    public Render(){
+    public Render()  {
 
         // initialisiere Skin
         current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
