@@ -236,11 +236,17 @@ public class Spiel extends Render implements Runnable {
 						int[] PGSize = aktuelles_level.getMap().getPGSize();
 						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							if (newField1[0] < PGSize[0])
+							if (newField1[0] < PGSize[0]) {
 								gs.addPosOff(field_size, 0);
+								sp.addPosOff(-4, 0);
+							}
+							else sp.addPosOff(-6,0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							if (1 < newField1[0])
+							if (1 < newField1[0]) {
 								gs.addPosOff(-field_size, 0);
+								sp.addPosOff(4,0);
+							}
+							else sp.addPosOff(6,0);
 						}
 					}
 
@@ -252,10 +258,10 @@ public class Spiel extends Render implements Runnable {
 						int[] newField2 = getFieldOf(g2.getPosition());
 						if (gs != g2) {
 							if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(g2.getPosition()))) {
-								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0]!=PGSize[0] && newField2[0] < PGSize[0]) {
+								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
 									g2.addPosOff(field_size, 0);
 								}
-								if (sp.getMoveDir()==DIRECTION.LEFT && newField2[0]!=PGSize[0] && 1 < newField1[0]) {
+								if (sp.getMoveDir()==DIRECTION.LEFT && 1 < newField2[0]) {
 									g2.addPosOff(-field_size, 0);
 								}
 							}
@@ -849,7 +855,7 @@ public class Spiel extends Render implements Runnable {
 			// ------- Counter
 
 			//Monster Anzahl aktualisieren
-	/*		if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
+			if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
 				if (monRTime < 0) {
 					if(monsterSpawn)
 						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
@@ -857,7 +863,7 @@ public class Spiel extends Render implements Runnable {
 				} else
 					monRTime -= DELAY_PERIOD;
 			}
-*/
+
 			// Monster trifft Spieler im Bonusmode
 			if (bounsmodus) {
 				if (bounsRemTime < (long) 0) {
