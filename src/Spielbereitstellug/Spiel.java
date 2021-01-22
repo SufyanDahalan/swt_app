@@ -265,10 +265,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						if (gs != g2) {
 							if (Arrays.equals(newField1, newField2)) {
 								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
-									g2.addPosOff(1, 0);
+									g2.addPosOff(field_size, 0);
 								}
 								if (sp.getMoveDir()==DIRECTION.LEFT && 1 < newField2[0]) {
-									g2.addPosOff(-1, 0);
+									g2.addPosOff(-field_size, 0);
 								}
 							}
 						}
