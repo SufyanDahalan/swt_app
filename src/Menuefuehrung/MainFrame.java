@@ -37,16 +37,16 @@ public class MainFrame extends JFrame {
                 // Spiel pausieren. Die Funktion pausieren() in class Spiel ist noch zu implementieren.
 
 
-               int choice = JOptionPane.showOptionDialog(null,
-                       "Do you want to leave the game?? ", "exit game",
-                       JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"resume","exit"}, "resume" );
+                int choice = JOptionPane.showOptionDialog(null,
+                        "Do you want to leave the game?? ", "exit game",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"resume","exit"}, "resume" );
 
-               ;
+                ;
 
-               if (choice == 0) {
-                   // Spiel fortsetzen
+                if (choice == 0) {
+                    // Spiel fortsetzen
 
-               } if (choice == 1) System.exit(0);
+                } if (choice == 1) System.exit(0);
             }
         };
         InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -75,7 +75,7 @@ public class MainFrame extends JFrame {
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
-        
+
 
 
 

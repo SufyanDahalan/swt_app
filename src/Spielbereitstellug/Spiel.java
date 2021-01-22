@@ -37,6 +37,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	final int geldsack_steps = 3;
 	int monster_steps = 5;
 	final long DELAY_PERIOD = 15;
+	final int newLifeScore = 20000;
 
 	protected Spieler sp1;
 	protected Spieler sp2;
@@ -53,6 +54,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private long bounsRemTime;
 	private final long bounsTime = 10000;
 	long monRTime;
+	private int incLifeCount = 0;
 
 	private int spielstand;
 
@@ -181,7 +183,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Diamant single_item = iterator.next();
 					if (Arrays.equals(single_item.getField(), getFieldOf(sp.getPosition()))) {
 						iterator.remove();
-						spielstand += single_item.getValue();
+						incScore(single_item.getValue());
 					}
 				}
 
@@ -219,7 +221,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geld gd = iterator.next();
 					if (Arrays.equals(gd.getField(), getFieldOf(sp.getPosition()))) {
 						iterator.remove();
-						spielstand += gd.getValue();
+						incScore(gd.getValue());
 					}
 				}
 
@@ -231,39 +233,29 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 					Geldsack gs = iterator.next();
 
+
 					// nach l/r bewegen
-
-					int[] gs_pos = gs.getPosition();
-					int[] sp_pos = sp.getPosition();
-
-					int gs_img_size = current_skin.getImage("money_static", field_size).getWidth();
-					int sp_img_size = current_skin.getImage("dig_gre_rgt_f6", field_size).getWidth();
-
-					int off = spieler_steps/2;
-
-					int sack_steps = spieler_steps/2;
-
-
-					if ( ((gs_pos[0]+gs_img_size > sp_pos[0] && sp_pos[0] > gs_pos[0])  || (sp_pos[0]+sp_img_size > gs_pos[0] && gs_pos[0] > sp_pos[0])) && gs_pos[1]+off > sp_pos[1] && gs_pos[1]-off < sp_pos[1] ) {
-						int[] pGSize = aktuelles_level.getMap().getPGSize();
-						int[] newPos = gs.getPosition().clone();
+					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
+						int[] PGSize = aktuelles_level.getMap().getPGSize();
+						int[] newField1 = getFieldOf(gs.getPosition());
 						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							newPos[0] += sack_steps;
-							if (newPos[0] < getCenterOf(pGSize)[0]+(spieler_steps/2)) {
-								gs.addPosOff(sack_steps, 0);
-								//sp.addPosOff(-spieler_steps/2, 0);
-							}
-							else sp.addPosOff(-sack_steps,0);
+							if (newField1[0] < PGSize[0]) {
+								gs.addPosOff(field_size, 0);
+							}else sp.addPosOff(-field_size/2,0);
 						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							newPos[0] -= sack_steps;
-							if (getCenterOf(new int[]{1,1})[0]-(spieler_steps/2) < newPos[0]) {
-								gs.addPosOff(-sack_steps, 0);
-								//sp.addPosOff(spieler_steps/2,0);
+							if (1 < newField1[0]) {
+								gs.addPosOff(-field_size, 0);
 							}
-							else sp.addPosOff(sack_steps,0);
+							else
+								sp.addPosOff(field_size/2,0);
+						}
+						else if (sp.getMoveDir() == DIRECTION.DOWN) {
+							sp.addPosOff(0, -field_size/2);
+						}
+						else{
+							sp.addPosOff(0, field_size/2);
 						}
 					}
-
 					// Geldsack trifft Geldsack
 					for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
 						Geldsack g2 = it.next();
@@ -303,7 +295,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				if (kirsche != null) {
 					if (Arrays.equals(kirsche.getField(), getFieldOf(sp.getPosition()))) {
 						aktuelles_level.getMap().removeKirsche();
-						spielstand += kirsche.getValue();
+						incScore(kirsche.getValue());
 						bounsmodus = true;
 					}
 				}
@@ -328,7 +320,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(mon.getPosition()))) {
 						if (bounsmodus) {
-							spielstand += mon.getWertung();
+							incScore(mon.getWertung());
 							iterator.remove();
 						} else {
 							//Monster trifft Spieler
@@ -348,6 +340,14 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			}
 
 			// ----- end for (Spieler)
+
+
+			if( incLifeCount > newLifeScore  ) {
+				sp1.incrementLife();
+				if(sp2 != null)
+					sp2.incrementLife();
+				incLifeCount = 0;
+			}
 
 			// Hobbin verfolgt Spieler
 
@@ -744,7 +744,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				for (Iterator<Monster> iter = monsters.iterator(); iter.hasNext(); ) {
 					Monster m = iter.next();
 					if (Arrays.equals(getFieldOf(fb.getPosition()), getFieldOf(m.getPosition()))) {
-						spielstand += m.getWertung();
+						incScore(m.getWertung());
 						anzMon++;
 						iterator.remove();
 						iter.remove();
@@ -1432,5 +1432,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	public void setClientMoveDir(DIRECTION moveDir) {
 		sp2.setMoveDir(moveDir);
+	}
+
+	private void incScore(int s){
+		spielstand += s;
+		incLifeCount += s;
 	}
 }
