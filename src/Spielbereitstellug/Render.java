@@ -43,7 +43,14 @@ public abstract class Render extends JPanel implements Filesystem {
         // Zeichne Hintergrund
 
         setBackground(Color.black);
-        BufferedImage backgroundImg = current_skin.getImage("backg_typ1", field_size);
+        BufferedImage backgroundImg = current_skin.getImage("backg_typ1", field_size);;
+
+        if(obj.has("bonus")){
+            boolean bonusMode = obj.getBoolean("bonus");
+            if(bonusMode)
+                backgroundImg = current_skin.getImage("backg_typ2", field_size);
+        }
+
         TexturePaint slatetp = new TexturePaint(backgroundImg, new Rectangle(0, 0, backgroundImg.getWidth(), backgroundImg.getHeight()));
         Graphics2D g2d = (Graphics2D) g;
         g2d.setPaint(slatetp);

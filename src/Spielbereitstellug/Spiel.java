@@ -34,7 +34,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	// Speed
 	int spieler_steps;
 	int feuerball_steps;
-	final int geldsack_steps = 3;
+	int geldsack_steps = 3;
 	int monster_steps = 5;
 	final long DELAY_PERIOD = 15;
 	final int newLifeScore = 20000;
@@ -282,6 +282,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
 							bounsmodus = false;
+							aktuelles_level.getMap().setBonus(false);
 							anzMon = 0;
 							monsters.clear();
 							iterator.remove();
@@ -297,6 +298,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						aktuelles_level.getMap().removeKirsche();
 						incScore(kirsche.getValue());
 						bounsmodus = true;
+						aktuelles_level.getMap().setBonus(true);
 					}
 				}
 
@@ -705,6 +707,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				}
 
 				else if (gs.getFalling()) {
+					geldsack_steps = field_size/10;
 					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)){
 						gs.addPosOff(0, geldsack_steps);
 						gs.incFallHeight(geldsack_steps);
@@ -883,6 +886,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				if (bounsRemTime < (long) 0) {
 					bounsRemTime = bounsTime;
 					bounsmodus = false;
+					aktuelles_level.getMap().setBonus(false);
 				} else
 					bounsRemTime -= DELAY_PERIOD;
 			}

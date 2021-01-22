@@ -28,6 +28,7 @@ public class Map {
 	private ArrayList<Geld> geld;
 	private ArrayList<Tunnel> tunnel;
 	private Kirsche kirsche;
+	private boolean bonus;
 
 	public Map(JSONObject obj, Skin sk) {
 
@@ -125,6 +126,7 @@ public class Map {
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
 		kirsche = m.kirsche;
 		skin = m.skin;
+		bonus = false;
 	}
 
 	////// Content handling functions
@@ -183,6 +185,10 @@ public class Map {
 	public int getMonsterAmmount() {
 		return monster.size();
 	}
+
+	public void setBonus(boolean b){
+		bonus = b;
+	};
 
 	/// Kirsche
 
@@ -331,6 +337,7 @@ public class Map {
 		obj.put("spawn_p1", new JSONArray(new int[]{spawn_sp1[0],spawn_sp1[1]}));
 		obj.put("spawn_p2", new JSONArray(new int[]{spawn_sp2[0],spawn_sp2[1]}));
 		obj.put("spawn_mon", new JSONArray(new int[]{spawn_monster[0],spawn_monster[1]}));
+		obj.put("bonus", bonus);
 
 		if(kirsche != null)
 			obj.put("spawn_cherry", new JSONArray(new int[]{kirsche.getField()[0],kirsche.getField()[1]}));
