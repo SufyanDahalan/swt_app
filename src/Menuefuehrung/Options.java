@@ -1,6 +1,12 @@
 package Menuefuehrung;
 
-import javax.sound.sampled.*;
+import Spielbereitstellug.Netzwerksteuerung;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -11,14 +17,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import Spielbereitstellug.Netzwerksteuerung;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
@@ -54,7 +55,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         button b4 = new button("Singleplayer", 17);
         button b5 = new button("Multiplayer", 17);
         button b6 = new button("Level Editor", 20);
-        button b7 = new button("About", 17);
+        button b7 = new button("Help me", 17);
         button b8 = new button("", 17);
 
 
@@ -220,7 +221,24 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         });
         b3.addActionListener(e -> System.exit(0));
         editorButton(b6, babaFrame);
+
+        b7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop != null && desktop.isSupported(Desktop.Action.OPEN)) {
+                    try {
+                        desktop.open(new File("bin/Benutzerhandbuch .pdf"));
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
+
+
 
 
     public void editorButton(button b, MainFrame babaFrame){
