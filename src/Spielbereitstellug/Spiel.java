@@ -233,64 +233,59 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				for (Iterator<Geldsack> iterator = geldsacke.iterator(); iterator.hasNext(); ) {
 					Geldsack gs = iterator.next();
 
-
-					// nach l/r bewegen
-					if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
-						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						int[] newField1 = getFieldOf(gs.getPosition());
-						if (sp.getMoveDir() == DIRECTION.RIGHT) {
-							if (newField1[0] < PGSize[0]) {
-								gs.addPosOff(field_size, 0);
-							}else sp.addPosOff(-field_size/2,0);
-						} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-							if (1 < newField1[0]) {
-								gs.addPosOff(-field_size, 0);
-							}
-							else
-								sp.addPosOff(field_size/2,0);
-						}
-						else if (sp.getMoveDir() == DIRECTION.DOWN) {
-							sp.addPosOff(0, -field_size/2);
-						}
-						else{
-							sp.addPosOff(0, field_size/2);
-						}
-					}
-					// Geldsack trifft Geldsack
-					for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
-						Geldsack g2 = it.next();
-						int[] PGSize = aktuelles_level.getMap().getPGSize();
-						int[] newField1 = getFieldOf(gs.getPosition());
-						int[] newField2 = getFieldOf(g2.getPosition());
-						if (gs != g2) {
-							if (Arrays.equals(newField1, newField2)) {
-								if (sp.getMoveDir()==DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
-									g2.addPosOff(field_size, 0);
-								}
-								if (sp.getMoveDir()==DIRECTION.LEFT && 1 < newField2[0]) {
-									g2.addPosOff(-field_size, 0);
-								}
+						// nach l/r bewegen
+						if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
+							int[] PGSize = aktuelles_level.getMap().getPGSize();
+							int[] newField1 = getFieldOf(gs.getPosition());
+							if (sp.getMoveDir() == DIRECTION.RIGHT) {
+								if (newField1[0] < PGSize[0] && getFieldOf(gs.getPosition())[0]!=PGSize[0]-1) {
+									gs.addPosOff(field_size, 0);
+								} else sp.addPosOff(-field_size / 2, 0);
+							} else if (sp.getMoveDir() == DIRECTION.LEFT) {
+								if (1 < newField1[0] && getFieldOf(gs.getPosition())[0]!=2) {
+									gs.addPosOff(-field_size, 0);
+								} else
+									sp.addPosOff(field_size / 2, 0);
+							} else if (sp.getMoveDir() == DIRECTION.DOWN) {
+								sp.addPosOff(0, -field_size / 2);
+							} else {
+								sp.addPosOff(0, field_size / 2);
 							}
 						}
-					}
+						// Geldsack trifft Geldsack
+						for (Iterator<Geldsack> it = geldsacke.iterator(); it.hasNext(); ) {
+							Geldsack g2 = it.next();
+							int[] PGSize = aktuelles_level.getMap().getPGSize();
+							int[] newField1 = getFieldOf(gs.getPosition());
+							int[] newField2 = getFieldOf(g2.getPosition());
+							if (gs != g2) {
+								if (Arrays.equals(newField1, newField2)) {
+									if (sp.getMoveDir() == DIRECTION.RIGHT && newField2[0] < PGSize[0]) {
+										g2.addPosOff(field_size, 0);
+									}
+									if (sp.getMoveDir() == DIRECTION.LEFT && 1 < newField2[0]) {
+										g2.addPosOff(-field_size, 0);
+									}
+								}
+							}
 
-					// Geldsack fällt auf Spieler
+						// Geldsack fällt auf Spieler
 
-					if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(gs.getPosition())) && gs.getFalling()) {
-						if (sp.isAlive()) {
-							if (sp.decrementLife())
-								sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
+						if (Arrays.equals(getFieldOf(sp.getPosition()), getFieldOf(gs.getPosition())) && gs.getFalling()) {
+							if (sp.isAlive()) {
+								if (sp.decrementLife())
+									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
-							bounsmodus = false;
-							aktuelles_level.getMap().setBonus(false);
-							anzMon = 0;
-							monsters.clear();
-							iterator.remove();
-							break;
+								bounsmodus = false;
+								aktuelles_level.getMap().setBonus(false);
+								anzMon = 0;
+								monsters.clear();
+								iterator.remove();
+								break;
+							}
 						}
 					}
 				}
-
 				///Bonsmodus aktivieren:
 				// Spieler trifft Kirsche ->
 				if (kirsche != null) {
