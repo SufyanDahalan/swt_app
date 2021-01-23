@@ -9,11 +9,11 @@ import java.awt.*;
 import static java.awt.Toolkit.getDefaultToolkit;
 
 
-public class button extends JButton implements Filesystem {
+public class Button extends JButton implements Filesystem {
 
     private Skin current_skin;
 
-    button(String Name, int Size){
+    Button(String Name, int Size){
                 super(Name);
                 setOpaque(false);
                 setContentAreaFilled(false);

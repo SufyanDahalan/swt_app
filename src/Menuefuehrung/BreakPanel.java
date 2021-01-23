@@ -23,9 +23,9 @@ public class BreakPanel extends JPanel {
 
         setBackground(Color.BLACK);
 
-        button resume_btn = new button("resume game", 20);
-        button leave_btn = new button("leave game", 20);
-        button quit_btn = new button("quit completely", 15);
+        Button resume_btn = new Button("resume game", 20);
+        Button leave_btn = new Button("leave game", 20);
+        Button quit_btn = new Button("quit completely", 15);
 
 
         add(resume_btn);

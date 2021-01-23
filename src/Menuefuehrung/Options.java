@@ -49,14 +49,14 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         setPreferredSize(new Dimension(Width/3, (Height/4)*3));
 
         setOpaque(false);
-        button b1 = new button("Start", 20);
-        button b2 = new button("Options", 20);
-        button b3 = new button("Quit", 20);
-        button b4 = new button("Singleplayer", 17);
-        button b5 = new button("Multiplayer", 17);
-        button b6 = new button("Level Editor", 20);
-        button b7 = new button("Help me", 17);
-        button b8 = new button("", 17);
+        Button b1 = new Button("Start", 20);
+        Button b2 = new Button("Options", 20);
+        Button b3 = new Button("Quit", 20);
+        Button b4 = new Button("Singleplayer", 17);
+        Button b5 = new Button("Multiplayer", 17);
+        Button b6 = new Button("Level Editor", 20);
+        Button b7 = new Button("Help me", 17);
+        Button b8 = new Button("", 17);
 
 
 
@@ -241,7 +241,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
 
 
 
-    public void editorButton(button b, MainFrame babaFrame){
+    public void editorButton(Button b, MainFrame babaFrame){
 
         LevelEditor editor = new LevelEditor();
         babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
