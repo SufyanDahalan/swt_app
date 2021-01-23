@@ -187,7 +187,14 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     if(ipv4 != null) {
                         JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
 
-                        Netzwerksteuerung netCont = new Netzwerksteuerung();
+                        // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
+                        // zum testen mit einer localhost Adresse.
+                        Netzwerksteuerung netCont = null;
+                        try {
+                            netCont = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1")); // zuvor war hier der 1. Konstruktor
+                        } catch (UnknownHostException unknownHostException) {
+                            unknownHostException.printStackTrace();
+                        }
 
                         babaFrame.prepareMap(true, true, netCont);
                     }
@@ -196,17 +203,24 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     }
                 }
                 else {
-                    // Local ausgewählt
+                    // Client ausgewählt
                     String ipstring = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
 
                     InetAddress ipImp = null;
-                    try {
-                        ipImp = InetAddress.getByName(ipstring);
+
+                    try { //Auch hier zum testen eine localhost Adresse.
+                        //ipImp = InetAddress.getByName(ipstring); zuvor dieses
+                        // braucht man auch später wieder, damit die Eingabe genommen wird.
+                        ipImp = InetAddress.getByName("127.0.0.1");
                     } catch (UnknownHostException unknownHostException) {
                         unknownHostException.printStackTrace();
                     }
 
-                    Netzwerksteuerung netCont = new Netzwerksteuerung(ipImp);
+                    //Netzwerksteuerung netCont = new Netzwerksteuerung(ipImp);
+                    //
+                    // Auch hier nehmen wir jetzt mal den 2. Konstruktor:
+
+                    Netzwerksteuerung netCont = new Netzwerksteuerung(false, ipImp);
 
                     babaFrame.prepareMap(false, true, netCont);
                 }

@@ -11,7 +11,10 @@ import java.net.Socket;
 
 public class Netzwerksteuerung {
 
-	public static final int PORT = 1337;
+	public static final int PORT = 65432; // ein "freier" d.h. dynamischer Port
+	// zum Testen: auf dem lokalen Host kann der Client den Port nicht nutzen, da dieser vom Host benutzt wird.
+	public static final int CLIENTPORT = 65430;
+
 	public ObjectOutputStream objectOutputStream;
 	public ObjectInputStream objectInputStream;
 	public boolean isHost;
@@ -149,6 +152,7 @@ public class Netzwerksteuerung {
 
 			} else {    /*in diesem Fall ist unsere Instanz der Client*/
 				streamSocket = new Socket(ip, PORT);
+				//streamSocket = new Socket(ip, CLIENTPORT);
 			}
 
 			OutputStream outStream = streamSocket.getOutputStream();
