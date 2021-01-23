@@ -3,27 +3,24 @@ import org.json.JSONArray;
 import Spielverlauf.*;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 
-public class Geldsack{
+public class Geldsack implements Serializable {
 	private int[] position;
 	private int[] field;
 	private boolean falling;
 	private int fallHeight;
-	private BufferedImage bild;
-	private Animation animation;
 	final private long liveTime = 1000;
 	private long remLiveTime;
 	private boolean shaking;
 
-	public Geldsack(int[] fp, Skin sk) {
+	public Geldsack(int[] fp){
 		position=null;
 		falling = false;
 		shaking = false;
 		fallHeight = 0;
 		field=fp;
-		bild=sk.getImage("money_static");
-		animation=sk.getAnimation("money_shaking");
 		remLiveTime = liveTime;
 	}
 
@@ -46,7 +43,6 @@ public class Geldsack{
 		falling = f;
     }
 
-
 	public boolean getFalling() {
 		return falling;
 	}
@@ -63,10 +59,6 @@ public class Geldsack{
 		fallHeight = 0;
 	}
 
-	public BufferedImage getImage() {
-		return bild;
-	}
-
 	public void decRemainingTime(long delay_period) {
 		remLiveTime -= delay_period;
 	}
@@ -81,10 +73,6 @@ public class Geldsack{
 
 	public void setShaking(boolean s){
 		shaking  = s;
-	}
-
-	public Animation getAnimation() {
-		return animation;
 	}
 
 	public boolean getShaking() {

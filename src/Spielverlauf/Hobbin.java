@@ -3,15 +3,9 @@ import java.util.ArrayList;
 
 public class Hobbin extends Monster {
 
-	ArrayList<Animation> animations;
 
-	public Hobbin(int[] spawn_monster, Skin sk){
+	public Hobbin(int[] spawn_monster) {
 		super(spawn_monster);
-
-		animations = new ArrayList<>();
-
-		animations.add(sk.getAnimation("hobbin_right"));
-		animations.add(sk.getAnimation("hobbin_left"));
 	}
 
 /*
@@ -32,18 +26,5 @@ public class Hobbin extends Monster {
 			return false; // wenn Bewegng nicht erlaubt
 	}
 */
-	@Override
-	public Animation getAnimation() {
-
-		Animation an = null;
-
-		for (Animation a : animations)
-			if (a.getDir() == moveDir){
-				an = a;
-				break;
-			}
-
-		return an;
-	}
 
 }

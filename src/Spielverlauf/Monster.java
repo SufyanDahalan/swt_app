@@ -1,10 +1,11 @@
 package Spielverlauf;
 
-public abstract class Monster {
+import java.io.Serializable;
+
+public abstract class Monster implements Serializable {
 
 	private int[] position;
 	protected int wertung = 250;
-	protected boolean graben;
 	protected DIRECTION moveDir;
 	protected boolean[] blocks;
 
@@ -12,16 +13,6 @@ public abstract class Monster {
 		position = pos;
 		moveDir = DIRECTION.RIGHT;
 		blocks = new boolean[]{true,true,true,true};
-	}
-
-	public void sichBewegen() {
-		// TODO - implement Monster.sichBewegen
-		throw new UnsupportedOperationException();
-	}
-
-	public void toeten() {
-		// TODO - implement Monster.toeten
-		throw new UnsupportedOperationException();
 	}
 
 	public int[] getPosition(){
@@ -36,8 +27,6 @@ public abstract class Monster {
 		position[0]+=x;
 		position[1]+=y;
 	}
-
-	public abstract Animation getAnimation();
 
     public DIRECTION getMoveDir() {
 		return moveDir;
