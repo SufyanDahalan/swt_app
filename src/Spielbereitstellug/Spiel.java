@@ -238,18 +238,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 							int[] PGSize = aktuelles_level.getMap().getPGSize();
 							int[] newField1 = getFieldOf(gs.getPosition());
 							if (sp.getMoveDir() == DIRECTION.RIGHT) {
-								if (newField1[0] < PGSize[0] && getFieldOf(gs.getPosition())[0]!=PGSize[0]-1) {
+								if (newField1[0] < PGSize[0] ) {
 									gs.addPosOff(field_size, 0);
-								} else sp.addPosOff(-field_size / 2, 0);
+								}
 							} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-								if (1 < newField1[0] && getFieldOf(gs.getPosition())[0]!=2) {
+								if (1 < newField1[0] ) {
 									gs.addPosOff(-field_size, 0);
-								} else
-									sp.addPosOff(field_size / 2, 0);
-							} else if (sp.getMoveDir() == DIRECTION.DOWN) {
-								sp.addPosOff(0, -field_size / 2);
-							} else {
-								sp.addPosOff(0, field_size / 2);
+								}
 							}
 						}
 						// Geldsack trifft Geldsack
