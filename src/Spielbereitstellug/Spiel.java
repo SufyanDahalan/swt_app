@@ -46,7 +46,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private final ArrayList<Map> mapChain;
 	int current_map = 0;
 
-
+	Thread loopThreat;
 
 	// loop global
 	int anzMon = 0;
@@ -238,18 +238,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 							int[] PGSize = aktuelles_level.getMap().getPGSize();
 							int[] newField1 = getFieldOf(gs.getPosition());
 							if (sp.getMoveDir() == DIRECTION.RIGHT) {
-								if (newField1[0] < PGSize[0] && getFieldOf(gs.getPosition())[0]!=PGSize[0]-1) {
+								if (newField1[0] < PGSize[0] ) {
 									gs.addPosOff(field_size, 0);
-								} else sp.addPosOff(-field_size / 2, 0);
+								}
 							} else if (sp.getMoveDir() == DIRECTION.LEFT) {
-								if (1 < newField1[0] && getFieldOf(gs.getPosition())[0]!=2) {
+								if (1 < newField1[0] ) {
 									gs.addPosOff(-field_size, 0);
-								} else
-									sp.addPosOff(field_size / 2, 0);
-							} else if (sp.getMoveDir() == DIRECTION.DOWN) {
-								sp.addPosOff(0, -field_size / 2);
-							} else {
-								sp.addPosOff(0, field_size / 2);
+								}
 							}
 						}
 						// Geldsack trifft Geldsack
@@ -1056,13 +1051,11 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	}
 
 	public void beenden() {
-		// TODO - implement Spiel.beenden
-		throw new UnsupportedOperationException();
+		loopThreat.stop();
 	}
 
 	public void pausieren() {
-		// TODO - implement Spiel.pausieren
-		throw new UnsupportedOperationException();
+		System.out.println("SP pausiert");
 	}
 
 
@@ -1346,8 +1339,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	}
 
 	public void start(){
-		Thread thread = new Thread(this);
-		thread.start();
+		loopThreat = new Thread(this);
+		loopThreat.start();
 	}
 
 	@Override
@@ -1409,10 +1402,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		this.el = el;
 	}
 
-	public void pause() {
-		System.out.println("Pause wurde gedrückt");
-	}
-
 	public void setMap( Map m ) {
 		aktuelles_level = new Level(0,0,0,0,  m);
 	}
@@ -1436,5 +1425,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private void incScore(int s){
 		spielstand += s;
 		incLifeCount += s;
+	}
+
+	public void resume() {
+		System.out.println("Spiel wurde fortgesetzt");
+	}
+
+	public boolean getMultiplayer() {
+		return isMultiplayer;
 	}
 }

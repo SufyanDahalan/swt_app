@@ -17,7 +17,7 @@ import java.text.DateFormat;
 import java.util.GregorianCalendar;
 
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements Filesystem{
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
@@ -152,11 +152,10 @@ public class MainFrame extends JFrame {
 
 
                 // Save score
-                String rootfolder_name = "bin/";
 
                 JSONObject obj = null;
                 try {
-                    obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootfolder_name + "scores.json"))));
+                    obj = new JSONObject(new String(Files.readAllBytes(Paths.get(rootDir + "scores.json"))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -176,12 +175,10 @@ public class MainFrame extends JFrame {
                 scores.put(score);
 
                 try {
-                    Files.write(Paths.get(rootfolder_name + "scores.json"), obj.toString(4).getBytes());
+                    Files.write(Paths.get(rootDir + "scores.json"), obj.toString(4).getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
 
                 // go back to Main
                 getContentPane().remove(spiel);
@@ -230,10 +227,15 @@ public class MainFrame extends JFrame {
             }
         });
 
-        addKeyBinding(spiel, "ESC", new AbstractAction() {
+        addKeyBinding(spiel, "ESCAPE", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                spiel.pause();
+                // pausiere Spiel
+                spiel.pausieren();
+                System.out.println("BP anzeigen");
+                // zeige Pausemenue
+                CardLayout layout = (CardLayout) getContentPane().getLayout();
+                layout.show(getContentPane(), "spielpause");
             }
         });
 
@@ -243,6 +245,11 @@ public class MainFrame extends JFrame {
             getContentPane().add(spiel, "multiplayer");
         else
             getContentPane().add(spiel, "singleplayer");
+
+        // erstelle PausePanel
+
+        BreakPanel bp = new BreakPanel(spiel, this);
+        getContentPane().add(bp, "spielpause");
 
         spiel.spawnSpieler();
 
