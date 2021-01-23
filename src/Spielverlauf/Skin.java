@@ -210,6 +210,21 @@ public class Skin {
 
 	}
 
+	public void invertImage(BufferedImage image) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int new_rgb;
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				new_rgb = 255 + 256*255 + 256*256*255 - image.getRGB(x, y);
+				image.setRGB(x, y, new_rgb);
+			}
+
+		}
+
+	}
+
 	public BufferedImage getImage(String name, int fs) {
 
 		BufferedImage dest = images.get(name);
