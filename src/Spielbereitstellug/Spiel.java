@@ -69,44 +69,47 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
-		bounsRemTime=bounsTime;
+		bounsRemTime = bounsTime;
 
 		// initialisiere Netzwerksteuerung
 		netControl = netC;
 
 		// initialisiere Mapchain
 
-		String[] maps = new File(levelfolder_name).list(); // read Level from Folder
-
 		// create Map and add it to chain
 
 		mapChain = new ArrayList<>();
 
-		for (String map : maps) {
+		if(isMultiplayer && isHost){
+			String[] maps = new File(levelfolder_name).list(); // read Level from Folder
 
-			// read Level-File
-			JSONObject objf = null;
-			try {
-				objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
-			} catch (Exception e) {
-				e.printStackTrace();
+
+			for (String map : maps) {
+
+				// read Level-File
+				JSONObject objf = null;
+				try {
+					objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// create Map and add to chain
+				mapChain.add(new Map(objf, current_skin));
 			}
 
-			// create Map and add to chain
-			mapChain.add(new Map(objf, current_skin));
+			// add Player
+
+			createNextLevel();
+
+
+			setFbRegTime();
+			monRTime = aktuelles_level.getRegenTimeFb();
+
+			// refresh sizing
+			obj = aktuelles_level.getMap().exportStaticsAsJSON();
+
 		}
-
-		// add Player
-
-		createNextLevel();
-
-
-		setFbRegTime();
-		monRTime = aktuelles_level.getRegenTimeFb();
-
-		// refresh sizing
-		obj = aktuelles_level.getMap().exportStaticsAsJSON();
-
 		feuerball_steps = field_size/15;
 		spieler_steps = field_size/10;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
@@ -317,6 +320,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						} else {
 							//Monster trifft Spieler
 							if (sp.isAlive() && dieing) {
+								System.out.println("sp is on m");
 								if (sp.decrementLife())
 									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 

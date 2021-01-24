@@ -55,7 +55,7 @@ public class Netzwerksteuerung {
 		// Server OUT
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
 		
-		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1);
+		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2);
 
 		// Sende sp hier mit objectOutputStream_outToClient
 		try {
@@ -129,7 +129,8 @@ public class Netzwerksteuerung {
 		if (sp != null){
 			s.setMap(sp.getMap());
 			s.setSpielstand(sp.getSpielstand());
-			s.sp1 = sp.getSp();
+			s.sp1 = sp.getSp1();
+			s.sp2 = sp.getSp2();
 		}
 
 		killConnection();

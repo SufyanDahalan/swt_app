@@ -250,8 +250,8 @@ public class MainFrame extends JFrame implements Filesystem{
 
         BreakPanel bp = new BreakPanel(spiel, this);
         getContentPane().add(bp, "spielpause");
-
-        spiel.spawnSpieler();
+        if(isMultiplayer && isHost)
+            spiel.spawnSpieler();
 
         spiel.start();
 
