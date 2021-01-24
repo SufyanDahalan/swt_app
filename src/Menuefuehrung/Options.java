@@ -204,14 +204,14 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                 }
                 else {
                     // Client ausgewählt
-                    String ipstring = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", null);
+                    String ipstring = JOptionPane.showInputDialog(digger, "enter the Host_IP: ", "localhost");
 
                     InetAddress ipImp = null;
 
                     try { //Auch hier zum testen eine localhost Adresse.
-                        //ipImp = InetAddress.getByName(ipstring); zuvor dieses
+                        ipImp = InetAddress.getByName(ipstring); // zuvor dieses
                         // braucht man auch später wieder, damit die Eingabe genommen wird.
-                        ipImp = InetAddress.getByName("127.0.0.1");
+                        //ipImp = InetAddress.getByName("127.0.0.1");
                     } catch (UnknownHostException unknownHostException) {
                         unknownHostException.printStackTrace();
                     }
