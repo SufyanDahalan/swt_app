@@ -79,7 +79,7 @@ public class MainFrame extends JFrame implements Filesystem{
 
 
 
-        setIconImage(new ImageIcon("bin/images/Logo.png").getImage());
+        setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
@@ -107,9 +107,6 @@ public class MainFrame extends JFrame implements Filesystem{
 
 
     public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont){//copied from Test.java, should be adjusted later
-
-        int height = getContentPane().getPreferredSize().height;
-        int width = getContentPane().getPreferredSize().width;
 
         final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
 
@@ -250,7 +247,7 @@ public class MainFrame extends JFrame implements Filesystem{
 
         BreakPanel bp = new BreakPanel(spiel, this);
         getContentPane().add(bp, "spielpause");
-        if(isMultiplayer && isHost)
+        if(!(isMultiplayer && !isHost))
             spiel.spawnSpieler();
 
         spiel.start();

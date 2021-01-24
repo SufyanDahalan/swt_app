@@ -80,7 +80,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		mapChain = new ArrayList<>();
 
-		if(isMultiplayer && isHost){
+		if(!(isMultiplayer && !isHost)){
 			String[] maps = new File(levelfolder_name).list(); // read Level from Folder
 
 
