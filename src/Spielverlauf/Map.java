@@ -110,15 +110,21 @@ public class Map implements Serializable {
 
 		playground_size = m.playground_size.clone();
 
-		monster = new ArrayList<Monster>(m.monster);
+		monster = new ArrayList<Monster>();
 		spawn_monster = m.spawn_monster.clone();
 		spawn_sp1 = m.spawn_sp1.clone();
 		spawn_sp2 = m.spawn_sp2.clone();
 		spawn_cherry = m.spawn_cherry.clone();
-		feuerball = new ArrayList<Feuerball>(m.feuerball);
-		diamanten = new ArrayList<Diamant>(m.diamanten);
-		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
-		geld = new ArrayList<Geld>(m.geld);
+		feuerball = new ArrayList<Feuerball>();
+		diamanten = new ArrayList<Diamant>();
+		for(Diamant d : m.diamanten){
+			diamanten.add(new Diamant(d));
+		}
+		geldsaecke = new ArrayList<Geldsack>();
+		for(Geldsack g : m.geldsaecke){
+			geldsaecke.add(new Geldsack(g));
+		}
+		geld = new ArrayList<Geld>();
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
 		kirsche = m.kirsche;
 		bonus = false;

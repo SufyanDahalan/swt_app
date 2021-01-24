@@ -19,8 +19,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	// dev ops
 
-	final boolean monsterSpawn = true;
-	final boolean dieing = true;
+	final boolean monsterSpawn = false;
+	final boolean dieing = false;
 
 	// game setup
 
@@ -170,7 +170,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				Spieler sp = spIterator.next();
 
 				// alle Diamanten gesammel?
-				if (aktuelles_level.getMap().getDiamonds().size() == 0) {
+				if (aktuelles_level.getMap().getDiamonds().isEmpty()) {
 					// dann nächstes Level
 					createNextLevel();
 
@@ -237,7 +237,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geldsack gs = iterator.next();
 
 						// nach l/r bewegen
-						if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
+						if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition())) && !gs.getFalling()) {
 							int[] PGSize = aktuelles_level.getMap().getPGSize();
 							int[] newField1 = getFieldOf(gs.getPosition());
 							if (sp.getMoveDir() == DIRECTION.RIGHT) {
@@ -701,13 +701,16 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				}
 
 				else if (gs.getFalling()) {
-					geldsack_steps = field_size/10;
+					geldsack_steps = field_size/20;
 					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)){
+						System.out.println(geldsack_steps);
+						System.out.println(field_size);
 						gs.addPosOff(0, geldsack_steps);
 						gs.incFallHeight(geldsack_steps);
 					}
 					else {
 						if (gs.getFallHeight()-2 > field_size) {
+							System.out.println("done");
 							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition())));
 							iterator.remove();
 						} else {
@@ -717,7 +720,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						}
 					}
 				}
-
 
 				//Geldsack fällt auf Monster
 				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
@@ -1100,7 +1102,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		for (int i = 0; i < geldsaecke.size(); i++) {
 
 			Geldsack single_item = geldsaecke.get(i);
-
 
 			BufferedImage moneyPodImg;
 

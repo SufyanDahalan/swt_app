@@ -24,6 +24,15 @@ public class Geldsack implements Serializable {
 		remLiveTime = liveTime;
 	}
 
+	public Geldsack(Geldsack gs){
+		position=null;
+		falling = false;
+		shaking = false;
+		fallHeight = 0;
+		field=gs.getField().clone();
+		remLiveTime = liveTime;
+	}
+
 	public void setPosition(int[] pos) {
 		position = pos;
 	}

@@ -10,6 +10,10 @@ public class Diamant extends Item implements Serializable {
 		super(fp);
 	}
 
+	public Diamant(Diamant d){
+		super(d.getField().clone());
+	}
+
 	@Override
 	public int getValue() {
 		return wertung;
