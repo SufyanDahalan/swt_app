@@ -19,8 +19,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	// dev ops
 
-	final boolean monsterSpawn = false;
-	final boolean dieing = false;
+	final boolean monsterSpawn = true;
+	final boolean dieing = true;
 
 	// game setup
 
@@ -703,14 +703,11 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				else if (gs.getFalling()) {
 					geldsack_steps = field_size/20;
 					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)){
-						System.out.println(geldsack_steps);
-						System.out.println(field_size);
 						gs.addPosOff(0, geldsack_steps);
 						gs.incFallHeight(geldsack_steps);
 					}
 					else {
 						if (gs.getFallHeight()-2 > field_size) {
-							System.out.println("done");
 							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition())));
 							iterator.remove();
 						} else {

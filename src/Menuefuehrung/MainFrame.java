@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -112,7 +114,7 @@ public class MainFrame extends JFrame implements Filesystem{
 
         EndListener el = spielstand -> {
 
-            JTextField name = new JTextField(8);
+            JTextField name = new JTextField(3);
             JTextField age = new JTextField(2);
 
             JPanel myPanel = new JPanel();
@@ -121,6 +123,26 @@ public class MainFrame extends JFrame implements Filesystem{
             myPanel.add(new JLabel("Your Age :"));
             myPanel.add(age);
             myPanel.add(Box.createHorizontalStrut(10));
+
+            name.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {}
+
+                @Override
+                public void keyPressed(KeyEvent e) {}
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    int pos = name.getCaretPosition();
+                    String text = name.getText();
+                    if(text.length() > 3){
+                        text = text.substring(0,3);
+                        pos = 3;
+                    }
+                    name.setText(text.toUpperCase());
+                    name.setCaretPosition(pos);
+                }
+            });
 
             int result = JOptionPane.showConfirmDialog(null, myPanel, "please enter ..", JOptionPane.OK_CANCEL_OPTION);
 
