@@ -86,12 +86,22 @@ public class Netzwerksteuerung {
 			e.printStackTrace();
 		}
 
+		if(cp != null) {
+			if(cp.getSp() != null) {
+				s.sp2.setPosition(cp.getSp().getPosition());
+				s.sp2.setMoveDir(cp.getSp().getMoveDir());
 
-		s.sp2 = cp.getSp();
-
-		// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
-		if(cp.isFb_try())
-			s.spawnFeuerball(s.sp2);
+				// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
+				if (s.sp2.getFired()) {
+					s.spawnFeuerball(s.sp2);
+					s.sp2.setFired(false);
+				}
+			}
+			else
+				System.out.println("sp in cp is null");
+		}
+		else
+			System.out.println("cp is null");
 
 		killConnection();
 	}
@@ -121,9 +131,9 @@ public class Netzwerksteuerung {
 			streamSocket.setSoTimeout(250);
 			sp = (ServerPackage) objectInputStream.readObject();
 		}
- 		catch(SocketTimeoutException timeout){
+		catch(SocketTimeoutException timeout){
 			System.out.println("waiting too long. next!");
- 		}
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -135,11 +145,12 @@ public class Netzwerksteuerung {
 			s.setMap(sp.getMap());
 			s.setSpielstand(sp.getSpielstand());
 			s.sp1 = sp.getSp1();
+			s.sp2.setLeben(sp.getSp2().getLeben());
+			s.sp2.setFired(sp.getSp2().getFired());
 			s.sp2 = sp.getSp2();
 			s.getChat().empfangen(sp.getVS());
 
 		}
-
 
 		killConnection();
 	}

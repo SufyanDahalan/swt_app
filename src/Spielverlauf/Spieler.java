@@ -93,4 +93,8 @@ public class Spieler implements Serializable {
 		if(leben < 3)
 			leben++;
     }
+
+	public void setLeben(int l) {
+		leben = l;
+	}
 }

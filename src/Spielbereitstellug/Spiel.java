@@ -82,36 +82,34 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		mapChain = new ArrayList<>();
 
-		if(!(isMultiplayer && !isHost)){
-			String[] maps = new File(levelfolder_name).list(); // read Level from Folder
+		String[] maps = new File(levelfolder_name).list(); // read Level from Folder
 
+		for (String map : maps) {
 
-			for (String map : maps) {
-
-				// read Level-File
-				JSONObject objf = null;
-				try {
-					objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				// create Map and add to chain
-				mapChain.add(new Map(objf, current_skin));
+			// read Level-File
+			JSONObject objf = null;
+			try {
+				objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-			// add Player
-
-			createNextLevel();
-
-
-			setFbRegTime();
-			monRTime = aktuelles_level.getRegenTimeFb();
-
-			// refresh sizing
-			obj = aktuelles_level.getMap().exportStaticsAsJSON();
-
+			// create Map and add to chain
+			mapChain.add(new Map(objf, current_skin));
 		}
+
+		// add Player
+
+		createNextLevel();
+
+
+		setFbRegTime();
+		monRTime = aktuelles_level.getRegenTimeFb();
+
+		// refresh sizing
+		obj = aktuelles_level.getMap().exportStaticsAsJSON();
+
+
 		feuerball_steps = field_size/15;
 		spieler_steps = field_size/10;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
@@ -971,12 +969,11 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	public void spawnSpieler() {
 
 		int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
-
 		sp1 = new Spieler(pixelPos[0], pixelPos[1]);
 
 		if(isMultiplayer) {
 			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
-			sp2 = new Spieler(pixelPos[0], pixelPos[1]);
+			sp2 = new Spieler(pixelPos[0],pixelPos[1]);
 		}
 
 
@@ -1091,236 +1088,238 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	}
 
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		if(aktuelles_level != null) {
+			super.paintComponent(g);
 
-		int[] borderOffset = getBorderOffset();
+			int[] borderOffset = getBorderOffset();
 
-		// Zeichne Geldsäcke
+			// Zeichne Geldsäcke
 
-		ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
+			ArrayList<Geldsack> geldsaecke = aktuelles_level.getMap().getGeldsaecke();
 
-		for (int i = 0; i < geldsaecke.size(); i++) {
+			for (int i = 0; i < geldsaecke.size(); i++) {
 
-			Geldsack single_item = geldsaecke.get(i);
+				Geldsack single_item = geldsaecke.get(i);
 
-			BufferedImage moneyPodImg;
+				BufferedImage moneyPodImg;
 
-			if (single_item.getShaking()) {
-				Animation a = current_skin.getAnimation("money_shaking");
-				moneyPodImg = a.nextFrame(field_size);
-			} else
-				moneyPodImg = current_skin.getImage("money_static",field_size);
+				if (single_item.getShaking()) {
+					Animation a = current_skin.getAnimation("money_shaking");
+					moneyPodImg = a.nextFrame(field_size);
+				} else
+					moneyPodImg = current_skin.getImage("money_static", field_size);
 
-			int[] field = single_item.getField();
-			int[] middle = single_item.getPosition();
-			int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
-			int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
+				int[] field = single_item.getField();
+				int[] middle = single_item.getPosition();
+				int x_pixel = middle[0] - (moneyPodImg.getWidth() / 2);
+				int y_pixel = middle[1] - (moneyPodImg.getHeight() / 2);
 
-			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
+				g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
-			if (devFrames) {
-				g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
-				g.setColor(Color.RED);
-			}
-		}
-
-		// Monster
-		ArrayList<Hobbin> hobbins = aktuelles_level.getMap().getHobbins();
-		Animation ani_hobbin_left = current_skin.getAnimation("hobbin_left");
-		Animation ani_hobbin_right = current_skin.getAnimation("hobbin_right");
-
-		BufferedImage hobbinImg = null;
-
-		for (int i = 0; i < hobbins.size(); i++) {
-			Hobbin single_item = hobbins.get(i);
-
-			if (single_item.getMoveDir() == DIRECTION.RIGHT)
-				hobbinImg = ani_hobbin_right.nextFrame(field_size);
-			else
-				hobbinImg = ani_hobbin_left.nextFrame(field_size);
-
-
-			int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
-			int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);
-
-			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
-
-			if (devFrames) {
-				int[] field = getFieldOf(single_item.getPosition());
-				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-				g.setColor(Color.RED);
-			}
-		}
-
-		Animation ani_nobbin = current_skin.getAnimation("nobbin");
-		BufferedImage nobbinImg = ani_nobbin.nextFrame(field_size);
-
-		ArrayList<Nobbin> nobbins = aktuelles_level.getMap().getNobbins();
-
-		for (int i = 0; i < nobbins.size(); i++) {
-			Nobbin single_item = nobbins.get(i);
-
-			int x_pixel = single_item.getPosition()[0] - (nobbinImg.getWidth() / 2);
-			int y_pixel = single_item.getPosition()[1] - (nobbinImg.getHeight() / 2);
-
-			g.drawImage(nobbinImg, x_pixel, y_pixel, null);
-
-			if (devFrames) {
-				int[] field = getFieldOf(single_item.getPosition());
-				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-				g.setColor(Color.RED);
-			}
-		}
-
-		// Feuerball
-
-		ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
-
-		for (int i = 0; i < feuerball.size(); i++) {
-			Feuerball single_item = feuerball.get(i);
-			BufferedImage pic = current_skin.getImage("fireball_red_f1", field_size);
-
-			int[] pos = single_item.getPosition();
-			int x_pixel = pos[0] - (pic.getWidth() / 2);
-			int y_pixel = pos[1] - (pic.getHeight() / 2);
-
-			g.drawImage(pic, x_pixel, y_pixel, null);
-
-			if (devFrames) {
-				int[] field = getFieldOf(single_item.getPosition());
-				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-				g.setColor(Color.RED);
-			}
-		}
-
-		// Geld
-		ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
-
-		for (int i = 0; i < geld.size(); i++) {
-			Geld single_item = geld.get(i);
-			//Animation a = single_item.getAnimation();
-
-			BufferedImage geldImg = current_skin.getImage("money_fall_f6", field_size); //a.nextFrame(field_size);
-
-			int[] field = single_item.getField();
-			int[] middle = getCenterOf(field);
-			int x_pixel = middle[0] - (geldImg.getWidth() / 2);
-			int y_pixel = middle[1] - (geldImg.getHeight() / 2);
-
-			// scaling ...
-
-			g.drawImage(geldImg, x_pixel, y_pixel, null);
-
-			if (devFrames) {
-				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
-				g.setColor(Color.RED);
-			}
-		}
-
-		// Spieler
-
-		if (sp1 != null) {
-			if (sp1.isAlive()) {
-
-				Animation ani_left = current_skin.getAnimation("digger_red_left");
-				Animation ani_right = current_skin.getAnimation("digger_red_right");
-				Animation ani_up = current_skin.getAnimation("digger_red_up");
-				Animation ani_down = current_skin.getAnimation("digger_red_down");
-
-				BufferedImage sp1Img = null;
-
-				if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-					sp1Img = ani_right.nextFrame(field_size);
+				if (devFrames) {
+					g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
+					g.setColor(Color.RED);
 				}
-				if (sp1.getMoveDir() == DIRECTION.LEFT) {
-					sp1Img = ani_left.nextFrame(field_size);
-				}
-				if (sp1.getMoveDir() == DIRECTION.UP) {
-					sp1Img = ani_up.nextFrame(field_size);
-				}
-				if (sp1.getMoveDir() == DIRECTION.DOWN) {
-					sp1Img = ani_down.nextFrame(field_size);
-				}
-
-
-				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-				g.drawImage(sp1Img, x_pixel, y_pixel, null);
-
-			} else {
-				// gegen Geist ersetzen
-				//Animation ani_grave = current_skin.getAnimation("Grave");
-				BufferedImage sp1Img = current_skin.getImage("grave_f5");
-				int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-				g.drawImage(sp1Img, x_pixel, y_pixel, null);
-			}
-		}
-
-		if (sp2 != null) {
-			if (sp2.isAlive()) {
-				Animation ani_left = current_skin.getAnimation("digger_gre_left");
-				Animation ani_right = current_skin.getAnimation("digger_gre_right");
-				Animation ani_up = current_skin.getAnimation("digger_gre_up");
-				Animation ani_down = current_skin.getAnimation("digger_gre_down");
-
-				BufferedImage spImg = null;
-
-				if (sp2.getMoveDir() == DIRECTION.RIGHT) {
-					spImg = ani_right.nextFrame(field_size);
-				}
-				if (sp2.getMoveDir() == DIRECTION.LEFT) {
-					spImg = ani_left.nextFrame(field_size);
-				}
-				if (sp2.getMoveDir() == DIRECTION.UP) {
-					spImg = ani_up.nextFrame(field_size);
-				}
-				if (sp2.getMoveDir() == DIRECTION.DOWN) {
-					spImg = ani_down.nextFrame(field_size);
-				}
-
-
-				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
-				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
-				g.drawImage(spImg, x_pixel, y_pixel, null);
-			} else {
-				// gegen Geist ersetzen
-				//Animation ani_grave = current_skin.getAnimation("Grave");
-				BufferedImage spImg = current_skin.getImage("grave_f5", field_size);
-				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
-				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
-				g.drawImage(spImg, x_pixel, y_pixel, null);
-			}
-		}
-
-		// Zeichne Score
-		int margin_y = field_size / 4;
-		int margin_x = field_size / 2;
-
-		int fontSize = field_size / 2;
-		g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
-		g.setColor(Color.white);
-		g.drawString(String.format("%05d", spielstand), margin_x, margin_y + fontSize);
-
-		// Zeichne Leben
-
-		// Zeichne Leben von SP1
-		BufferedImage sp1Img = current_skin.getImage("statusbar_digger_MP_red", field_size);
-		margin_x = 3 * field_size;
-		for (int i = sp1.getLeben(); i > 0; i--) {
-			g.drawImage(sp1Img, margin_x, margin_y, null);
-			margin_x += sp1Img.getWidth();
-		}
-
-		// Zeichene auch leben von SP2
-		if (sp2 != null) {
-			margin_x = 9 * field_size;
-			BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
-			for (int i = sp2.getLeben(); i > 0; i--) {
-				g.drawImage(sp2Img, margin_x, margin_y, null);
-				margin_x -= sp1Img.getWidth();
 			}
 
+			// Monster
+			ArrayList<Hobbin> hobbins = aktuelles_level.getMap().getHobbins();
+			Animation ani_hobbin_left = current_skin.getAnimation("hobbin_left");
+			Animation ani_hobbin_right = current_skin.getAnimation("hobbin_right");
+
+			BufferedImage hobbinImg = null;
+
+			for (int i = 0; i < hobbins.size(); i++) {
+				Hobbin single_item = hobbins.get(i);
+
+				if (single_item.getMoveDir() == DIRECTION.RIGHT)
+					hobbinImg = ani_hobbin_right.nextFrame(field_size);
+				else
+					hobbinImg = ani_hobbin_left.nextFrame(field_size);
+
+
+				int x_pixel = single_item.getPosition()[0] - (hobbinImg.getWidth() / 2);
+				int y_pixel = single_item.getPosition()[1] - (hobbinImg.getHeight() / 2);
+
+				g.drawImage(hobbinImg, x_pixel, y_pixel, null);
+
+				if (devFrames) {
+					int[] field = getFieldOf(single_item.getPosition());
+					g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+					g.setColor(Color.RED);
+				}
+			}
+
+			Animation ani_nobbin = current_skin.getAnimation("nobbin");
+			BufferedImage nobbinImg = ani_nobbin.nextFrame(field_size);
+
+			ArrayList<Nobbin> nobbins = aktuelles_level.getMap().getNobbins();
+
+			for (int i = 0; i < nobbins.size(); i++) {
+				Nobbin single_item = nobbins.get(i);
+
+				int x_pixel = single_item.getPosition()[0] - (nobbinImg.getWidth() / 2);
+				int y_pixel = single_item.getPosition()[1] - (nobbinImg.getHeight() / 2);
+
+				g.drawImage(nobbinImg, x_pixel, y_pixel, null);
+
+				if (devFrames) {
+					int[] field = getFieldOf(single_item.getPosition());
+					g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+					g.setColor(Color.RED);
+				}
+			}
+
+			// Feuerball
+
+			ArrayList<Feuerball> feuerball = aktuelles_level.getMap().getFeuerball();
+
+			for (int i = 0; i < feuerball.size(); i++) {
+				Feuerball single_item = feuerball.get(i);
+				BufferedImage pic = current_skin.getImage("fireball_red_f1", field_size);
+
+				int[] pos = single_item.getPosition();
+				int x_pixel = pos[0] - (pic.getWidth() / 2);
+				int y_pixel = pos[1] - (pic.getHeight() / 2);
+
+				g.drawImage(pic, x_pixel, y_pixel, null);
+
+				if (devFrames) {
+					int[] field = getFieldOf(single_item.getPosition());
+					g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+					g.setColor(Color.RED);
+				}
+			}
+
+			// Geld
+			ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
+
+			for (int i = 0; i < geld.size(); i++) {
+				Geld single_item = geld.get(i);
+				//Animation a = single_item.getAnimation();
+
+				BufferedImage geldImg = current_skin.getImage("money_fall_f6", field_size); //a.nextFrame(field_size);
+
+				int[] field = single_item.getField();
+				int[] middle = getCenterOf(field);
+				int x_pixel = middle[0] - (geldImg.getWidth() / 2);
+				int y_pixel = middle[1] - (geldImg.getHeight() / 2);
+
+				// scaling ...
+
+				g.drawImage(geldImg, x_pixel, y_pixel, null);
+
+				if (devFrames) {
+					g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
+					g.setColor(Color.RED);
+				}
+			}
+
+			// Spieler
+
+			if (sp1 != null) {
+				if (sp1.isAlive()) {
+
+					Animation ani_left = current_skin.getAnimation("digger_red_left");
+					Animation ani_right = current_skin.getAnimation("digger_red_right");
+					Animation ani_up = current_skin.getAnimation("digger_red_up");
+					Animation ani_down = current_skin.getAnimation("digger_red_down");
+
+					BufferedImage sp1Img = null;
+
+					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
+						sp1Img = ani_right.nextFrame(field_size);
+					}
+					if (sp1.getMoveDir() == DIRECTION.LEFT) {
+						sp1Img = ani_left.nextFrame(field_size);
+					}
+					if (sp1.getMoveDir() == DIRECTION.UP) {
+						sp1Img = ani_up.nextFrame(field_size);
+					}
+					if (sp1.getMoveDir() == DIRECTION.DOWN) {
+						sp1Img = ani_down.nextFrame(field_size);
+					}
+
+
+					int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+					g.drawImage(sp1Img, x_pixel, y_pixel, null);
+
+				} else {
+					// gegen Geist ersetzen
+					//Animation ani_grave = current_skin.getAnimation("Grave");
+					BufferedImage sp1Img = current_skin.getImage("grave_f5");
+					int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
+					int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
+					g.drawImage(sp1Img, x_pixel, y_pixel, null);
+				}
+			}
+
+			if (sp2 != null) {
+				if (sp2.isAlive()) {
+					Animation ani_left = current_skin.getAnimation("digger_gre_left");
+					Animation ani_right = current_skin.getAnimation("digger_gre_right");
+					Animation ani_up = current_skin.getAnimation("digger_gre_up");
+					Animation ani_down = current_skin.getAnimation("digger_gre_down");
+
+					BufferedImage spImg = null;
+
+					if (sp2.getMoveDir() == DIRECTION.RIGHT) {
+						spImg = ani_right.nextFrame(field_size);
+					}
+					if (sp2.getMoveDir() == DIRECTION.LEFT) {
+						spImg = ani_left.nextFrame(field_size);
+					}
+					if (sp2.getMoveDir() == DIRECTION.UP) {
+						spImg = ani_up.nextFrame(field_size);
+					}
+					if (sp2.getMoveDir() == DIRECTION.DOWN) {
+						spImg = ani_down.nextFrame(field_size);
+					}
+
+
+					int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
+					int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+					g.drawImage(spImg, x_pixel, y_pixel, null);
+				} else {
+					// gegen Geist ersetzen
+					//Animation ani_grave = current_skin.getAnimation("Grave");
+					BufferedImage spImg = current_skin.getImage("grave_f5", field_size);
+					int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
+					int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+					g.drawImage(spImg, x_pixel, y_pixel, null);
+				}
+			}
+
+			// Zeichne Score
+			int margin_y = field_size / 4;
+			int margin_x = field_size / 2;
+
+			int fontSize = field_size / 2;
+			g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
+			g.setColor(Color.white);
+			g.drawString(String.format("%05d", spielstand), margin_x, margin_y + fontSize);
+
+			// Zeichne Leben
+
+			// Zeichne Leben von SP1
+			BufferedImage sp1Img = current_skin.getImage("statusbar_digger_MP_red", field_size);
+			margin_x = 3 * field_size;
+			for (int i = sp1.getLeben(); i > 0; i--) {
+				g.drawImage(sp1Img, margin_x, margin_y, null);
+				margin_x += sp1Img.getWidth();
+			}
+
+			// Zeichene auch leben von SP2
+			if (sp2 != null) {
+				margin_x = 9 * field_size;
+				BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
+				for (int i = sp2.getLeben(); i > 0; i--) {
+					g.drawImage(sp2Img, margin_x, margin_y, null);
+					margin_x -= sp1Img.getWidth();
+				}
+
+			}
 		}
 	}
 

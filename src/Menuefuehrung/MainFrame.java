@@ -294,7 +294,6 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
             public void actionPerformed(ActionEvent e) {
                 // pausiere Spiel
                 spiel.pausieren();
-                System.out.println("BP anzeigen");
                 // zeige Pausemenue
                 CardLayout layout = (CardLayout) getContentPane().getLayout();
                 layout.show(getContentPane(), "spielpause");
@@ -312,8 +311,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
         BreakPanel bp = new BreakPanel(spiel, this);
         getContentPane().add(bp, "spielpause");
-        if(!(isMultiplayer && !isHost))
-            spiel.spawnSpieler();
+        spiel.spawnSpieler();
 
         spiel.start();
 
