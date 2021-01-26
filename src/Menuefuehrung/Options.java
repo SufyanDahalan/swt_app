@@ -4,15 +4,17 @@ import Spielbereitstellug.Netzwerksteuerung;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.awt.Font;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
@@ -37,7 +40,6 @@ public class Options extends JPanel implements ActionListener, Filesystem {
 
         try {
             clip = Music();
-            //playSound();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
             e1.printStackTrace();
         }
@@ -82,57 +84,80 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         b8.setIcon(icon);
         b8.addActionListener(this);
 
+        JPanel sigleplayer = new JPanel();
+        sigleplayer.setBackground(Color.black);
+        b4.setForeground(Color.orange);
+
+        JPanel multiplayer = new JPanel();
+        multiplayer.setBackground(Color.black);
+        b5.setForeground(Color.orange);
+
+
+        Box box1 = Box.createVerticalBox();
+        sigleplayer.add(b4);
+        multiplayer.add(b5);
+
+        box1.add(sigleplayer);
+        box1.add(multiplayer);
+
+        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
+
+        b4.addActionListener(e -> {
+            babaFrame.prepareMap(true, false, null);
+            layout.show(babaFrame.getContentPane(), "singleplayer");//Singleplayer mode
+        });
 
         b1.addActionListener((event) -> {
-            b1.setEnabled(false);
-            remove(b6);
-            remove(b8);
-            remove(b7);
+            if(b1.getForeground() == Color.green){
+                b1.setForeground(Color.darkGray);
+                remove(b6);
+                remove(b8);
+                remove(b7);
 
-            JPanel sigleplayer = new JPanel();
-            sigleplayer.setBackground(Color.black);
-            b4.setForeground(Color.orange);
+                add(box1);
 
-            JPanel multiplayer = new JPanel();
-            multiplayer.setBackground(Color.black);
-            b5.setForeground(Color.orange);
+                add(b6);
+                add(b2);
+                add(b7);
+                add(b3);
+                add(b8);
+            }else{
+                b1.setForeground(Color.green);
+                remove(box1);
+            }
 
 
-            Box box1 = Box.createVerticalBox();
-            sigleplayer.add(b4);
-            multiplayer.add(b5);
-
-            box1.add(sigleplayer);
-            box1.add(multiplayer);
-
-            Container frame = getParent().getParent();
-            CardLayout layout = (CardLayout) frame.getLayout();
-
-            b4.addActionListener(e -> {
-                babaFrame.prepareMap(true, false, null);
-                layout.show(frame, "singleplayer");//Singleplayer mode
-            });
-
-            add(box1);
-            add(b6);
-            add(b2);
-            add(b7);
-            add(b3);
-            add(b8);
-
-            frame.repaint();
-            frame.revalidate();
+            babaFrame.repaint();
+            babaFrame.revalidate();
         });
 
 
-        b2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        b2.addActionListener(e -> {
+            {
+                b2.setEnabled(false);
                 JDialog settings = new JDialog();
-                settings.setTitle("Options");
+                settings.setUndecorated(false);
                 JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, soundVolume);
                 JSlider musicSlider = new JSlider(JSlider.HORIZONTAL,0, 10, musicVolume);
+                JButton save = new JButton("save");
+                save.addActionListener(e2->playSound());
 
+
+                save.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        settings.setVisible(false);
+                        b2.setEnabled(true);
+                    }
+                });
+
+                settings.addWindowListener(new WindowAdapter(){
+                    @Override
+                    public void windowClosing(WindowEvent e){
+                        settings.setVisible(false);
+                        b2.setEnabled(true);
+                    }
+                });
                 musicSlider.addChangeListener(new ChangeListener() {
                     @Override
                     public void stateChanged(ChangeEvent e) {
@@ -150,16 +175,24 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                 });
 
 
-                settings.setLayout(new BoxLayout(settings.getContentPane(), BoxLayout.PAGE_AXIS));
-                settings.add(new JLabel("Sound"));
+
+                JLabel soundLabel = new JLabel("Sound");
+                soundLabel.setForeground(Color.red);
+                settings.add(soundLabel);
                 settings.add(soundSlider);
-                settings.add(new JLabel("Music"));
+                JLabel musicLabel = new JLabel("Music");
+                musicLabel.setForeground(Color.red);
+                settings.add(musicLabel);
                 settings.add(musicSlider);
+                settings.add(save);
                 settings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 settings.setResizable(false);
                 settings.setSize(new Dimension(500,200));
                 settings.setLocationRelativeTo(null);
+                settings.setAlwaysOnTop(true);
                 settings.setVisible(true);
+                settings.getContentPane().setBackground(Color.black);
+                settings.setLayout(new BoxLayout(settings.getContentPane(), BoxLayout.PAGE_AXIS));
             }
         });
 
@@ -231,16 +264,41 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         });
 
         b6.addActionListener(e -> {
-            Container frame = getParent().getParent();
-            CardLayout layout = (CardLayout) frame.getLayout();
-            layout.show(frame, "editor");
+            editorButton(b6, babaFrame);
+
         });
         b3.addActionListener(e -> System.exit(0));
-        editorButton(b6, babaFrame);
 
-        b7.addActionListener(new ActionListener() {
+        b7.addActionListener(e-> {
+            JFrame helpme = new JFrame("Help me");
+            helpme.setSize(500, 600);
+            helpme.getContentPane().setBackground(Color.black);
+            helpme.setVisible(true);
+            helpme.setLocationRelativeTo(null);
+
+            JLabel text = new JLabel("");
+            text.setFont(new Font("Serif", Font.PLAIN, 18));
+            text.setText("<html><font color = red size=7> Tastaturbelegung <br> <br>  " +
+                    "<font color = white size = 5>" +
+                    " nach oben gehen ------------------------------------------ △         <br> <br>" +
+                    " nach unten gehen ----------------------------------------- ▽         <br> <br>" +
+                    " nach links laufen ----------------------------------------- ◁         <br> <br>" +
+                    " nach rechts laufen ---------------------------------------- ▷         <br> <br>" +
+                    " feuerball abfeuern --------------------------------------- Leertaste <br> <br>" +
+                    "Vollbild-/Fenstermodus ---------------------------------F11       <br> <br>" +
+                    "Spiel pausiereen ------------------------------------------ esc       <br> <br> <br><br><br><br><br><br><br><br><br>" +
+                    " </b></html> ");
+
+
+            text.setFont(text.getFont().deriveFont(50f));
+            text.setVisible(true);
+            helpme.add(text);
+        });
+
+       /* b7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 Desktop desktop = Desktop.getDesktop();
                 if (desktop != null && desktop.isSupported(Desktop.Action.OPEN)) {
                     try {
@@ -250,7 +308,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     }
                 }
             }
-        });
+        });*/
 
     }
 
@@ -259,11 +317,34 @@ public class Options extends JPanel implements ActionListener, Filesystem {
 
     public void editorButton(Button b, MainFrame babaFrame){
 
-        LevelEditor editor = new LevelEditor();
-        babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
-        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
-        layout.show(babaFrame.getContentPane(), "editor");
+        if(LevelEditor.assertMaxMap()){
+            JDialog ErrorDialog = new JDialog();
+            ErrorDialog.setTitle("Error!");
+            JLabel text = new JLabel("<html><body>Cannot create more than 100 levels!<br>please delete them and try again later</body></html>", SwingConstants.CENTER);
+            text.setVerticalAlignment(SwingConstants.CENTER);
+            ErrorDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            ErrorDialog.setResizable(false);
+            ErrorDialog.setSize(new Dimension(500,200));
+            ErrorDialog.setLocationRelativeTo(null);
 
+
+            text.setForeground(Color.red);
+
+            ErrorDialog.getContentPane().setBackground(Color.BLACK);
+
+            ErrorDialog.add(text);
+            ErrorDialog.setVisible(true);
+        }else {
+            LevelEditor editor = new LevelEditor();
+            babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
+            MainFrame.addKeyBinding(editor, "ESCAPE", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    layout.show(babaFrame.getContentPane(), "panel");
+                }});
+            layout.show(babaFrame.getContentPane(), "editor");
+        }
     }
 
     public void playSound()
@@ -294,7 +375,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
             clip.stop();
             music = false;
         }
-    else if(!music && clip != null) {
+        else if(!music && clip != null) {
             clip.play();
             music = true;
         }

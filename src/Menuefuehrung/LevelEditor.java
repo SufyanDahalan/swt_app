@@ -38,9 +38,15 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
         c.setFocusable(true);
     }
 
+    static public boolean assertMaxMap(){
+        ArrayList<Integer> mapNumber = new ArrayList<>();
+        String[] maps = new File(levelfolder_name).list();
+        if(maps.length > 99)
+            return true;
+        return false;
+    }
+
     public LevelEditor() {
-
-
         playground_size.put(0, 18);
         playground_size.put(1, 10);
         super.obj.put("pg_size", playground_size);
@@ -180,11 +186,11 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
                         if(LevelEditor.super.obj.has("pos_tun") && ((LevelEditor.super.obj.getJSONObject("pos_tun").has("vertikal") && duplicate( LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) ||
-                        (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
-                        (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
-                        LevelEditor.super.obj.put("spawn_p1", coordinations);
-                        spawn_sp1 = new int[]{x, y};
-                    }
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
+                            LevelEditor.super.obj.put("spawn_p1", coordinations);
+                            spawn_sp1 = new int[]{x, y};
+                        }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -205,11 +211,11 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
                         if(LevelEditor.super.obj.has("pos_tun") && ((LevelEditor.super.obj.getJSONObject("pos_tun").has("vertikal") && duplicate( LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) ||
-                        (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
-                        (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
                             LevelEditor.super.obj.put("spawn_p2", coordinations);
                             spawn_sp2 = new int[]{x, y};
-                    }
+                        }
                     }
                 };
                 addMouseListener((globalMouseAdapter));
@@ -221,18 +227,18 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                 removeMouseListener(globalMouseAdapter);//Nullify previous Mousebinding
                 globalMouseAdapter = new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
-                    ArrayList<Integer> coordinations = new ArrayList<>();
-                    int x = e.getX();
-                    int y = e.getY();
-                    int[] P1 = LevelEditor.super.getFieldOf(new int[]{x, y});
-                    coordinations.add(P1[0]);
-                    coordinations.add(P1[1]);
-                    
-                    if(LevelEditor.super.obj.has("pos_tun") && (LevelEditor.super.obj.getJSONObject("pos_tun").has("vertikal") &&  (duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) ||
-                    (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
-                    (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
-                        LevelEditor.super.obj.put("spawn_mon", coordinations);
-                        spawn_monster = new int[]{x, y};
+                        ArrayList<Integer> coordinations = new ArrayList<>();
+                        int x = e.getX();
+                        int y = e.getY();
+                        int[] P1 = LevelEditor.super.getFieldOf(new int[]{x, y});
+                        coordinations.add(P1[0]);
+                        coordinations.add(P1[1]);
+
+                        if(LevelEditor.super.obj.has("pos_tun") && (LevelEditor.super.obj.getJSONObject("pos_tun").has("vertikal") &&  (duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("vertikal"), new JSONArray(coordinations))) ||
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
+                                (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
+                            LevelEditor.super.obj.put("spawn_mon", coordinations);
+                            spawn_monster = new int[]{x, y};
                         }
                     }
                 };
@@ -252,10 +258,10 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         coordinations.add(P1[0]);
                         coordinations.add(P1[1]);
                         if((!LevelEditor.super.obj.has("pos_money") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_money"), new JSONArray(coordinations)) ) && (!LevelEditor.super.obj.has("pos_diam") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_diam"),
-                          new JSONArray(coordinations)))){//make sure its not overlapping with another item
+                                new JSONArray(coordinations)))){//make sure its not overlapping with another item
                             LevelEditor.super.obj.put("spawn_cherry", new JSONArray(coordinations));
 //                            kirsche = new Kirsche(LevelEditor.super.getFieldOf(new int[]{x, y}), current_skin);
-                    }
+                        }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -273,20 +279,20 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         int y = e.getY();
                         JSONArray D = new JSONArray();
                         D.put(new JSONArray(LevelEditor.super.getFieldOf(new int[]{x, y})));
-                        
+
                         if((!LevelEditor.super.obj.has("pos_money") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_money"),  (JSONArray)D.get(0)) ) && (!LevelEditor.super.obj.has("spawn_cherry") ||
-                        ((int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(0) != LevelEditor.super.getFieldOf(new int[]{x, y})[0] || (int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(1) != LevelEditor.super.getFieldOf(new int[]{x, y})[1])
+                                ((int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(0) != LevelEditor.super.getFieldOf(new int[]{x, y})[0] || (int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(1) != LevelEditor.super.getFieldOf(new int[]{x, y})[1])
                         )){//make sure its not overlapping with another item
-                            
-                        if(LevelEditor.super.obj.has("pos_diam")){
-                            JSONArray temp = LevelEditor.super.obj.getJSONArray("pos_diam");
-                            for(int i = 0; i < LevelEditor.super.obj.getJSONArray("pos_diam").length(); i++){
-                                D.put(temp.get(i));
+
+                            if(LevelEditor.super.obj.has("pos_diam")){
+                                JSONArray temp = LevelEditor.super.obj.getJSONArray("pos_diam");
+                                for(int i = 0; i < LevelEditor.super.obj.getJSONArray("pos_diam").length(); i++){
+                                    D.put(temp.get(i));
+                                }
+                                LevelEditor.super.obj.remove("pos_diam");
                             }
-                            LevelEditor.super.obj.remove("pos_diam");
-                        }
                             LevelEditor.super.obj.put("pos_diam", D);
-                    }
+                        }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -304,18 +310,18 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         JSONArray D = new JSONArray();
                         D.put(new JSONArray(LevelEditor.super.getFieldOf(new int[]{x, y})));
                         if((!LevelEditor.super.obj.has("pos_diam") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_diam"), (JSONArray)D.get(0)) ) && (!LevelEditor.super.obj.has("spawn_cherry") ||
-                        ((int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(0) != LevelEditor.super.getFieldOf(new int[]{x, y})[0] || (int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(1) != LevelEditor.super.getFieldOf(new int[]{x, y})[1])
+                                ((int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(0) != LevelEditor.super.getFieldOf(new int[]{x, y})[0] || (int)LevelEditor.super.obj.getJSONArray("spawn_cherry").get(1) != LevelEditor.super.getFieldOf(new int[]{x, y})[1])
                         ))//make sure its not overlapping with another item
-                            {
-                                if(LevelEditor.super.obj.has("pos_money")){
-                                    JSONArray temp = LevelEditor.super.obj.getJSONArray("pos_money");
-                                    for(int i = 0; i < LevelEditor.super.obj.getJSONArray("pos_money").length(); i++){
-                                        D.put(temp.get(i));
-                                    }
-                                    LevelEditor.super.obj.remove("pos_money");
+                        {
+                            if(LevelEditor.super.obj.has("pos_money")){
+                                JSONArray temp = LevelEditor.super.obj.getJSONArray("pos_money");
+                                for(int i = 0; i < LevelEditor.super.obj.getJSONArray("pos_money").length(); i++){
+                                    D.put(temp.get(i));
                                 }
-                                LevelEditor.super.obj.put("pos_money", D);
+                                LevelEditor.super.obj.remove("pos_money");
                             }
+                            LevelEditor.super.obj.put("pos_money", D);
+                        }
                     }
                 };
                 addMouseListener(globalMouseAdapter);
@@ -487,10 +493,10 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
     public boolean duplicate(JSONArray temp, JSONArray coords){
 
         for(int i = 0; i < temp.length(); i++){
-            if(toArray(coords)[0] 
-            == toArray(temp.getJSONArray(i))[0]
-             && toArray(coords)[1] == 
-             toArray(temp.getJSONArray(i))[1]){
+            if(toArray(coords)[0]
+                    == toArray(temp.getJSONArray(i))[0]
+                    && toArray(coords)[1] ==
+                    toArray(temp.getJSONArray(i))[1]){
                 return true;
             }
         }

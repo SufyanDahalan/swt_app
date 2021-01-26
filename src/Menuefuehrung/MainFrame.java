@@ -9,9 +9,7 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +17,9 @@ import java.text.DateFormat;
 import java.util.GregorianCalendar;
 
 
-public class MainFrame extends JFrame implements Filesystem{
+public class MainFrame extends JFrame implements Filesystem, MouseListener {
+    Point evtPoint;
+    int xPos, yPos;
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
@@ -61,8 +61,13 @@ public class MainFrame extends JFrame implements Filesystem{
 
     public static void main(String[] args) throws Exception {
 
-        SwingUtilities.invokeLater(MainFrame::new);
-
+//        SwingUtilities.invokeLater(MainFrame::new);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame().setVisible(true);
+            }
+        });
     }
 
     public MainFrame() {
@@ -77,8 +82,51 @@ public class MainFrame extends JFrame implements Filesystem{
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
+            }
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                xPos = getBounds().x;
+                yPos = getBounds().y;
+                evtPoint = e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (e.getX() < evtPoint.x) {
+                    setLocation(xPos--, yPos);
+                }
+                if (e.getX() > evtPoint.x) {
+                    setLocation(xPos++, yPos);
+                }
+                if (e.getY() < evtPoint.y) {
+                    setLocation(xPos, yPos--);
+                }
+                if (e.getY() > evtPoint.y) {
+                    setLocation(xPos, yPos++);
+                }
+            }}
+        );
 
 
         setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
@@ -203,10 +251,7 @@ public class MainFrame extends JFrame implements Filesystem{
                 getContentPane().remove(spiel);
                 CardLayout layout = (CardLayout) getContentPane().getLayout();
                 layout.show(getContentPane(), "panel");
-
             }
-
-
         };
 
 
@@ -274,4 +319,28 @@ public class MainFrame extends JFrame implements Filesystem{
 
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

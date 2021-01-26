@@ -2,7 +2,19 @@
     {
         "date": "18. Januar 2021",
         "score": 1000,
-        "name": "JOH",
+        "name": "John Don",
         "age": 30
+    },
+    {
+        "date": "25. Januar 2021",
+        "score": 2300,
+        "name": "suf",
+        "age": "22"
+    },
+    {
+        "date": "25. Januar 2021",
+        "score": 9900,
+        "name": "Sufian",
+        "age": "3"
     }
 ]}
