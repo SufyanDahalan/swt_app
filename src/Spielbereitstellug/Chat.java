@@ -64,7 +64,7 @@ public class Chat {
 
 		sendButt.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getTextfeld().append(" Der Button wurde geklickt");
+				// getTextfeld().append(" Der Button wurde geklickt");
 				senden();
 			}
 		});
@@ -94,8 +94,9 @@ public class Chat {
 	}
 
 	public void empfangen(String text){
-		getTextfeld().append("Dein Mitspieler: " + text );
+		if( ! text.equals("") ){getTextfeld().append("Dein Mitspieler: " + text );}
 	}
+
 
 
 }
