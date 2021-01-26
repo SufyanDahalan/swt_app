@@ -2,20 +2,20 @@ package Spielverlauf;
 
 import org.json.JSONArray;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Spieler {
+public class Spieler implements Serializable {
 
 	private int[] position;
 	// private String name; wird nicht benötigt, da Daten erst am Ende eines Spiels gebraucht werden und dann direkt in den Skore gespeichert werden.
 	// private int alter;
 	private int leben = 3;
 	private DIRECTION moveDir;
-	private ArrayList<Animation> animations;
 	private long fbRegeneration;
 	private boolean fired;
 
-	public Spieler(int x_pixel, int y_pixel, ArrayList<Animation> as) {
+	public Spieler(int x_pixel, int y_pixel) {
 
 		// Position
 		position = new int[2];
@@ -25,8 +25,6 @@ public class Spieler {
 		moveDir = DIRECTION.LEFT;
 		fired = false;
 
-		//Animation
-		animations = as;
 	}
 
 	public int[] getPosition(){return position;}
@@ -70,17 +68,6 @@ public class Spieler {
 
 		 */
 		return isAlive();
-	}
-
-	public Animation getAnimation(){
-		Animation an = null;
-
-		for(Animation a : animations)
-			if(a.getDir() == moveDir){
-				an = a;
-				break;
-			}
-		return an;
 	}
 
 	public void setFbRegeneration(long fbRegeneration) {

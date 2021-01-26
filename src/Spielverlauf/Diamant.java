@@ -1,14 +1,17 @@
 package Spielverlauf;
 
-import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-
-public class Diamant extends Item {
+public class Diamant extends Item implements Serializable {
 
 	private int wertung = 25;
 
-	public Diamant(int[] fp, Skin sk) {
-		super(fp, sk.getImage("diamond"));
+	public Diamant(int[] fp) {
+		super(fp);
+	}
+
+	public Diamant(Diamant d){
+		super(d.getField().clone());
 	}
 
 	@Override

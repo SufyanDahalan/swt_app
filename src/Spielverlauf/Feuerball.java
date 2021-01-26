@@ -1,23 +1,22 @@
 package Spielverlauf;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Feuerball {
+public class Feuerball implements Serializable {
 
 	private int[] position;
 	private DIRECTION dir;
-	private BufferedImage bild;
 
 	/**
 	 * 
 	 * @param pos
 	 * @param d
 	 */
-	public Feuerball(int[] pos, DIRECTION d, Skin sk) {
+	public Feuerball(int[] pos, DIRECTION d) {
 
 		dir = d;
 		position = pos.clone();
-		bild=sk.getImage("fireball_red_f6");
 	}
 
 	public int[] getPosition() {
@@ -26,10 +25,6 @@ public class Feuerball {
 	public void addPosOff(int x, int y){
 		position[0]+=x;
 		position[1]+=y;
-	}
-
-	public BufferedImage getImage(){
-		return bild;
 	}
 
     public DIRECTION getMovDir() {

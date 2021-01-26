@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,7 +17,9 @@ import java.text.DateFormat;
 import java.util.GregorianCalendar;
 
 
-public class MainFrame extends JFrame implements Filesystem{
+public class MainFrame extends JFrame implements Filesystem, MouseListener {
+    Point evtPoint;
+    int xPos, yPos;
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
@@ -59,8 +61,13 @@ public class MainFrame extends JFrame implements Filesystem{
 
     public static void main(String[] args) throws Exception {
 
-        SwingUtilities.invokeLater(MainFrame::new);
-
+//        SwingUtilities.invokeLater(MainFrame::new);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new MainFrame().setVisible(true);
+            }
+        });
     }
 
     public MainFrame() {
@@ -75,11 +82,54 @@ public class MainFrame extends JFrame implements Filesystem{
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                xPos = getBounds().x;
+                yPos = getBounds().y;
+                evtPoint = e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (e.getX() < evtPoint.x) {
+                    setLocation(xPos--, yPos);
+                }
+                if (e.getX() > evtPoint.x) {
+                    setLocation(xPos++, yPos);
+                }
+                if (e.getY() < evtPoint.y) {
+                    setLocation(xPos, yPos--);
+                }
+                if (e.getY() > evtPoint.y) {
+                    setLocation(xPos, yPos++);
+                }
+            }}
+        );
 
 
-
-
-        setIconImage(new ImageIcon("bin/images/Logo.png").getImage());
+        setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
         setUndecorated(true);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
@@ -108,14 +158,11 @@ public class MainFrame extends JFrame implements Filesystem{
 
     public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont){//copied from Test.java, should be adjusted later
 
-        int height = getContentPane().getPreferredSize().height;
-        int width = getContentPane().getPreferredSize().width;
-
         final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
 
         EndListener el = spielstand -> {
 
-            JTextField name = new JTextField(8);
+            JTextField name = new JTextField(3);
             JTextField age = new JTextField(2);
 
             JPanel myPanel = new JPanel();
@@ -124,6 +171,26 @@ public class MainFrame extends JFrame implements Filesystem{
             myPanel.add(new JLabel("Your Age :"));
             myPanel.add(age);
             myPanel.add(Box.createHorizontalStrut(10));
+
+            name.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {}
+
+                @Override
+                public void keyPressed(KeyEvent e) {}
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    int pos = name.getCaretPosition();
+                    String text = name.getText();
+                    if(text.length() > 3){
+                        text = text.substring(0,3);
+                        pos = 3;
+                    }
+                    name.setText(text.toUpperCase());
+                    name.setCaretPosition(pos);
+                }
+            });
 
             int result = JOptionPane.showConfirmDialog(null, myPanel, "please enter ..", JOptionPane.OK_CANCEL_OPTION);
 
@@ -184,10 +251,7 @@ public class MainFrame extends JFrame implements Filesystem{
                 getContentPane().remove(spiel);
                 CardLayout layout = (CardLayout) getContentPane().getLayout();
                 layout.show(getContentPane(), "panel");
-
             }
-
-
         };
 
 
@@ -250,11 +314,35 @@ public class MainFrame extends JFrame implements Filesystem{
 
         BreakPanel bp = new BreakPanel(spiel, this);
         getContentPane().add(bp, "spielpause");
-
-        spiel.spawnSpieler();
+        if(!(isMultiplayer && !isHost))
+            spiel.spawnSpieler();
 
         spiel.start();
 
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Map {
-
-	private Skin skin;
+public class Map implements Serializable {
 
 	// Playground
 
@@ -33,8 +31,6 @@ public class Map {
 	public Map(JSONObject obj, Skin sk) {
 
 		// Set initial Content
-
-		skin = sk;
 
 		playground_size = toArray(obj.getJSONArray("pg_size"));
 		spawn_monster = toArray(obj.getJSONArray("spawn_mon"));
@@ -60,7 +56,7 @@ public class Map {
 
 			int[] item_pos = toArray(pos_diam.getJSONArray(i));
 
-			diamanten.add(new Diamant(item_pos, sk));
+			diamanten.add(new Diamant(item_pos));
 		}
 
 		// Füge initiale Geldsäcke ein
@@ -71,7 +67,7 @@ public class Map {
 
 			int[] item_pos = toArray(pos_money.getJSONArray(i));
 
-			geldsaecke.add(new Geldsack(item_pos, sk));
+			geldsaecke.add(new Geldsack(item_pos));
 		}
 
 		//// Set initial tunnels
@@ -85,7 +81,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_vertikal.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL, sk));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.VERTICAL));
 		}
 
 		// Set landscape tunnel
@@ -95,7 +91,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_horizontal.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL, sk));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.HORIZONTAL));
 		}
 
 		// Set holes
@@ -105,7 +101,7 @@ public class Map {
 
 			int[] single_tunnel = toArray(pos_tun_space.getJSONArray(i));
 
-			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE, sk));
+			tunnel.add(new Tunnel(single_tunnel, TUNNELTYP.SPACE));
 		}
 
 	}
@@ -114,18 +110,23 @@ public class Map {
 
 		playground_size = m.playground_size.clone();
 
-		monster = new ArrayList<Monster>(m.monster);
+		monster = new ArrayList<Monster>();
 		spawn_monster = m.spawn_monster.clone();
 		spawn_sp1 = m.spawn_sp1.clone();
 		spawn_sp2 = m.spawn_sp2.clone();
 		spawn_cherry = m.spawn_cherry.clone();
-		feuerball = new ArrayList<Feuerball>(m.feuerball);
-		diamanten = new ArrayList<Diamant>(m.diamanten);
-		geldsaecke = new ArrayList<Geldsack>(m.geldsaecke);
-		geld = new ArrayList<Geld>(m.geld);
+		feuerball = new ArrayList<Feuerball>();
+		diamanten = new ArrayList<Diamant>();
+		for(Diamant d : m.diamanten){
+			diamanten.add(new Diamant(d));
+		}
+		geldsaecke = new ArrayList<Geldsack>();
+		for(Geldsack g : m.geldsaecke){
+			geldsaecke.add(new Geldsack(g));
+		}
+		geld = new ArrayList<Geld>();
 		tunnel = new ArrayList<Tunnel>(m.tunnel);
 		kirsche = m.kirsche;
-		skin = m.skin;
 		bonus = false;
 	}
 
@@ -316,7 +317,7 @@ public class Map {
 	public int[] getSpawn_SP2(){return spawn_sp2;}
 
 	public void setzeHobbin(int[] pos) {
-		monster.add( new Hobbin(pos, skin) );
+		monster.add( new Hobbin(pos) );
 	}
 
 	private int[] toArray(JSONArray ja){

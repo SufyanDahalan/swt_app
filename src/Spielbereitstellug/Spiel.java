@@ -69,44 +69,47 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
-		bounsRemTime=bounsTime;
+		bounsRemTime = bounsTime;
 
 		// initialisiere Netzwerksteuerung
 		netControl = netC;
 
 		// initialisiere Mapchain
 
-		String[] maps = new File(levelfolder_name).list(); // read Level from Folder
-
 		// create Map and add it to chain
 
 		mapChain = new ArrayList<>();
 
-		for (String map : maps) {
+		if(!(isMultiplayer && !isHost)){
+			String[] maps = new File(levelfolder_name).list(); // read Level from Folder
 
-			// read Level-File
-			JSONObject objf = null;
-			try {
-				objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
-			} catch (Exception e) {
-				e.printStackTrace();
+
+			for (String map : maps) {
+
+				// read Level-File
+				JSONObject objf = null;
+				try {
+					objf = new JSONObject(new String(Files.readAllBytes(Paths.get(levelfolder_name + map))));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// create Map and add to chain
+				mapChain.add(new Map(objf, current_skin));
 			}
 
-			// create Map and add to chain
-			mapChain.add(new Map(objf, current_skin));
+			// add Player
+
+			createNextLevel();
+
+
+			setFbRegTime();
+			monRTime = aktuelles_level.getRegenTimeFb();
+
+			// refresh sizing
+			obj = aktuelles_level.getMap().exportStaticsAsJSON();
+
 		}
-
-		// add Player
-
-		createNextLevel();
-
-
-		setFbRegTime();
-		monRTime = aktuelles_level.getRegenTimeFb();
-
-		// refresh sizing
-		obj = aktuelles_level.getMap().exportStaticsAsJSON();
-
 		feuerball_steps = field_size/15;
 		spieler_steps = field_size/10;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
@@ -167,7 +170,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				Spieler sp = spIterator.next();
 
 				// alle Diamanten gesammel?
-				if (aktuelles_level.getMap().getDiamonds().size() == 0) {
+				if (aktuelles_level.getMap().getDiamonds().isEmpty()) {
 					// dann nächstes Level
 					createNextLevel();
 
@@ -206,13 +209,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						else
 							arrangement = TUNNELTYP.HORIZONTAL;
 
-						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, arrangement, current_skin));
+						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, arrangement));
 					}
 				} else if (tt.size() == 0) {
 					if (dirSp == DIRECTION.RIGHT || dirSp == DIRECTION.LEFT)
-						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.HORIZONTAL, current_skin));
+						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.HORIZONTAL));
 					else if (dirSp == DIRECTION.UP || dirSp == DIRECTION.DOWN)
-						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL, current_skin));
+						aktuelles_level.getMap().addTunnel(new Tunnel(fpSp, TUNNELTYP.VERTICAL));
 				}
 
 
@@ -234,7 +237,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geldsack gs = iterator.next();
 
 						// nach l/r bewegen
-						if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition()))) {
+						if (Arrays.equals(getFieldOf(gs.getPosition()), getFieldOf(sp.getPosition())) && !gs.getFalling()) {
 							int[] PGSize = aktuelles_level.getMap().getPGSize();
 							int[] newField1 = getFieldOf(gs.getPosition());
 							if (sp.getMoveDir() == DIRECTION.RIGHT) {
@@ -317,6 +320,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						} else {
 							//Monster trifft Spieler
 							if (sp.isAlive() && dieing) {
+								System.out.println("sp is on m");
 								if (sp.decrementLife())
 									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
@@ -372,7 +376,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						arrangement = TUNNELTYP.HORIZONTAL;
 
 
-					aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+					aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement));
 
 				}
 				if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{h_pos[0], y_off + h_pos[1]})).isEmpty()) {
@@ -380,7 +384,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						arrangement = TUNNELTYP.VERTICAL;
 
 
-					aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement, current_skin));
+					aktuelles_level.getMap().addTunnel(new Tunnel(fph, arrangement));
 
 				}
 				h.addPosOff(x_off, y_off);
@@ -697,14 +701,14 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				}
 
 				else if (gs.getFalling()) {
-					geldsack_steps = field_size/10;
+					geldsack_steps = field_size/20;
 					if (gs.getPosition()[1] < getCenterOf(getFieldOf(gs.getPosition()))[1] || (gs.getPosition()[1] >= getCenterOf(getFieldOf(gs.getPosition()))[1] && aktuelles_level.getMap().getTunnel(check_field).size() > 0)){
 						gs.addPosOff(0, geldsack_steps);
 						gs.incFallHeight(geldsack_steps);
 					}
 					else {
 						if (gs.getFallHeight()-2 > field_size) {
-							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition()), current_skin));
+							aktuelles_level.getMap().addGeld(new Geld(getFieldOf(gs.getPosition())));
 							iterator.remove();
 						} else {
 							gs.resetFallHeight();
@@ -713,7 +717,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						}
 					}
 				}
-
 
 				//Geldsack fällt auf Monster
 				for (Iterator<Monster> m_iter = monsters.iterator(); m_iter.hasNext(); ) {
@@ -786,7 +789,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			//add Kirsche
 			if (anzMon == aktuelles_level.getMaxMonster()) {
-				aktuelles_level.getMap().setKirsche(new Kirsche(aktuelles_level.getMap().getSpawn_cherry(), current_skin));
+				aktuelles_level.getMap().setKirsche(new Kirsche(aktuelles_level.getMap().getSpawn_cherry()));
 				anzMon = 0;
 			}
 
@@ -863,7 +866,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			if (aktuelles_level.getMap().getMonsterAmmount() < aktuelles_level.getMaxMonster() && kirsche == null) {
 				if (monRTime < 0) {
 					if(monsterSpawn) {
-						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster()), current_skin));
+						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
 						System.out.println(getCenterOf(aktuelles_level.getMap().getSpawn_monster())[0]+" "+getCenterOf(aktuelles_level.getMap().getSpawn_monster())[1]);
 					}
 					monRTime = aktuelles_level.getRegenTimeMonster();
@@ -966,24 +969,11 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
 
-		ArrayList<Animation> an = new ArrayList<>();
-
-		an.add(current_skin.getAnimation("digger_red_right"));
-		an.add(current_skin.getAnimation("digger_red_left"));
-		an.add(current_skin.getAnimation("digger_red_up"));
-		an.add(current_skin.getAnimation("digger_red_down"));
-
-		sp1 = new Spieler(pixelPos[0], pixelPos[1], an);
+		sp1 = new Spieler(pixelPos[0], pixelPos[1]);
 
 		if(isMultiplayer) {
-			an.clear();
-			an.add(current_skin.getAnimation("digger_gre_right"));
-			an.add(current_skin.getAnimation("digger_gre_left"));
-			an.add(current_skin.getAnimation("digger_gre_up"));
-			an.add(current_skin.getAnimation("digger_gre_down"));
-
 			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
-			sp2 = new Spieler(pixelPos[0], pixelPos[1], an);
+			sp2 = new Spieler(pixelPos[0], pixelPos[1]);
 		}
 
 
@@ -994,7 +984,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			if(isHost) {
 				sp.setFired(true);
 				sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
-				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir(), current_skin));
+				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir()));
 			}
 			else{
 				sp.setFired(true);
@@ -1098,7 +1088,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	}
 
 	protected void paintComponent(Graphics g) {
-
 		super.paintComponent(g);
 
 		int[] borderOffset = getBorderOffset();
@@ -1111,15 +1100,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			Geldsack single_item = geldsaecke.get(i);
 
-
 			BufferedImage moneyPodImg;
 
-			if(single_item.getShaking()) {
-				Animation a = single_item.getAnimation();
+			if (single_item.getShaking()) {
+				Animation a = current_skin.getAnimation("money_shaking");
 				moneyPodImg = a.nextFrame(field_size);
-			}
-			else
-				moneyPodImg = current_skin.scale(single_item.getImage(),field_size);
+			} else
+				moneyPodImg = current_skin.getImage("money_static",field_size);
 
 			int[] field = single_item.getField();
 			int[] middle = single_item.getPosition();
@@ -1128,8 +1115,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			g.drawImage(moneyPodImg, x_pixel, y_pixel, null);
 
-			if(devFrames) {
-				g.drawRect((field[0]-1) * field_size + borderOffset[0], (field[1]-1) * field_size + borderOffset[1], field_size, field_size);
+			if (devFrames) {
+				g.drawRect((field[0] - 1) * field_size + borderOffset[0], (field[1] - 1) * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
 		}
@@ -1155,7 +1142,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			g.drawImage(hobbinImg, x_pixel, y_pixel, null);
 
-			if(devFrames) {
+			if (devFrames) {
 				int[] field = getFieldOf(single_item.getPosition());
 				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
@@ -1175,7 +1162,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			g.drawImage(nobbinImg, x_pixel, y_pixel, null);
 
-			if(devFrames) {
+			if (devFrames) {
 				int[] field = getFieldOf(single_item.getPosition());
 				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
@@ -1188,7 +1175,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		for (int i = 0; i < feuerball.size(); i++) {
 			Feuerball single_item = feuerball.get(i);
-			BufferedImage pic = current_skin.scale(single_item.getImage(), field_size);
+			BufferedImage pic = current_skin.getImage("fireball_red_f1", field_size);
 
 			int[] pos = single_item.getPosition();
 			int x_pixel = pos[0] - (pic.getWidth() / 2);
@@ -1196,7 +1183,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			g.drawImage(pic, x_pixel, y_pixel, null);
 
-			if(devFrames) {
+			if (devFrames) {
 				int[] field = getFieldOf(single_item.getPosition());
 				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
@@ -1204,14 +1191,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		}
 
 		// Geld
-
 		ArrayList<Geld> geld = aktuelles_level.getMap().getGeld();
 
 		for (int i = 0; i < geld.size(); i++) {
 			Geld single_item = geld.get(i);
-			Animation a = single_item.getAnimation();
+			//Animation a = single_item.getAnimation();
 
-			BufferedImage geldImg = a.nextFrame(field_size);
+			BufferedImage geldImg = current_skin.getImage("money_fall_f6", field_size); //a.nextFrame(field_size);
 
 			int[] field = single_item.getField();
 			int[] middle = getCenterOf(field);
@@ -1222,7 +1208,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			g.drawImage(geldImg, x_pixel, y_pixel, null);
 
-			if(devFrames) {
+			if (devFrames) {
 				g.drawRect(field[0] * field_size + borderOffset[0], field[1] * field_size + borderOffset[1], field_size, field_size);
 				g.setColor(Color.RED);
 			}
@@ -1230,8 +1216,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		// Spieler
 
-		if(sp1 != null) {
-			if(sp1.isAlive()) {
+		if (sp1 != null) {
+			if (sp1.isAlive()) {
 
 				Animation ani_left = current_skin.getAnimation("digger_red_left");
 				Animation ani_right = current_skin.getAnimation("digger_red_right");
@@ -1258,8 +1244,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
 				g.drawImage(sp1Img, x_pixel, y_pixel, null);
 
-			}
-			else {
+			} else {
 				// gegen Geist ersetzen
 				//Animation ani_grave = current_skin.getAnimation("Grave");
 				BufferedImage sp1Img = current_skin.getImage("grave_f5");
@@ -1269,8 +1254,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			}
 		}
 
-		if(sp2 != null) {
-			if(sp2.isAlive()) {
+		if (sp2 != null) {
+			if (sp2.isAlive()) {
 				Animation ani_left = current_skin.getAnimation("digger_gre_left");
 				Animation ani_right = current_skin.getAnimation("digger_gre_right");
 				Animation ani_up = current_skin.getAnimation("digger_gre_up");
@@ -1295,8 +1280,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
 				int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
 				g.drawImage(spImg, x_pixel, y_pixel, null);
-			}
-			else {
+			} else {
 				// gegen Geist ersetzen
 				//Animation ani_grave = current_skin.getAnimation("Grave");
 				BufferedImage spImg = current_skin.getImage("grave_f5", field_size);
@@ -1307,35 +1291,34 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		}
 
 		// Zeichne Score
-		int margin_y = field_size/4;
-		int margin_x = field_size/2;
+		int margin_y = field_size / 4;
+		int margin_x = field_size / 2;
 
-		int fontSize = field_size/2;
+		int fontSize = field_size / 2;
 		g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
 		g.setColor(Color.white);
-		g.drawString(String.format("%05d", spielstand), margin_x, margin_y+fontSize);
+		g.drawString(String.format("%05d", spielstand), margin_x, margin_y + fontSize);
 
 		// Zeichne Leben
 
 		// Zeichne Leben von SP1
-		BufferedImage sp1Img =current_skin.getImage("statusbar_digger_MP_red", field_size);
-		margin_x = 3*field_size;
-		for(int i = sp1.getLeben(); i > 0; i--) {
+		BufferedImage sp1Img = current_skin.getImage("statusbar_digger_MP_red", field_size);
+		margin_x = 3 * field_size;
+		for (int i = sp1.getLeben(); i > 0; i--) {
 			g.drawImage(sp1Img, margin_x, margin_y, null);
 			margin_x += sp1Img.getWidth();
 		}
 
 		// Zeichene auch leben von SP2
-		if(sp2 != null) {
-			margin_x = 9*field_size;
+		if (sp2 != null) {
+			margin_x = 9 * field_size;
 			BufferedImage sp2Img = current_skin.getImage("statusbar_digger_MP_gre", field_size);
-			for(int i = sp2.getLeben(); i > 0; i--) {
+			for (int i = sp2.getLeben(); i > 0; i--) {
 				g.drawImage(sp2Img, margin_x, margin_y, null);
 				margin_x -= sp1Img.getWidth();
 			}
 
 		}
-
 	}
 
 	public void start(){

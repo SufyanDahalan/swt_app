@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 
 public class Netzwerksteuerung {
@@ -53,16 +54,21 @@ public class Netzwerksteuerung {
 		connect();
 		// Server OUT
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
-		/*
-		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand());
+		
+		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2);
 
 		// Sende sp hier mit objectOutputStream_outToClient
 		try {
+			streamSocket.setSoTimeout(250);
 			objectOutputStream.writeObject(sp);
-		} catch (IOException e) {
+		}
+		catch(SocketTimeoutException timeout){
+			System.out.println("waiting too long. next!");
+ 		}
+ 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
+
 
 		// Server IN
 		ClientPackage cp= null; // get this package
@@ -77,8 +83,7 @@ public class Netzwerksteuerung {
 		}
 
 
-		s.setClientPos(cp.getPos());
-		s.setClientMoveDir(cp.getMoveDir());
+		s.sp2 = cp.getSp();
 
 		// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
 		if(cp.isFb_try())
@@ -94,7 +99,7 @@ public class Netzwerksteuerung {
 		boolean try_fb = s.sp2.getFired();
 		s.sp2.setFired(false);
 
-		ClientPackage cp = new ClientPackage(s.sp2,try_fb);
+		ClientPackage cp = new ClientPackage(s.sp2, try_fb);
 
 		// Sende cp hier mit objectOutputStream_outToServer
 		try {
@@ -106,20 +111,27 @@ public class Netzwerksteuerung {
 		// Client IN
 		ServerPackage sp = null; // get this package
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
-		/*
-		// Empfange sp hier mit getObjectInputStream_inFromClient
+
 		try {
+			streamSocket.setSoTimeout(250);
 			sp = (ServerPackage) objectInputStream.readObject();
-		} catch (IOException e) {
+		}
+ 		catch(SocketTimeoutException timeout){
+			System.out.println("waiting too long. next!");
+ 		}
+		catch (IOException e) {
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		s.setMap(sp.getMap());
-
-		s.setSpielstand(sp.getSpielstand());
-		*/
+		if (sp != null){
+			s.setMap(sp.getMap());
+			s.setSpielstand(sp.getSpielstand());
+			s.sp1 = sp.getSp1();
+			s.sp2 = sp.getSp2();
+		}
 
 		killConnection();
 	}
