@@ -186,7 +186,8 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     // Host ausgewählt
 
                     if(ipv4 != null) {
-                        JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
+                        // Auskommentiert, da irreführend; Blockt den Aufbau einer Verbindung; Muss entweder in eigenem Thread laufen oder z.B. als Panel implentiert werden
+                        //JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
 
                         // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
                         // zum testen mit einer localhost Adresse.

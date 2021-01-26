@@ -1,10 +1,8 @@
-{
-  "data":[
+{"data": [
     {
-      "name": "John Don",
-      "date": "18. Januar 2021",
-      "age": 30,
-      "score": 1000
+        "date": "18. Januar 2021",
+        "score": 1000,
+        "name": "JOH",
+        "age": 30
     }
-  ]
-}
+]}

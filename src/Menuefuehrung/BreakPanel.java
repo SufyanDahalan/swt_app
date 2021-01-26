@@ -13,7 +13,6 @@ import static java.awt.Toolkit.getDefaultToolkit;
 public class BreakPanel extends JPanel {
 
     BreakPanel(Spiel s, MainFrame babaFrame){
-        System.out.println("BP erstellt");
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
