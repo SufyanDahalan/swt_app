@@ -28,6 +28,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	boolean isHost;
 
 	Netzwerksteuerung netControl;
+	Chat chat;
 
 	private EndListener el;
 
@@ -61,15 +62,16 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	private Level aktuelles_level;
 
 	public Spiel(){
-		this(true, false, null);
+		this(true, false, null, null);
 	}
 
-	public Spiel( boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC) {
+	public Spiel( boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC, Chat c) {
 		// initalisiere game setup
 
 		this.isHost = isHost;
 		this.isMultiplayer = isMultiplayer;
 		bounsRemTime = bounsTime;
+		this.chat = c;
 
 		// initialisiere Netzwerksteuerung
 		netControl = netC;
@@ -926,15 +928,14 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 			// Sende Mapobj
 			if (isMultiplayer && netControl != null){
-				//netControl.serverSend(aktuelles_level.getMap(), spielstand);
 				netControl.serverExchange(this);
+
 			}
 
 		}
 		else{ // !isHost
 			if (isMultiplayer && netControl != null){
 				netControl.clientExchange(this);
-				//netControl.clientGetContent(this);
 			}
 		}
 

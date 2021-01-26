@@ -58,7 +58,8 @@ public class Netzwerksteuerung {
 		// Server OUT
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
 		
-		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2);
+		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2, versandQueue);
+		versandQueue = "";
 
 		// Sende sp hier mit objectOutputStream_outToClient
 		try {
@@ -102,7 +103,8 @@ public class Netzwerksteuerung {
 		boolean try_fb = s.sp2.getFired();
 		s.sp2.setFired(false);
 
-		ClientPackage cp = new ClientPackage(s.sp2, try_fb);
+		ClientPackage cp = new ClientPackage(s.sp2, try_fb, versandQueue);
+		versandQueue = "";
 
 		// Sende cp hier mit objectOutputStream_outToServer
 		try {
@@ -134,7 +136,10 @@ public class Netzwerksteuerung {
 			s.setSpielstand(sp.getSpielstand());
 			s.sp1 = sp.getSp1();
 			s.sp2 = sp.getSp2();
+			s.getChat().empfangen(sp.getVS());
+
 		}
+
 
 		killConnection();
 	}
@@ -197,6 +202,10 @@ public class Netzwerksteuerung {
 			*/
 
 		}catch(IOException e){e.printStackTrace();}
+	}
+
+	public void sendMsg(String text) {
+		versandQueue += text;
 	}
 
 }

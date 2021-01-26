@@ -88,7 +88,7 @@ public class Chat {
 
 	public void senden(){
 		String versandString = getEingabeFeld().getText();
-		netConnect.sendeText(versandString);
+		netConnect.sendMsg(versandString);
 		getEingabeFeld().setText("");
 		getTextfeld().append("Ich: " + versandString + "\n");
 	}
@@ -96,7 +96,6 @@ public class Chat {
 	public void empfangen(String text){
 		getTextfeld().append("Dein Mitspieler: " + text );
 	}
-
 
 
 }
