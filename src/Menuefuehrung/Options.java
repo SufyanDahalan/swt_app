@@ -1,15 +1,16 @@
 package Menuefuehrung;
 
+import Spielbereitstellug.Chat;
 import Spielbereitstellug.Netzwerksteuerung;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +23,6 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.awt.Font;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
@@ -103,7 +103,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
 
         b4.addActionListener(e -> {
-            babaFrame.prepareMap(true, false, null);
+            babaFrame.prepareMap(true, false, null, null);
             layout.show(babaFrame.getContentPane(), "singleplayer");//Singleplayer mode
         });
 
@@ -229,8 +229,8 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                         } catch (UnknownHostException unknownHostException) {
                             unknownHostException.printStackTrace();
                         }
-
-                        babaFrame.prepareMap(true, true, netCont);
+                        Chat chat = new Chat(netCont);
+                        babaFrame.prepareMap(true, true, netCont, chat);
                     }
                     else{
                         JOptionPane.showConfirmDialog(null, "Keine Verb. mögl.", "Host", JOptionPane.DEFAULT_OPTION);
@@ -255,8 +255,8 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     // Auch hier nehmen wir jetzt mal den 2. Konstruktor:
 
                     Netzwerksteuerung netCont = new Netzwerksteuerung(false, ipImp);
-
-                    babaFrame.prepareMap(false, true, netCont);
+                    Chat chat = new Chat(netCont);
+                    babaFrame.prepareMap(false, true, netCont, chat);
                 }
                 layout.show(babaFrame.getContentPane(), "multiplayer");
             }

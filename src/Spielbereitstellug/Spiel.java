@@ -137,6 +137,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		return spieler_steps;
 	}
 
+	public Chat getChat(){ return chat; }
+
 	private boolean loop() {
 
 		// Take Time, set period

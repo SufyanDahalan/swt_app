@@ -1,9 +1,6 @@
 package Menuefuehrung;
 
-import Spielbereitstellug.EndListener;
-import Spielbereitstellug.Lokalsteuerung;
-import Spielbereitstellug.Netzwerksteuerung;
-import Spielbereitstellug.Spiel;
+import Spielbereitstellug.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -156,9 +153,10 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
     }
 
 
-    public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont){//copied from Test.java, should be adjusted later
+    public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont, Chat chat){//copied from Test.java, should be adjusted later
 
-        final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont);
+        final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont, chat);
+
 
         EndListener el = spielstand -> {
 

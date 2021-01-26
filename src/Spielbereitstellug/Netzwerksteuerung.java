@@ -25,6 +25,9 @@ public class Netzwerksteuerung {
 
 	private InetAddress ip;
 
+	private String versandQueue = "";
+	private String empfangsQueue = "";
+
 	Socket awaitingConnection(ServerSocket serverSocket) throws IOException {
 		Socket socket = serverSocket.accept(); // blockiert, bis sich ein Client angemeldet hat
 		return socket;

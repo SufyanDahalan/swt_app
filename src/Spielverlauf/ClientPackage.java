@@ -13,6 +13,10 @@ public class ClientPackage implements Serializable {
         this.fb_try = fb_try;
     }
 
+    public String getVS(){
+        return versandQueue;
+    }
+
     public boolean isFb_try() {
         return fb_try;
     }

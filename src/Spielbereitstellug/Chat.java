@@ -81,9 +81,9 @@ public class Chat {
 
 	}
 
-	public Chat(){
+	public Chat( Netzwerksteuerung netCon ){
 		createWindow();
-		//setConnection(n);
+		setConnection( netCon );
 	}
 
 	public void senden(){
@@ -93,33 +93,10 @@ public class Chat {
 		getTextfeld().append("Ich: " + versandString + "\n");
 	}
 
-	public void empfangen(){
-		String empfangsString = netConnect.empfangeText();
-		getTextfeld().append("Dein Mitspieler: " + empfangsString + "\n");
+	public void empfangen(String text){
+		getTextfeld().append("Dein Mitspieler: " + text );
 	}
 
 
-	public static void main(String[] args) {       //createWindow();
-
-
-		/*Netzwerksteuerung netCont1 = null;
-		try {
-			netCont1 = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1"));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		Netzwerksteuerung netCont2 = null;
-		try {
-			netCont2 = new Netzwerksteuerung(false, InetAddress.getByName("127.0.0.1"));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}*/
-
-		Chat Chat1 = new Chat();
-
-		Chat Chat2 = new Chat();
-
-		Chat1.getTextfeld().append("hier ist ein zweiter String, viel Spaß damit");
-	}
 
 }
