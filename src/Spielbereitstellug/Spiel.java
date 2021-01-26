@@ -965,12 +965,11 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	public void spawnSpieler() {
 
-		if(!isMultiplayer || isHost) {
-			int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
-			sp1 = new Spieler(pixelPos[0], pixelPos[1]);
-		}
+		int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
+		sp1 = new Spieler(pixelPos[0], pixelPos[1]);
+
 		if(isMultiplayer) {
-			int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
+			pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP2());
 			sp2 = new Spieler(pixelPos[0],pixelPos[1]);
 		}
 
