@@ -147,7 +147,6 @@ public class Netzwerksteuerung {
 			s.sp1 = sp.getSp1();
 			s.sp2.setLeben(sp.getSp2().getLeben());
 			s.sp2.setFired(sp.getSp2().getFired());
-			s.sp2 = sp.getSp2();
 			s.getChat().empfangen(sp.getVS());
 
 		}
