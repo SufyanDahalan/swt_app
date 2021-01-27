@@ -97,8 +97,8 @@ public class Netzwerksteuerung {
 					s.sp2.setFired(false);
 				}
 			}
-			else
-				System.out.println("sp in cp is null");
+
+			s.getChat().empfangen(cp.getVS());
 		}
 		else
 			System.out.println("cp is null");
