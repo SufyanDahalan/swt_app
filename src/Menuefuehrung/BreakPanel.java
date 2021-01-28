@@ -2,43 +2,51 @@ package Menuefuehrung;
 
 import Spielbereitstellug.Spiel;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
 public class BreakPanel extends JPanel {
 
-    BreakPanel(Spiel s, MainFrame babaFrame){
-        setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
+    BreakPanel(Spiel s, MainFrame babaFrame, boolean isAdmin) {
+
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
-        setPreferredSize(new Dimension(Width/3, (Height/4)*3));
+        setPreferredSize(new Dimension(Width / 3, (Height / 4) * 3));
 
         setBackground(Color.BLACK);
 
-        Button resume_btn = new Button("resume game", 20);
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+
         Button leave_btn = new Button("leave game", 20);
-        Button quit_btn = new Button("quit completely", 15);
+        Button quit_btn = new Button("quit completely", 20);
 
+        leave_btn.setAlignmentX(CENTER_ALIGNMENT);
+        quit_btn.setAlignmentX(CENTER_ALIGNMENT);
 
-        add(resume_btn);
+        add(Box.createVerticalGlue());
         add(leave_btn);
-        add(quit_btn);
 
-        resume_btn.addActionListener((event) -> {
-            s.resume();
-            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
-            if (s.getMultiplayer())
-                layout.show(babaFrame.getContentPane(), "multiplayer");
-            else
-                layout.show(babaFrame.getContentPane(), "singleplayer");
-        });
+        if (isAdmin) {
+            Button resume_btn = new Button("resume game", 20);
+            resume_btn.setAlignmentX(CENTER_ALIGNMENT);
+            add(resume_btn);
+            resume_btn.addActionListener((event) -> {
+                s.resume();
+                CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
+                if (s.getMultiplayer())
+                    layout.show(babaFrame.getContentPane(), "multiplayer");
+                else
+                    layout.show(babaFrame.getContentPane(), "singleplayer");
+            });
+        }
+        add(quit_btn);
+        add(Box.createVerticalGlue());
+
         leave_btn.addActionListener((event) -> {
             s.beenden();
             babaFrame.getContentPane().remove(s);

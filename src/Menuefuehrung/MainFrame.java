@@ -289,6 +289,8 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
             }
         });
 
+        final MainFrame b =this;
+
         addKeyBinding(spiel, "ESCAPE", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -296,6 +298,11 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
                 spiel.pausieren();
                 // zeige Pausemenue
                 CardLayout layout = (CardLayout) getContentPane().getLayout();
+                // erstelle PausePanel
+
+                BreakPanel bp = new BreakPanel(spiel, b, true);
+                getContentPane().add(bp, "spielpause");
+
                 layout.show(getContentPane(), "spielpause");
             }
         });
@@ -307,10 +314,6 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         else
             getContentPane().add(spiel, "singleplayer");
 
-        // erstelle PausePanel
-
-        BreakPanel bp = new BreakPanel(spiel, this);
-        getContentPane().add(bp, "spielpause");
         spiel.spawnSpieler();
 
         spiel.start();

@@ -221,21 +221,21 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     if(ipv4 != null) {
                         // Auskommentiert, da irreführend; Blockt den Aufbau einer Verbindung; Muss entweder in eigenem Thread laufen oder z.B. als Panel implentiert werden
                         //JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
-
-                        // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
-                        // zum testen mit einer localhost Adresse.
-                        Netzwerksteuerung netCont = null;
-                        try {
-                            netCont = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1")); // zuvor war hier der 1. Konstruktor
-                        } catch (UnknownHostException unknownHostException) {
-                            unknownHostException.printStackTrace();
-                        }
-                        Chat chat = new Chat(netCont);
-                        babaFrame.prepareMap(true, true, netCont, chat);
                     }
                     else{
-                        JOptionPane.showConfirmDialog(null, "Keine Verb. mögl.", "Host", JOptionPane.DEFAULT_OPTION);
+                        JOptionPane.showConfirmDialog(null, "Keine Verb. zum Inet.", "Host", JOptionPane.DEFAULT_OPTION);
                     }
+
+                    // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
+                    // zum testen mit einer localhost Adresse.
+                    Netzwerksteuerung netCont = null;
+                    try {
+                        netCont = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1")); // zuvor war hier der 1. Konstruktor
+                    } catch (UnknownHostException unknownHostException) {
+                        unknownHostException.printStackTrace();
+                    }
+                    Chat chat = new Chat(netCont);
+                    babaFrame.prepareMap(true, true, netCont, chat);
                 }
                 else {
                     // Client ausgewählt

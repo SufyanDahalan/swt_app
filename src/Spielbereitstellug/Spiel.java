@@ -982,12 +982,12 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	public void spawnFeuerball( Spieler sp) {
 		if(!sp.getFired() && sp.isAlive()){
 			if(isHost) {
-				sp.setFired(true);
-				sp.setFbRegeneration(aktuelles_level.getRegenTimeFb());
-				aktuelles_level.getMap().addFeuerball(new Feuerball(sp.getPosition(), sp.getMoveDir()));
+				sp1.setFired(true);
+				sp1.setFbRegeneration(aktuelles_level.getRegenTimeFb());
+				aktuelles_level.getMap().addFeuerball(new Feuerball(sp1.getPosition(), sp.getMoveDir()));
 			}
 			else{
-				sp.setFired(true);
+				sp2.setFired(true);
 			}
 		}
 	}
