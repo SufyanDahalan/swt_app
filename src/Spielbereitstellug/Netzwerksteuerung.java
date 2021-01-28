@@ -96,8 +96,8 @@ public class Netzwerksteuerung {
 					s.spawnFeuerball(s.sp2);
 				}
 			}
-			else
-				System.out.println("sp in cp is null");
+
+			s.getChat().empfangen(cp.getVS());
 		}
 		else
 			System.out.println("cp is null");
