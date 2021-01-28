@@ -127,7 +127,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
 
         setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
-        setUndecorated(true);
+        setUndecorated(false);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(this.getContentPane(), "panel");
         pack();
@@ -140,15 +140,16 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
     private void FullScreen(){
         if (fullscreen) {
-            setVisible(false);
+            dispose();
+            setUndecorated(false);
             fullscreen = false;
-            device.setFullScreenWindow(null);
+            pack();
             setVisible(true);
         }else{
-            setVisible(false);
-            device.setFullScreenWindow(this);
+            dispose();
+            setUndecorated(true);
             fullscreen = true;
-            setVisible(true);
+            device.setFullScreenWindow(this);
         }
     }
 
