@@ -28,7 +28,7 @@ public class Chat {
 
 	private void createWindow() { // Create and set up the window.
 
-		JFrame frame = new JFrame("Simple GUI");
+		JFrame frame = new JFrame("Chat");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
