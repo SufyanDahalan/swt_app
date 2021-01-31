@@ -222,21 +222,21 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                     if(ipv4 != null) {
                         // Auskommentiert, da irreführend; Blockt den Aufbau einer Verbindung; Muss entweder in eigenem Thread laufen oder z.B. als Panel implentiert werden
                         //JOptionPane.showConfirmDialog(null, "Your IP Address: "+ipv4+" \n" + "Wait for a connation...", "Host", JOptionPane.DEFAULT_OPTION);
-
-                        // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
-                        // zum testen mit einer localhost Adresse.
-                        Netzwerksteuerung netCont = null;
-                        try {
-                            netCont = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1")); // zuvor war hier der 1. Konstruktor
-                        } catch (UnknownHostException unknownHostException) {
-                            unknownHostException.printStackTrace();
-                        }
-                        Chat chat = new Chat(netCont);
-                        babaFrame.prepareMap(true, true, netCont, chat);
                     }
                     else{
-                        JOptionPane.showConfirmDialog(null, "Keine Verb. mögl.", "Host", JOptionPane.DEFAULT_OPTION);
+                        JOptionPane.showConfirmDialog(null, "Keine Verb. zum Inet.", "Host", JOptionPane.DEFAULT_OPTION);
                     }
+
+                    // Nutze im folgendem den 2. Netzwerksteuerungs Konstruktor
+                    // zum testen mit einer localhost Adresse.
+                    Netzwerksteuerung netCont = null;
+                    try {
+                        netCont = new Netzwerksteuerung(true, InetAddress.getByName("127.0.0.1")); // zuvor war hier der 1. Konstruktor
+                    } catch (UnknownHostException unknownHostException) {
+                        unknownHostException.printStackTrace();
+                    }
+                    Chat chat = new Chat(netCont);
+                    babaFrame.prepareMap(true, true, netCont, chat);
                 }
                 else {
                     // Client ausgewählt
@@ -272,26 +272,26 @@ public class Options extends JPanel implements ActionListener, Filesystem {
 
         b7.addActionListener(e-> {
             JFrame helpme = new JFrame("Help me");
-            helpme.setSize(500, 600);
+            helpme.setSize(600, 700);
             helpme.getContentPane().setBackground(Color.black);
             helpme.setVisible(true);
             helpme.setLocationRelativeTo(null);
 
             JLabel text = new JLabel("");
-            text.setFont(new Font("Serif", Font.PLAIN, 18));
-            text.setText("<html><font color = red size=7> Tastaturbelegung <br> <br>  " +
+            text.setFont(new Font("serif", Font.BOLD, 18));
+            text.setText("<html><font color = red size=7>  Keyboard input: <br> <br>  " +
                     "<font color = white size = 5>" +
-                    " nach oben gehen ------------------------------------------ △         <br> <br>" +
-                    " nach unten gehen ----------------------------------------- ▽         <br> <br>" +
-                    " nach links laufen ----------------------------------------- ◁         <br> <br>" +
-                    " nach rechts laufen ---------------------------------------- ▷         <br> <br>" +
-                    " feuerball abfeuern --------------------------------------- Leertaste <br> <br>" +
-                    "Vollbild-/Fenstermodus ---------------------------------F11       <br> <br>" +
-                    "Spiel pausiereen ------------------------------------------ esc       <br> <br> <br><br><br><br><br><br><br><br><br>" +
+                    " Go open  ------------------------------------------ △         <br> <br>" +
+                    " Go down  ------------------------------------------ ▽         <br> <br>" +
+                    " Go left  ------------------------------------------- ◁        <br> <br>" +
+                    " Go right ------------------------------------------- ▷        <br> <br>" +
+                    " Fire ----------------------------------------------- Space     <br> <br>" +
+                    " Full-/Windowscreen --------------------------------- F11       <br> <br>" +
+                    " Game pause ----------------------------------------- esc       <br> <br> <br><br><br><br><br><br><br><br><br>" +
                     " </b></html> ");
 
 
-            text.setFont(text.getFont().deriveFont(50f));
+            //text.setFont(text.getFont().deriveFont(50f));
             text.setVisible(true);
             helpme.add(text);
         });

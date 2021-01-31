@@ -92,9 +92,8 @@ public class Netzwerksteuerung {
 				s.sp2.setMoveDir(cp.getSp().getMoveDir());
 
 				// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
-				if (s.sp2.getFired()) {
+				if (cp.getSp().getFired()) {
 					s.spawnFeuerball(s.sp2);
-					s.sp2.setFired(false);
 				}
 			}
 

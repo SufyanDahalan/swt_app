@@ -3,6 +3,7 @@ package Menuefuehrung;
 import Spielbereitstellug.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -82,12 +83,45 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
             }
 
             try {
-                System.out.println("name: "+levelfolder_name+"+"+name);
+                    System.out.println("name: "+levelfolder_name+"+"+name);
                 Files.write(Paths.get(levelfolder_name + name), LevelEditor.super.obj.toString(4).getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+    }
+
+    public void loadSavedLevel() { // Soll zum laden bestehender Level genutzt werden
+        System.out.println("STRG + O Wurde gedrückt!!!");
+
+        JFileChooser fileChooser = new JFileChooser();
+        // Erstelle "File-Filter", so dass nur .json Dateien ausgewählt werden können
+        fileChooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if(file.isDirectory()) return true;
+                else{
+                    String name = file.getName().toLowerCase();
+                    return name.endsWith(".json");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "Level Dateien im .json Format";
+            }
+        });
+
+
+        int response = fileChooser.showOpenDialog(null);
+        if(response != 0) return; // d.h.: Das Fenster wurde geschlossen, ohne, dass eine Datei ausgewählt wurde.
+
+        String filename = fileChooser.getSelectedFile().getAbsolutePath();
+        System.out.println(filename); // filename enthölt den absoluten Dateipfad zur json Datei
+
+
+        //TODO: Implementiere Laden des Levels in der .json Datei, so dass das Level richtig angezeigt wird und vom Nutzer bearbeitet werden kann.
 
     }
 
@@ -161,6 +195,14 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
 
     void keybindings(){
 
+        KeyStroke ctrlO = KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( ctrlO, ctrlO);// add new keybinding
+        getActionMap().put(ctrlO, new AbstractAction() {//ctrl+s for saving the map at the end
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadSavedLevel();
+            }
+        });
 
         KeyStroke ctrlS = KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( ctrlS, ctrlS);// add new keybinding
