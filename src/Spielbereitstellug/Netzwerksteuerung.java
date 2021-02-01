@@ -13,8 +13,6 @@ import java.net.SocketTimeoutException;
 public class Netzwerksteuerung {
 
 	public static final int PORT = 65432; // ein "freier" d.h. dynamischer Port
-	// zum Testen: auf dem lokalen Host kann der Client den Port nicht nutzen, da dieser vom Host benutzt wird.
-	public static final int CLIENTPORT = 65430;
 
 	public ObjectOutputStream objectOutputStream;
 	public ObjectInputStream objectInputStream;
@@ -28,6 +26,12 @@ public class Netzwerksteuerung {
 	private String versandQueue = "";
 	private String empfangsQueue = "";
 
+	/***
+	 * wird vom Server aufgerufen, um auf Verbindung des Clients zu warten
+	 * @param serverSocket bekommt erstellen Serversocket
+	 * @return gibt verbundenen Socket zurück
+	 * @throws IOException
+	 */
 	Socket awaitingConnection(ServerSocket serverSocket) throws IOException {
 		Socket socket = serverSocket.accept(); // blockiert, bis sich ein Client angemeldet hat
 		return socket;
@@ -38,9 +42,19 @@ public class Netzwerksteuerung {
 		this(true, null);
 	}
 
+	/***
+	 * Konstruktor, dem man die IP-Adresse übergeben kann.
+	 * @param ip IP-Adresse des Servers
+	 */
 	public Netzwerksteuerung(InetAddress ip){
 		this(false, ip);
 	}
+
+	/***
+	 * Konstruktor kann auch vom Client genutzt werden. In diesem Fall mit isHost = False
+	 * @param isHost Variable speichert Nutzerentscheidung
+	 * @param ip IP-Adresse des Clients
+	 */
 	public Netzwerksteuerung(boolean isHost, InetAddress ip) {
 
 		this.ip =ip;
@@ -52,6 +66,10 @@ public class Netzwerksteuerung {
 
 	}
 
+	/***
+	 * Methode zum Verschicken des Map-Objektes, wird periodisch vom Host aufgerufen
+	 * @param s Spiel-Objekt, aus dem die Map bezogen wird
+	 */
     public void serverExchange( Spiel s) {
 
 		connect();
@@ -105,6 +123,11 @@ public class Netzwerksteuerung {
 		killConnection();
 	}
 
+	/***
+	 * Methode zum verschicken von Steuerungsinformationen, wird periodisch vom Client aufgerufen
+	 * Verschickt wird die Bewegung der Spielfigur, sowie der Schießbefehl des Feuerballs
+	 * @param s Spiel, aus dem die Steuerungsinformationen bezogen werden
+	 */
 	public void clientExchange(Spiel s) {
 
 		connect();
@@ -153,6 +176,10 @@ public class Netzwerksteuerung {
 		killConnection();
 	}
 
+	/***
+	 * Methode zum sauberen Beenden der Verbindung
+	 * Wird von Client und Server verwendet
+	 */
 	private void killConnection() {
 		if (isHost){
 			try {
@@ -170,6 +197,10 @@ public class Netzwerksteuerung {
 		}
 	}
 
+	/***
+	 * Methode für Verbindungsaufbau
+	 * Erstellt benötigte Sockets
+	 */
 	private void connect(){
 		try {
 
@@ -192,27 +223,15 @@ public class Netzwerksteuerung {
 			InputStream inStream = streamSocket.getInputStream();
 			objectInputStream = new ObjectInputStream(inStream);
 
-			/*
-				BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
-				String s = null;
-				while ((s = reader.readLine()) != null) {
-					writer.write(s + "\n");
-					writer.flush();
-					System.out.println("Empfangen vom Client:" + s + "\n");
-				}
-
-				System.out.println("Server sendet nun etwas zurück.\n");
-
-				writer.write("Hallo Client! Hier ist eine lange zahl: 1234567899876563213456789\n"); // s.u.
-				writer.flush();
-
-				writer.close();
-				reader.close();
-			*/
 
 		}catch(IOException e){e.printStackTrace();}
 	}
 
+	/***
+	 * Schnittstelle zum Verschicken von Textnachrichten, wird vom Chat benutzt
+	 * Chatnachrichten werden zunächst in einer versandQueue gesammelt, diese wird periodisch übertragen
+	 * @param text zu sendende Textnachricht
+	 */
 	public void sendMsg(String text) {
 		versandQueue += text;
 	}
