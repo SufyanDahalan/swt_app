@@ -6,12 +6,13 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import Spielverlauf.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.io.File;
-import java.io.IOException;
+
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -145,7 +146,16 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
         System.out.println(filename); // filename enthölt den absoluten Dateipfad zur json Datei
 
 
-        //TODO: Implementiere Laden des Levels in der .json Datei, so dass das Level richtig angezeigt wird und vom Nutzer bearbeitet werden kann.
+        // Hier wird die zuvor ausgewählte Json-Datei geladen
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filename)));
+
+            LevelEditor.super.obj = new JSONObject(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
