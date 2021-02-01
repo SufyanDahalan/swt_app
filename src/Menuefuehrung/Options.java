@@ -140,6 +140,9 @@ public class Options extends JPanel implements ActionListener, Filesystem {
                 settings.setUndecorated(false);
                 JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, soundVolume);
                 JSlider musicSlider = new JSlider(JSlider.HORIZONTAL,0, 10, musicVolume);
+                soundSlider.setUI(new SliderDigger(soundSlider));
+                musicSlider.setUI(new SliderDigger(musicSlider));
+
                 JButton save = new JButton("save");
                 save.addActionListener(e2->playSound());
 
