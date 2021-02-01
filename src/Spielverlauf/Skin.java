@@ -1,6 +1,5 @@
 package Spielverlauf;
 
-import Spielverlauf.Animation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,27 +9,26 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class Skin {
 
-	private HashMap<String, BufferedImage> images;
-	private HashMap<String, Animation> animations;
+	private final HashMap<String, BufferedImage> images;
+	private final HashMap<String, Animation> animations;
 	private Font font;
 
-	private String name;
-	private int reference;
+	private final String name;
+	private final int reference;
 
 	private final int animation_measure = 10;
 
 	// Load Skin
-	public Skin(File skinDir, String skinname){
+	public Skin(File skinDir, String skinname) {
 
-		File skin_graphic_file = new File(skinDir, skinname+".png");
-		File skin_catalog_file = new File(skinDir, skinname+".json");
+		File skin_graphic_file = new File(skinDir, skinname + ".png");
+		File skin_catalog_file = new File(skinDir, skinname + ".json");
 
 		JSONObject obj = null;
 
@@ -206,14 +204,37 @@ public class Skin {
 		gs_bilder[2] = getImage("money_fall_f3");
 		//gs_bilder[3] = getImage("money_fall_f3");
 
-		animations.put("money_shaking", new Animation(animation_measure+7, gs_bilder, this, null, true));
+		animations.put("money_shaking", new Animation(animation_measure + 7, gs_bilder, this, null, true));
 
+	}
+
+	public BufferedImage invertImage(BufferedImage image) {
+
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		int new_rgb;
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+
+				if (image.getRGB(x, y) != 0)
+					new_rgb = new Color(255, 255, 255).getRGB();
+				else
+					new_rgb = 0;
+
+				result.setRGB(x, y, new_rgb);
+			}
+		}
+		return result;
 	}
 
 	public BufferedImage getImage(String name, int fs) {
 
 		BufferedImage dest = images.get(name);
-		return scale(dest,fs);
+		return scale(dest, fs);
 
 	}
 

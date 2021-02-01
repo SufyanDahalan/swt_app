@@ -1,25 +1,25 @@
 package Menuefuehrung;
 
-import Spielbereitstellug.*;
-import java.awt.image.BufferedImage;
+import Spielbereitstellug.Render;
+import Spielverlauf.Animation;
+import Spielverlauf.Skin;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.ArrayList;
-import Spielverlauf.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.regex.*;
-import java.util.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /***
@@ -60,9 +60,7 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
     static public boolean assertMaxMap(){
         ArrayList<Integer> mapNumber = new ArrayList<>();
         String[] maps = new File(levelfolder_name).list();
-        if(maps.length > 99)
-            return true;
-        return false;
+        return maps.length > 99;
     }
 
     /***
@@ -189,12 +187,96 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
         // Monster
         Animation ani_nobbin = current_skin.getAnimation("nobbin");
         BufferedImage nobbinImg = ani_nobbin.nextFrame(super.field_size);
-        if(spawn_monster != null){
+        if (spawn_monster != null) {
             int x_pixel = spawn_monster[0] - (nobbinImg.getWidth() / 2);
             int y_pixel = spawn_monster[1] - (nobbinImg.getHeight() / 2);
 
             g.drawImage(nobbinImg, x_pixel, y_pixel, null);
         }
+
+        // Zeichne Anleitung
+        final int margin_y = field_size / 4;
+        int margin_x = field_size / 2;
+
+        int fontSize = (int) ((double) field_size / 3.5);
+        g.setFont(current_skin.getFont().deriveFont(Font.PLAIN, fontSize));
+        g.setColor(Color.white);
+
+        BufferedImage pic;
+        String text;
+        int off_left = field_size / 3;
+        int off_right = field_size / 3;
+
+        int pic_size = (int) ((double) field_size / 1.2);
+
+        text = "D:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("diamond", pic_size);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "H:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("tunnel_hori", pic_size / 2);
+        pic = current_skin.invertImage(pic);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "V:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("tunnel_vert", pic_size / 2);
+        pic = current_skin.invertImage(pic);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "S:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("tunnel_space", pic_size / 2);
+        pic = current_skin.invertImage(pic);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "P:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("statusbar_digger_MP_red", pic_size);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "B:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("statusbar_digger_MP_gre", pic_size);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "G:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("money_static", pic_size);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "K:";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+        pic = current_skin.getImage("cherry", pic_size);
+        g.drawImage(pic, margin_x, margin_y, null);
+        margin_x += pic.getWidth() + off_left;
+
+        text = "R: Remove";
+        g.drawString(text, margin_x, margin_y + fontSize);
+        margin_x += g.getFontMetrics().stringWidth(text) + off_right;
+
+        text = "Str+S: Save";
+        g.drawString(text, margin_x, margin_y + fontSize);
+
+        text = "Str+O: Open";
+        g.drawString(text, margin_x, margin_y + 2 * fontSize);
 
         repaint();
     }
