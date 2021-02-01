@@ -6,7 +6,11 @@ import java.awt.event.*;
 import javax.swing.*; // Create a simple GUI window
 
 
-
+/***
+ * Klasse für den Multiplayer-Chat
+ * erstellt GUI zum chatten
+ * arbeitet zusammen mit der Netzwerksteuerung zum verschicken und empfangen von Textnachrichten
+ */
 public class Chat {
 
 	// Variablen Deklaration für praktischen Zugriff
@@ -14,18 +18,34 @@ public class Chat {
 	private javax.swing.JTextArea eingabeFeld; // hier kann der Nutzer tippen
 	private Netzwerksteuerung netConnect;
 
+	/***
+	 * Getter fürs Textfeld (aka. Ausgabefeld)
+	 * @return JTextArea textfeld
+	 */
 	public JTextArea getTextfeld() {
 		return textfeld;
 	}
 
+	/***
+	 * Getter fürs Eingabedeld
+	 * @return JTextArea eingabeFeld
+	 */
 	public JTextArea getEingabeFeld() {
 		return eingabeFeld;
 	}
 
+	/***
+	 * zum festlegen der Netzwerksteuerung
+	 * @param n Netzwerksteuerung
+	 */
 	public void setConnection(Netzwerksteuerung n){ netConnect = n; }
 
-	JButton sendButt;
+	// JButton sendButt;
 
+	/***
+	 * erstellt das Chatfenster (GUI)
+	 * bestehend aus: Ausgabefeld, Eingabefeld, Senden-Button
+	 */
 	private void createWindow() { // Create and set up the window.
 
 		JFrame frame = new JFrame("Chat");
@@ -39,7 +59,7 @@ public class Chat {
 		textfeld.setEditable(false);
 		textfeld.setFont(new java.awt.Font("Times New Roman", 0, 22));
 
-		textfeld.setText("Hier ist ein Teststring ");
+		// textfeld.setText("Hier ist ein Teststring ");
 
 		textfeld.setLineWrap(true); // Zeilenumbruch wird eingeschaltet
 		textfeld.setWrapStyleWord(true); // Zeilenumbrüche erfolgen nur nach ganzen Wörtern
@@ -81,11 +101,20 @@ public class Chat {
 
 	}
 
+	/***
+	 * Konstruktor für den Chat, bekommt eine Netzwerksteuerung übergeben, über welche die Nachrichten ausgetauscht werden
+	 * @param netCon Netzwerksteuerung i.d.R. wird diese auch zum Austasch von Map und Steuerungsinformationen genutzt
+	 */
 	public Chat( Netzwerksteuerung netCon ){
 		createWindow();
 		setConnection( netCon );
 	}
 
+	/***
+	 * Methode zum verschicken von Nachrichten,
+	 * wird mit drücken der "Senden"-Schaltfläche aufgerufen
+	 * verschiebt Inhalt des Eingabefeldes in die versandQueue der Netzwerksteuerung
+	 */
 	public void senden(){
 		String versandString = getEingabeFeld().getText();
 		netConnect.sendMsg(versandString);
@@ -93,6 +122,12 @@ public class Chat {
 		getTextfeld().append("Ich: " + versandString + "\n");
 	}
 
+	/***
+	 * Methode zum empfangen eines Text-Strings
+	 * Wird von der Netzwerksteuerung aufgerufen
+	 * Zeigt den text im Ausgabefeld an
+	 * @param text Chatnachricht (ggf Mehrere aus der versandQueue des Absenders)
+	 */
 	public void empfangen(String text){
 		if( ! text.equals("") ){getTextfeld().append("Dein Mitspieler: " + text );}
 	}
