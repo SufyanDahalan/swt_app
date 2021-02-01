@@ -58,13 +58,14 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
     public static void main(String[] args) throws Exception {
 
-//        SwingUtilities.invokeLater(MainFrame::new);
-        SwingUtilities.invokeLater(new Runnable() {
+       SwingUtilities.invokeLater(MainFrame::new);
+        /*SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new MainFrame().setVisible(true);
             }
         });
+         */
     }
 
     public MainFrame() {
@@ -79,7 +80,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         });
         MainPanel Panel = new MainPanel(this);
         getContentPane().add(Panel, "panel");
-        this.addMouseListener(new MouseListener() {
+       /*this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -125,7 +126,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
             }}
         );
 
-
+*/
         setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
         setUndecorated(false);
         CardLayout layout = (CardLayout) getContentPane().getLayout();
@@ -314,35 +315,19 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
             getContentPane().add(spiel, "multiplayer");
         else
             getContentPane().add(spiel, "singleplayer");
-
         spiel.spawnSpieler();
-
         spiel.start();
 
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
+    public void mouseClicked(MouseEvent e) {}
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
+    public void mousePressed(MouseEvent e) {}
     @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
+    public void mouseReleased(MouseEvent e) {}
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
+    public void mouseEntered(MouseEvent e) {}
     @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+    public void mouseExited(MouseEvent e) {}
 }
