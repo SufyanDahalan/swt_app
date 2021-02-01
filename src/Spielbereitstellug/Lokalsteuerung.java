@@ -105,8 +105,11 @@ public class Lokalsteuerung {
 
 	public void shoot(){
 
-		spiel.spawnFeuerball(spiel.sp1 );
-
+		if(isHost)
+			spiel.spawnFeuerball(spiel.sp1);
+		else {
+			spiel.sp2.setFired(true);
+		}
 		// System.out.println("FEUEEEEEER!"); // System.out.println( spiel.getFeuerball_sp1().getPosition()[0] );
 
 		render();
