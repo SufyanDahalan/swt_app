@@ -20,6 +20,13 @@ import java.util.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
+/***
+ * Diese Klasse soll das erstellen neuer Level ermöglichen,
+ * erstellte Level können im .json Format gespeichert werden.
+ * Ein neu erstelltes Level wird standarmäßig als Letztes Level der spielbaren Level angehängt.
+ * Das Feature richtet sich an fortgeschrittene Spieler, denen die Standardlevel zu langweilig sind.
+ */
 public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Filesystem {
 
     final static Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
@@ -33,12 +40,22 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
     // static content
     private final Skin current_skin = new Skin(new File(skinfolder_name), skinName);
 
+    /***
+     * um Tastenbelegung zu erstellen
+     * @param c JComponent
+     * @param key Taste
+     * @param action Action
+     */
     public static void addKeyBinding(JComponent c, String key, final Action action) {
         c.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), key);// add new keybinding
         c.getActionMap().put(key, action);
         c.setFocusable(true);
     }
 
+    /**
+     * Prüft ob es schon mehr mehr als 99 Maps gibt
+     * @return boolean
+     */
     static public boolean assertMaxMap(){
         ArrayList<Integer> mapNumber = new ArrayList<>();
         String[] maps = new File(levelfolder_name).list();
@@ -47,6 +64,9 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
         return false;
     }
 
+    /***
+     * Konstruktor des LevelEditors
+     */
     public LevelEditor() {
         playground_size.put(0, 18);
         playground_size.put(1, 10);
@@ -58,6 +78,9 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
         super.refreshSizing();
     }
 
+    /***
+     * speichert das erstellte Level, aber nur wenn alle für das Spiel notwenigen Elemente gesetzt wurden
+     */
     public void validateAndSave() {// can be called with ctrl+s
         if (super.obj.has("name") && super.obj.has("pg_size") && super.obj.has("spawn_p1") && super.obj.has("spawn_p2") && super.obj.has("spawn_mon")
                 && super.obj.has("spawn_cherry") && super.obj.has("pos_diam") && super.obj.has("pos_money") && super.obj.has("pos_tun")) {
@@ -92,6 +115,9 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
 
     }
 
+    /***
+     * Soll bestehende Level in den Editor laden können
+     */
     public void loadSavedLevel() { // Soll zum laden bestehender Level genutzt werden
         System.out.println("STRG + O Wurde gedrückt!!!");
 
@@ -126,7 +152,10 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
     }
 
 
-
+    /***
+     * zeigt das Spielfeld an und animiert Monster und Spieler Figuren
+     * @param g Graphics-Object
+     */
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
@@ -162,7 +191,10 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
         repaint();
     }
 
-
+    /***
+     * untersucht welche Level-Dateien es im Level-Ordner bereits gibt
+     * inkrementiert die Letzte Ziffer im Dateinamen
+     */
     void Name(){
         String[] maps = new File(levelfolder_name).list();
         ArrayList<Integer> mapNumber = new ArrayList<>();
@@ -192,7 +224,33 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
     }//this function defines the name of the JSON key "name", not the name under which
     //the JSON file is to be saved
 
-
+    /***
+     * Hier werden die Belegungen der Tasten definiert:
+     *
+     * STRG + O - Öffnen einer bestehenden Leveldatei
+     *
+     * STRG + S - Speichern eines erstellten Levels (falls relevante Elemente platziert)
+     *
+     * P - Spawnpoint Spieler 1 platzieren
+     *
+     * B - Spawnpoint Spieler 2 platzieren
+     *
+     * M - Spawnpoint Monster platzieren
+     *
+     * K - Spawnpoint der Kirsche platzieren
+     *
+     * D - Diamanten platzieren
+     *
+     * G - Geldsack platzieren
+     *
+     * V - vertikalen Tunnel setzten
+     *
+     * H - horizontalen Tunnel setzten
+     *
+     * S - Tunnelknoten (Space) setzten
+     *
+     * R - gesetztes Element entfernen
+     */
     void keybindings(){
 
         KeyStroke ctrlO = KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK);
