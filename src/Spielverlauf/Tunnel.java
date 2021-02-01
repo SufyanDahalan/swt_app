@@ -12,6 +12,14 @@ public class Tunnel implements Serializable {
 		typ = t;
 	}
 
+	public Tunnel(int[] fp, DIRECTION d){
+		fieldPosition = fp;
+		if(d == DIRECTION.RIGHT || d == DIRECTION.LEFT)
+			typ = TUNNELTYP.HORIZONTAL;
+		else
+			typ = TUNNELTYP.VERTICAL;
+	}
+
 	public int[] getPosition() {
 		return null;
 	};

@@ -8,12 +8,22 @@ public abstract class Monster implements Serializable {
 	protected int wertung = 250;
 	protected DIRECTION moveDir;
 	protected boolean[] blocks;
+	protected int stepCount;
 
 	public Monster(int[] pos) {
 		position = pos;
 		moveDir = DIRECTION.RIGHT;
 		blocks = new boolean[]{true,true,true,true};
+		stepCount = 0;
 	}
+
+	public boolean isBusy() {
+		if(stepCount <= 0)
+			return false;
+		else
+			return true;
+	}
+
 
 	public int[] getPosition(){
 		return position;
@@ -22,10 +32,27 @@ public abstract class Monster implements Serializable {
 	public void setPosition(int[] pos) {
 		position = pos;
 	}
+	public void setStepCount(int stepCount) {
+		this.stepCount = stepCount;
+	}
+
+	public int getStepCount(){
+		return stepCount;
+	}
 
 	public void addPosOff(int x, int y){
 		position[0]+=x;
 		position[1]+=y;
+	}
+
+	public void addPosOff(int off, DIRECTION d){
+		switch (d){
+			case LEFT: addPosOff(-off,0); break;
+			case RIGHT: addPosOff(off,0); break;
+			case UP: addPosOff(0,-off); break;
+			case DOWN: addPosOff(0,off); break;
+			default: break;
+		}
 	}
 
     public DIRECTION getMoveDir() {
