@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
  * Ein neu erstelltes Level wird standarmäßig als Letztes Level der spielbaren Level angehängt.
  * Das Feature richtet sich an fortgeschrittene Spieler, denen die Standardlevel zu langweilig sind.
  */
-public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Filesystem {
+public class LevelEditor extends Render implements MouseListener, Filesystem {
 
     final static Pattern lastIntPattern = Pattern.compile("[^0-9]+([0-9]+)$");
     MouseAdapter globalMouseAdapter;
@@ -104,7 +104,6 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
             }else{
                 name = "level_01.json";
             }
-
             try {
                     System.out.println("name: "+levelfolder_name+"+"+name);
                 Files.write(Paths.get(levelfolder_name + name), LevelEditor.super.obj.toString(4).getBytes());
@@ -112,7 +111,6 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                 e.printStackTrace();
             }
         }
-
     }
 
     /***
@@ -363,7 +361,6 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                         if((!LevelEditor.super.obj.has("pos_money") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_money"), new JSONArray(coordinations)) ) && (!LevelEditor.super.obj.has("pos_diam") || !duplicate(LevelEditor.super.obj.getJSONArray("pos_diam"),
                                 new JSONArray(coordinations)))){//make sure its not overlapping with another item
                             LevelEditor.super.obj.put("spawn_cherry", new JSONArray(coordinations));
-//                            kirsche = new Kirsche(LevelEditor.super.getFieldOf(new int[]{x, y}), current_skin);
                         }}
                     }
                 };
@@ -380,7 +377,6 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                     public void mouseClicked(MouseEvent e){
                         int x = e.getX();
                         int y = e.getY();
-//                        if(x >= 0 && y >= 0){
                         int[] field = LevelEditor.super.getFieldOf(new int[]{x, y});
                         if(field[0] >= 0 && field[1] >= 0){
                         JSONArray D = new JSONArray();
@@ -625,7 +621,7 @@ public class LevelEditor extends /*JPanel*/ Render implements MouseListener, Fil
                                     tempDiamant.put(LevelEditor.super.obj.getJSONArray("pos_diam").getJSONArray(i));
                                 }
                             }
-                        LevelEditor.super.obj.put("pos_money", tempDiamant);
+                        LevelEditor.super.obj.put("pos_diam", tempDiamant);
                         }
                             if(LevelEditor.super.obj.has("pos_money")) {
                                 JSONArray tempGeld = new JSONArray();
