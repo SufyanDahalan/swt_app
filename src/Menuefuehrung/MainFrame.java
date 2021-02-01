@@ -247,7 +247,8 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
                     e.printStackTrace();
                 }
 
-                // go back to Main
+                // go back to Main, update Scoreboard
+                Scoreboard.refeshScores();
                 getContentPane().remove(spiel);
                 CardLayout layout = (CardLayout) getContentPane().getLayout();
                 layout.show(getContentPane(), "panel");

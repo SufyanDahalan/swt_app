@@ -34,6 +34,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     int musicVolume = 10;
     boolean music = true;
     JDialog digger;
+    int mutedVolume = 10;
 
     Options(MainFrame babaFrame){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
@@ -372,10 +373,13 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(music && clip != null) {
+            mutedVolume = musicVolume;
+            musicVolume = 0;
             clip.stop();
             music = false;
         }
         else if(!music && clip != null) {
+            musicVolume = mutedVolume;
             clip.play();
             music = true;
         }
