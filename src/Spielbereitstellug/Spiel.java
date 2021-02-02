@@ -394,68 +394,154 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 			}
-
+*/// -------------------------------------------Saads Monster
+			monster_steps = 1;
 			for (Iterator<Nobbin> iterator = nobbins.iterator(); iterator.hasNext(); ) {
 				Nobbin m = iterator.next();
+				if(m.isBusy()){
+					m.addPosOff(monster_steps, m.getMoveDir());
+					m.setStepCount(m.getStepCount()-monster_steps);
+				}
+				else{
+
 
 				int[] m_pos = m.getPosition();
 				int[] s_pos = sp1.getPosition();
 				int x_off = 0;
 				int y_off = 0;
+				int nextfieldx = 0;
+				int nextfieldy = 0;
 
-				if (m_pos[0] > s_pos[0])
+				if (m_pos[0] > s_pos[0]){
 					x_off = -1;
+					nextfieldx = -field_size;
+				}
+
 				else
+				{
 					x_off = 1;
+					nextfieldx = field_size;
+				}
 
 				if (m_pos[1] > s_pos[1])
 
+				{
 					y_off = -1;
+				}
 				else if (m.z == 0) {
-					y_off = 1;
+					{
+						y_off = 1;
+					}
 
-				} else y_off = -1;
+				} else {
+					y_off = -1;
+				}
+
 				if (m.z != 0) {
+					//System.out.print("reached z");
 
-					m.addPosOff(0, 1);
+					//m.addPosOff(0, 1);
+					m.setStepCount(field_size);
+					m.setMoveDir(DIRECTION.DOWN);
 					//System.out.print(z);
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
-						m.addPosOff(0, 1);
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {
+						System.out.print(" happened here z+");
+						//m.addPosOff(0, 1);
+						m.setStepCount(field_size);
+						m.setMoveDir(DIRECTION.DOWN);
 						m.z = 0;
 					}
 
 
 				} else if (m.u != 0) {
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - 1, m_pos[1]})).isEmpty()) {
+					//System.out.print("reached u");
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - field_size, m_pos[1]})).isEmpty()) {
 						//System.out.print(u);
-						m.addPosOff(-1, 0);
-						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-							m.addPosOff(-1, 0);
+						//m.addPosOff(-1, 0);
+						m.setStepCount(field_size);
+						m.setMoveDir(DIRECTION.LEFT);
+						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {
+							//m.addPosOff(-1, 0);
+							//System.out.print("reached u++");
+							if(y_off<0){
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.UP);
+
+							}
+							else {
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.DOWN);
+							}
 							m.u = 0;
 						}
 
 
-					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] + 1})).isEmpty()) {
-						m.addPosOff(0, 1);
+					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] + field_size})).isEmpty()) {
+						//m.addPosOff(0, 1);
+
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.DOWN);
+
 
 					}
 
 
 				} else if (m.x != 0) {
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] - y_off})).isEmpty()) {
+					System.out.print(" reached x");
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] - nextfieldy})).isEmpty()) {
+						System.out.print(" reached x1");
 						//System.out.print(x);
-						m.addPosOff(0, -y_off);
+						//m.addPosOff(0, -y_off);
+						if(y_off<0){
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.DOWN);
+
+						}
+						else if (y_off>0) {
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.UP);
+						}
+
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] + x_off, m_pos[1]})).isEmpty()) {
-							m.addPosOff(0, -y_off);
+							//m.addPosOff(0, -y_off);
+							/*if(y_off<0){
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.DOWN);
+
+							}
+							else if (y_off>0) {
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.UP);
+							}*/
 							m.u = 0;
 						}
 
 
 					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - x_off, m_pos[1]})).isEmpty()) {
+						System.out.print(" reached x2");
 						//System.out.print(m.x);
-						m.addPosOff(-x_off, 0);
+						//m.addPosOff(-x_off, 0);
+						if(x_off<0){
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.RIGHT);
+
+						}
+						else if (x_off>0) {
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.LEFT);
+						}
+
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-							m.addPosOff(-x_off, 0);
+							//m.addPosOff(-x_off, 0);
+							if(x_off<0){
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.RIGHT);
+
+							}
+							else if (x_off>0) {
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.LEFT);
+							}
 							m.x = 0;
 						}
 
@@ -464,68 +550,71 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 				} else {
-					if (m_pos[1] == s_pos[1]) {
-						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
+					//System.out.print(getFieldOf(m_pos)[1]+ "   " +getFieldOf(s_pos)[1]);
+					if (getFieldOf(m_pos)[1]==getFieldOf(s_pos)[1] ) {
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
+							System.out.print("reached z1");
 							m.z++;
 							//System.out.print(m.z);
 
 
 						}
 					}
-					if (m_pos[0] == s_pos[0]) {
-						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
+					if (getFieldOf(m_pos)[0]==getFieldOf(s_pos)[0]) {
+						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
 							m.u++;
 							//System.out.print(m.u);
 						}
 					}
+					//System.out.print(x_off+ "  "+y_off+getFieldOf(m_pos)[0] + "  " +getFieldOf(m_pos)[1]+ " "+ (getFieldOf(m_pos)[0]-x_off)+ "  ");
 
 
-					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], y_off + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
-
-						if (m.z == 0 && m.u == 0) {
-							m.addPosOff(x_off, y_off);
-							if (x_off > 0)
-								m.setMoveDir(DIRECTION.RIGHT);
-							else
-								m.setMoveDir(DIRECTION.LEFT);
-						} else {
-							//m.addPosOff(0, -1);
-							System.out.print("test");
-
-						}
-					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], y_off + m_pos[1]})).isEmpty()) {
-						if (m.z == 0 && m.u == 0) {
-							m.addPosOff(0, y_off);
-
-						} else {
-							//y_off = -1;
-							m.setMoveDir(DIRECTION.DOWN);
-							//m.addPosOff(0,  y_off);
-							System.out.print("ml");
-
-						}
-
-					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{x_off + m_pos[0], m_pos[1]})).isEmpty()) {
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {
+						System.out.print("reached sec");
 						if (m.z == 0 && m.u == 0) {
 							//m.addPosOff(0, y_off);
-							m.addPosOff(x_off, 0);
-							m.z = 0;
-							if (x_off > 0)
-								m.setMoveDir(DIRECTION.RIGHT);
-							else
+							//m.addPosOff(x_off, 0);
+							if(x_off<0){
+								m.setStepCount(field_size);
 								m.setMoveDir(DIRECTION.LEFT);
+							}
+							else{
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.RIGHT);
+							}
+
+							m.z = 0;
+
 
 						}
-					} else m.x++;
+					}else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0], m_pos[1]+nextfieldy })).isEmpty()) {
+						System.out.print("reached first");
+						if (m.z == 0 && m.u == 0) {
+							//m.addPosOff(0, y_off);
+							if(y_off<0){
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.UP);
+
+							}
+							else {
+								m.setStepCount(field_size);
+								m.setMoveDir(DIRECTION.DOWN);
+							}
+							//System.out.print("catchedy  " +m_pos[1] + "  " + getFieldOf(m_pos)[1]);
+
+
+						}
+
+					}  else m.x++;
 
 
 				}
-			}
-*/
+			}}
 
-
+/// -------------------------------------------Saads Monster (Oben)
+/*
 			//------ Monster Tobi
 			monster_steps = 1;
 			// Monster(Nobbin) verfolgt Spieler // still a little buggy
@@ -624,7 +713,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					aktuelles_level.getMap().addTunnel(new Tunnel(field, h.getMoveDir()));
 				}
 			}
-
+*/
 			//------ Monster Tobi
 
 
