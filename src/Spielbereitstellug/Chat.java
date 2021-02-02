@@ -14,6 +14,7 @@ import javax.swing.*; // Create a simple GUI window
 public class Chat {
 
 	// Variablen Deklaration für praktischen Zugriff
+	private JFrame frame = new JFrame("Chat");
 	private javax.swing.JTextArea textfeld; // Zeigt Chatnachrichten an
 	private javax.swing.JTextArea eingabeFeld; // hier kann der Nutzer tippen
 	private Netzwerksteuerung netConnect;
@@ -48,8 +49,14 @@ public class Chat {
 	 */
 	private void createWindow() { // Create and set up the window.
 
-		JFrame frame = new JFrame("Chat");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame = new JFrame("Chat");
+
+
+		// Wenn der Nutzer das Fenster Schließt, verschwindet der Chat
+		// Wenn der Nutzer das Fenster nur minimiert, öffnet sich dieses, bei erhalt einer Nachricht automatisch
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		// Denn HIDE_ON_CLOSE is the same as JFrame.setVisible(false)
+		// Leider ist der Unischtbare Frame nicht ohne weiteres wieder SetVisible
 
 
 		JLabel textLabel = new JLabel("I'm a label in the window", SwingConstants.CENTER);
@@ -123,13 +130,19 @@ public class Chat {
 	}
 
 	/***
-	 * Methode zum empfangen eines Text-Strings
-	 * Wird von der Netzwerksteuerung aufgerufen
-	 * Zeigt den text im Ausgabefeld an
+	 * Methode zum empfangen eines Text-Strings,
+	 * Wird von der Netzwerksteuerung aufgerufen,
+	 * Zeigt den text im Ausgabefeld an,
+	 * Außerdem wird ein Minimiertes Fenster wieder sichtbar
 	 * @param text Chatnachricht (ggf Mehrere aus der versandQueue des Absenders)
 	 */
 	public void empfangen(String text){
-		if( ! text.equals("") ){getTextfeld().append("Dein Mitspieler: " + text );}
+		if( ! text.equals("") ){
+			getTextfeld().append("Dein Mitspieler: " + text + "\n");
+			// Falls das Fenster minimiert wurde, wird es bei erhalt einer Nachricht wieder sichtbar
+			// Achtung: Minimiert /= geschlossen !
+			frame.setState(JFrame.NORMAL);
+		}
 	}
 
 
