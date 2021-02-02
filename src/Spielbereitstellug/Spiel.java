@@ -616,21 +616,26 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 						}
+						y_off = 0;
+						nextfieldy = 0;
 					}
 					if (getFieldOf(m_pos)[0]==getFieldOf(s_pos)[0]) {
 						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
 							System.out.print("  reached u   ");
 							m.u++;
+
 							//System.out.print(m.u);
 						}
+						x_off = 0;
+						nextfieldx = 0;
 
 					}
 					//System.out.print(x_off+ "  "+y_off+getFieldOf(m_pos)[0] + "  " +getFieldOf(m_pos)[1]+ " "+ (getFieldOf(m_pos)[0]-x_off)+ "  ");
-					System.out.print( nextfieldx + "     " + nextfieldy+ "   "+ x_off + getFieldOf(m_pos)[0]+ "   "+getFieldOf(s_pos)[0]+ "  "+getFieldOf(m_pos)[0]+ "   "+getFieldOf(s_pos)[0] );
+					System.out.print(  getFieldOf(m_pos)[0]+ "   "+getFieldOf(s_pos)[0]+ "   " + nextfieldx+ "   " + x_off+ "   ");
 
 
-					if (  !aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {
+					if (  nextfieldx != 0 && !aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {
 						System.out.print("  reached sec  ");
 						if (m.z == 0 && m.u == 0) {
 							//m.addPosOff(0, y_off);
@@ -649,7 +654,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 						}
 
-					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0], m_pos[1]+nextfieldy })).isEmpty()) {
+					} else if ( nextfieldy != 0  && !aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0], m_pos[1]+nextfieldy })).isEmpty()) {
 						System.out.print("  reached first  ");
 
 							//m.addPosOff(0, y_off);
