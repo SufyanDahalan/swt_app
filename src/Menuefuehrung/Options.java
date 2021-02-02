@@ -2,6 +2,7 @@ package Menuefuehrung;
 
 import Spielbereitstellug.Chat;
 import Spielbereitstellug.Netzwerksteuerung;
+import Spielverlauf.Skin;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -9,13 +10,9 @@ import javafx.util.Duration;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +33,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     JDialog digger;
     int mutedVolume = 10;
 
-    Options(MainFrame babaFrame){
+    Options(MainFrame babaFrame, JPanel menu, Skin skin){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
 
         try {
@@ -101,9 +98,9 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         box1.add(sigleplayer);
         box1.add(multiplayer);
 
-        CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
 
         b4.addActionListener(e -> {
+            CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
             babaFrame.prepareMap(true, false, null, null);
             layout.show(babaFrame.getContentPane(), "singleplayer");//Singleplayer mode
         });
@@ -134,70 +131,9 @@ public class Options extends JPanel implements ActionListener, Filesystem {
 
 
         b2.addActionListener(e -> {
-            {
-                b2.setEnabled(false);
-                JDialog settings = new JDialog();
-                settings.setUndecorated(false);
-                JSlider soundSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, soundVolume);
-                JSlider musicSlider = new JSlider(JSlider.HORIZONTAL,0, 10, musicVolume);
-                soundSlider.setUI(new SliderDigger(soundSlider));
-                musicSlider.setUI(new SliderDigger(musicSlider));
 
-                JButton save = new JButton("save");
-                save.addActionListener(e2->playSound());
-
-
-                save.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        settings.setVisible(false);
-                        b2.setEnabled(true);
-                    }
-                });
-
-                settings.addWindowListener(new WindowAdapter(){
-                    @Override
-                    public void windowClosing(WindowEvent e){
-                        settings.setVisible(false);
-                        b2.setEnabled(true);
-                    }
-                });
-                musicSlider.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        musicVolume = musicSlider.getValue();
-                        clip.setVolume((musicSlider.getValue()/10.0));
-                    }
-                });
-
-                soundSlider.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                        soundVolume = soundSlider.getValue();
-                        sound.setVolume((soundSlider.getValue()/10.0));
-                    }
-                });
-
-
-
-                JLabel soundLabel = new JLabel("Sound");
-                soundLabel.setForeground(Color.red);
-                settings.add(soundLabel);
-                settings.add(soundSlider);
-                JLabel musicLabel = new JLabel("Music");
-                musicLabel.setForeground(Color.red);
-                settings.add(musicLabel);
-                settings.add(musicSlider);
-                settings.add(save);
-                settings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                settings.setResizable(false);
-                settings.setSize(new Dimension(500,200));
-                settings.setLocationRelativeTo(null);
-                settings.setAlwaysOnTop(true);
-                settings.setVisible(true);
-                settings.getContentPane().setBackground(Color.black);
-                settings.setLayout(new BoxLayout(settings.getContentPane(), BoxLayout.PAGE_AXIS));
-            }
+            CardLayout layout = (CardLayout) menu.getLayout();
+            layout.show(menu, "Setup");
         });
 
 
@@ -274,29 +210,10 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         b3.addActionListener(e -> System.exit(0));
 
         b7.addActionListener(e-> {
-            JFrame helpme = new JFrame("Help me");
-            helpme.setSize(600, 700);
-            helpme.getContentPane().setBackground(Color.black);
-            helpme.setVisible(true);
-            helpme.setLocationRelativeTo(null);
 
-            JLabel text = new JLabel("");
-            text.setFont(new Font("serif", Font.BOLD, 18));
-            text.setText("<html><font color = red size=7>  Keyboard input: <br> <br>  " +
-                    "<font color = white size = 5>" +
-                    " Go open  ------------------------------------------ △         <br> <br>" +
-                    " Go down  ------------------------------------------ ▽         <br> <br>" +
-                    " Go left  ------------------------------------------- ◁        <br> <br>" +
-                    " Go right ------------------------------------------- ▷        <br> <br>" +
-                    " Fire ----------------------------------------------- Space     <br> <br>" +
-                    " Full-/Windowscreen --------------------------------- F11       <br> <br>" +
-                    " Game pause ----------------------------------------- esc       <br> <br> <br><br><br><br><br><br><br><br><br>" +
-                    " </b></html> ");
+            CardLayout layout = (CardLayout) menu.getLayout();
+            layout.show(menu, "Manual");
 
-
-            //text.setFont(text.getFont().deriveFont(50f));
-            text.setVisible(true);
-            helpme.add(text);
         });
 
        /* b7.addActionListener(new ActionListener() {
@@ -315,8 +232,6 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         });*/
 
     }
-
-
 
 
     public void editorButton(Button b, MainFrame babaFrame){

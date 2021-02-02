@@ -5,15 +5,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -24,11 +23,11 @@ public class Scoreboard extends JPanel implements Filesystem {
     private Skin current_skin;
     static private JTable Table;
     static private DefaultTableModel dtm;
-    Scoreboard(){
+    Scoreboard(Skin skin){
         Table = new JTable();
-        current_skin = new Skin(new File(skinfolder_name), skinName); // Loads original_skin.png and original.json from skins/
+        current_skin = skin; // Loads original_skin.png and original.json from skins/
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
+        //setBorder(new CompoundBorder( BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20), BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED) ));
 
         setOpaque(false);
         dtm = new DefaultTableModel(0,0) {
@@ -45,7 +44,7 @@ public class Scoreboard extends JPanel implements Filesystem {
         Table.setFillsViewportHeight(true);
         Table.setForeground(Color.white);
         Table.setFont(current_skin.getFont().deriveFont(Font.PLAIN, 15));
-
+        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
 
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
@@ -108,6 +107,12 @@ public class Scoreboard extends JPanel implements Filesystem {
             dtm.addRow(new Object[]{temp.get(i).get("name"), temp.get(i).get("age"), temp.get(i).get("date"), temp.get(i).get("score")});
         }
         Table = new JTable (dtm);
+    }
+
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
     }
 
 }

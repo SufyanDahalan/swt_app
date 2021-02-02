@@ -1,12 +1,14 @@
 package Menuefuehrung;
 
 import Spielbereitstellug.*;
+import Spielverlauf.Skin;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -78,7 +80,8 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
                 FullScreen();
             }
         });
-        MainPanel Panel = new MainPanel(this);
+        Skin skin = new Skin(new File(skinfolder_name), skinName);
+        MainPanel Panel = new MainPanel(this, skin);
         getContentPane().add(Panel, "panel");
        /*this.addMouseListener(new MouseListener() {
             @Override
