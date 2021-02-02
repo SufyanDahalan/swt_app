@@ -29,34 +29,6 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         c.setFocusable(true);
     }
 
-    protected JRootPane createRootPane() {
-        JRootPane rootPane = new JRootPane();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
-        Action actionListener = new AbstractAction() {
-            public void actionPerformed(ActionEvent actionEvent) {
-                // Spiel pausieren. Die Funktion pausieren() in class Spiel ist noch zu implementieren.
-
-
-                int choice = JOptionPane.showOptionDialog(null,
-                        "Do you want to leave the game?? ", "exit game",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"resume","exit"}, "resume" );
-
-                ;
-
-                if (choice == 0) {
-                    // Spiel fortsetzen
-
-                } if (choice == 1) System.exit(0);
-            }
-        };
-        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(stroke, "ESCAPE");
-        rootPane.getActionMap().put("ESCAPE", actionListener);
-
-        return rootPane;
-
-    }
 
     public static void main(String[] args) throws Exception {
 

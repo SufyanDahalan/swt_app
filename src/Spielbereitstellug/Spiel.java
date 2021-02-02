@@ -347,6 +347,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				incLifeCount = 0;
 			}
 
+			/*
 			// Hobbin verfolgt Spieler
 
 			//
@@ -522,139 +523,109 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 				}
 			}
+*/
 
 
-					/*
-					Monster m = aktuelles_level.getMap().getMonster().get(0);
-					int[] m_pos = m.getPosition();
-					int[] s_pos = sp.getPosition();
-					int[] monsternext = m_pos;
-					double dx1 = s_pos[0] - m_pos[0];
-					double dy1 = s_pos[1] - m_pos[1];
-					double norm = Math.sqrt(dx1*dx1+dy1*dy1);
-					dx1 /= norm;
-					dy1 /= norm;
+			//------ Monster Tobi
+			monster_steps = 1;
+			// Monster(Nobbin) verfolgt Spieler // still a little buggy
+			for (Iterator<Monster> iterator = monsters.iterator(); iterator.hasNext(); ) {
+				Monster m = iterator.next();
 
-					dx1 *= 2;
-					dy1 *= 2;
-					m.addPosOff(0, 0);
-
+				if(m.isBusy()){
+					m.addPosOff(monster_steps, m.getMoveDir());
+					m.setStepCount(m.getStepCount()-monster_steps);
+				}
+				else {
+					int[] m_pos = m.getPosition().clone();
+					int[] s_pos = sp1.getPosition().clone();
 
 
-					|||
-					Monster m = aktuelles_level.getMap().getMonster().get(0);
-					int [] m_pos = m.getPosition();
-					int[] s_pos = sp.getPosition();
+					// Bestimme und setze geblockte Richtungen
+					m.removeBlocks();
+					boolean[] blocks = {false, false, false, false};
 
+					// wenn auf Kreuzung, dann Rhtung entscheiden
+					int[] upper_field = getFieldOf(m_pos);
+					upper_field[1] -= 1;
+					int[] lower_field = getFieldOf(m_pos);
+					lower_field[1] += 1;
+					int[] left_field = getFieldOf(m_pos);
+					left_field[0] -= 1;
+					int[] right_field = getFieldOf(m_pos);
+					right_field[0] += 1;
 
-					int  x_off = 0;
-					int y_off = 0;
-					int[] monsternext = m_pos;
+					int[][] check_fields = new int[4][2];
+					check_fields[0] = upper_field;
+					check_fields[1] = right_field;
+					check_fields[2] = lower_field;
+					check_fields[3] = left_field;
 
-
-					if (m_pos[0] > s_pos[0]){
-						monsternext[0] =  m_pos[0] - 1;
-						for (Tunnel num : tunnels) {
-							if(num.getField() != monsternext){
-								x_off=0;
-								break;
-							}
-							else{
-								x_off = -1;}
-
-					}
-
-					}
-					else
-					{
-						monsternext[0] =  m_pos[0] + 1;
-						for (Tunnel num : tunnels) {
-						if(num.getField()!=monsternext){
-							x_off=0;
-							break;
+					for (int i = 0; i < check_fields.length; i++) {
+						int[] f = check_fields[i];
+						if (f[0] < 1 || f[0] > aktuelles_level.getMap().getPGSize()[0] || f[1] < 1 || f[1] > aktuelles_level.getMap().getPGSize()[1])
+							blocks[i] = true;
+						if (m instanceof Nobbin) {
+							if (aktuelles_level.getMap().getTunnel(f).isEmpty())
+								blocks[i] = true;
 						}
-						else{
-							x_off = 1;}
-
-						}}
-					if (m_pos[1] > s_pos[1])
-					{
-						monsternext[1] =  m_pos[1]  - 1;
-						for (Tunnel num : tunnels) {
-							if(num.getField()!=monsternext){
-								y_off=0;
-								break;
-							}
-
-						else{
-							y_off = -1;}
-
-						}}
-					else{
-						monsternext[1] =  m_pos[1] + 1;
-						for (Tunnel num : tunnels) {
-							if(num.getField()!=monsternext){
-
-								y_off=0;
-								break;
-							}
-
-						else{
-							y_off = 1;}
-
-						}}
-				m.addPosOff(x_off, y_off);
-
-						*/
-
-
-			// Hobbin trifft Boden
-				/*
-				for (Iterator<Hobbin> it = hobbins.iterator(); it.hasNext();){
-						Hobbin h = it.next();
-
-					 int[] fph = getFieldOf(h.getPosition());
-				DIRECTION dirHp = h.getMoveDir();
-
-				//ArrayList<Tunnel> tt = aktuelles_level.getMap().getTunnel(fph);
-
-				if(tt.size() == 1){
-					TUNNELTYP ttyp = tt.get(0).getTyp();
-
-
-					if( ((dirHp == DIRECTION.UP || dirHp == DIRECTION.DOWN) && ttyp == TUNNELTYP.HORIZONTAL) ||
-						((dirHp == DIRECTION.RIGHT || dirHp == DIRECTION.LEFT) && ttyp == TUNNELTYP.VERTICAL) ){
-
-						TUNNELTYP arrangement;
-
-						if(dirHp == DIRECTION.UP || dirHp == DIRECTION.DOWN)
-							arrangement = TUNNELTYP.VERTICAL;
-						else
-							arrangement = TUNNELTYP.HORIZONTAL;
-
-						aktuelles_level.getMap().addTunnel( new Tunnel(fph, arrangement) );
 					}
-				}}*/
 
-			// Monster trifft Wand // Not yet done
-			// for (Iterator<Monster> it = monsters.iterator(); it.hasNext();){
-			// 	Monster h = it.next();
-			// 	int[] m_pos1 = h.getPosition();
-			// 	int[] newField = getFieldOf(m_pos1);
-			// 	int[] pgSize = aktuelles_level.getMap().getPGSize();
-			// 	if( newField[0] <= 0)
-			// 		h.addPosOff(1,0);
-			// 	if(newField[0] >= pgSize[0] )
-			// 		h.addPosOff(-1,0);
-			// 	if( newField[1] <= 0 )
-			// 		h.addPosOff(0, 1);
-			// 	if(newField[1] >= pgSize[1])
-			// 		h.addPosOff(0,-1);
-			// }
-			/*--------------------------------------------------------------------------------------------------------------------*/
+					m.setBlocks(blocks);
 
-			// Bewegung werden durch Algorithmus oder Tastatuseingabe oder Netzwerksteuerung direkt im Mapobjekt geändert und durch repaint übernommen
-			/// in jedem Fall wir true zurückgegeben. Andernfalls beendet sich die loop() und das spiel gilt als beendet. Darauf folgt dann die eintragung der ergebnisse ect.
+
+					int x_off = 0;
+					int y_off = 0;
+					DIRECTION x_dir;
+					DIRECTION y_dir;
+					boolean x_priority;
+
+					if (m_pos[0] > s_pos[0]) {
+						x_dir = DIRECTION.LEFT;
+					} else {
+						x_dir = DIRECTION.RIGHT;
+					}
+
+					if (m_pos[1] > s_pos[1]) {
+						y_dir = DIRECTION.UP;
+					} else {
+						y_dir = DIRECTION.DOWN;
+					}
+
+					if (Math.abs(m_pos[1] - s_pos[1]) < Math.abs(m_pos[0] - s_pos[0]))
+						x_priority = true; // falls x strecke größer
+					else
+						x_priority = false; // falls y strecke größer
+
+					DIRECTION resultDir;
+
+					if (!m.isBlocked(x_dir) && !m.isBlocked(y_dir))
+						resultDir = x_priority ? x_dir : y_dir;
+					else if (!m.isBlocked(x_dir) && m.isBlocked(y_dir))
+						resultDir = x_dir;
+					else if (m.isBlocked(x_dir) && !m.isBlocked(y_dir))
+						resultDir = y_dir;
+					else
+						resultDir = null;
+
+					if (resultDir != null) {
+						m.setStepCount(field_size);
+						m.setMoveDir(resultDir);
+					}
+				}
+			}
+
+			for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
+				Hobbin h = iterator.next();
+
+				int[] field = getFieldOf(h.getPosition());
+
+				if (aktuelles_level.getMap().getTunnel(field).isEmpty()) {
+					aktuelles_level.getMap().addTunnel(new Tunnel(field, h.getMoveDir()));
+				}
+			}
+
+			//------ Monster Tobi
 
 
 			// Spielerunabhängig
@@ -827,7 +798,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					Geldsack g = gs_iter.next();
 					int[] newField = getFieldOf(g.getPosition());
 					int[] PGSize = aktuelles_level.getMap().getPGSize();
-					if (Arrays.equals(getFieldOf(g.getPosition()), getFieldOf(m.getPosition()))) {
+					if (Arrays.equals(getFieldOf(g.getPosition()), getFieldOf(m.getPosition())) && !g.getFalling()) {
 						if (m.getMoveDir() == DIRECTION.RIGHT) {
 							if (newField[0] < PGSize[0])
 								g.addPosOff(field_size, 0);
