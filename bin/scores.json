@@ -1,20 +1,43 @@
 {"data": [
     {
-        "date": "18. Januar 2021",
-        "score": 1000,
-        "name": "John Don",
-        "age": 30
-    },
-    {
-        "date": "25. Januar 2021",
-        "score": 2300,
-        "name": "suf",
-        "age": "22"
-    },
-    {
-        "date": "25. Januar 2021",
+        "date": "02. Februar 2021",
         "score": 9900,
-        "name": "Sufian",
-        "age": "3"
+        "name": "ZAI",
+        "age": "20"
+    },
+    {
+        "date": "02. Februar 2021",
+        "score": 9900,
+        "name": "MUH",
+        "age": "20"
+    },
+    {
+        "date": "02. Februar 2021",
+        "score": 9900,
+        "name": "SUF",
+        "age": "20"
+    },
+    {
+        "date": "02. Februar 2021",
+        "score": 9900,
+        "name": "DEN",
+        "age": "20"
+    },
+    {
+        "date": "02. Februar 2021",
+        "score": 9900,
+        "name": "SAD",
+        "age": "20"
+    },
+    {
+        "date": "02. Februar 2021",
+        "score": 9900,
+        "name": "BAS",
+        "age": "20"
+    },{
+        "date": "02. Februar 2021",
+        "score": 1200,
+        "name": "TOB",
+        "age": "20"
     }
 ]}
