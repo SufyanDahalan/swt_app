@@ -661,6 +661,101 @@ public class Spiel extends Render implements Runnable, Filesystem {
 			}}
 
 /// -------------------------------------------Saads Monster (Oben)
+///Monster Hobbin
+for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
+				Hobbin m = iterator.next();
+
+				if(m.isBusy()){
+					m.addPosOff(monster_steps, m.getMoveDir());
+					m.setStepCount(m.getStepCount()-monster_steps);
+				}
+				else {
+					int[] m_pos = m.getPosition().clone();
+					int[] s_pos = sp1.getPosition().clone();
+
+
+					// Bestimme und setze geblockte Richtungen
+					m.removeBlocks();
+					boolean[] blocks = {false, false, false, false};
+
+					// wenn auf Kreuzung, dann Rhtung entscheiden
+					int[] upper_field = getFieldOf(m_pos);
+					upper_field[1] -= 1;
+					int[] lower_field = getFieldOf(m_pos);
+					lower_field[1] += 1;
+					int[] left_field = getFieldOf(m_pos);
+					left_field[0] -= 1;
+					int[] right_field = getFieldOf(m_pos);
+					right_field[0] += 1;
+
+					int[][] check_fields = new int[4][2];
+					check_fields[0] = upper_field;
+					check_fields[1] = right_field;
+					check_fields[2] = lower_field;
+					check_fields[3] = left_field;
+
+					for (int i = 0; i < check_fields.length; i++) {
+						int[] f = check_fields[i];
+						if (f[0] < 1 || f[0] > aktuelles_level.getMap().getPGSize()[0] || f[1] < 1 || f[1] > aktuelles_level.getMap().getPGSize()[1])
+							blocks[i] = true;
+
+					}
+
+					m.setBlocks(blocks);
+
+
+					int x_off = 0;
+					int y_off = 0;
+					DIRECTION x_dir;
+					DIRECTION y_dir;
+					boolean x_priority;
+
+					if (m_pos[0] > s_pos[0]) {
+						x_dir = DIRECTION.LEFT;
+					} else {
+						x_dir = DIRECTION.RIGHT;
+					}
+
+					if (m_pos[1] > s_pos[1]) {
+						y_dir = DIRECTION.UP;
+					} else {
+						y_dir = DIRECTION.DOWN;
+					}
+
+					if (Math.abs(m_pos[1] - s_pos[1]) < Math.abs(m_pos[0] - s_pos[0]))
+						x_priority = true; // falls x strecke größer
+					else
+						x_priority = false; // falls y strecke größer
+
+					DIRECTION resultDir;
+
+					if (!m.isBlocked(x_dir) && !m.isBlocked(y_dir))
+						resultDir = x_priority ? x_dir : y_dir;
+					else if (!m.isBlocked(x_dir) && m.isBlocked(y_dir))
+						resultDir = x_dir;
+					else if (m.isBlocked(x_dir) && !m.isBlocked(y_dir))
+						resultDir = y_dir;
+					else
+						resultDir = null;
+
+					if (resultDir != null) {
+						m.setStepCount(field_size);
+						m.setMoveDir(resultDir);
+					}
+				}
+			}
+
+			for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
+				Hobbin h = iterator.next();
+
+				int[] field = getFieldOf(h.getPosition());
+
+				if (aktuelles_level.getMap().getTunnel(field).isEmpty()) {
+					aktuelles_level.getMap().addTunnel(new Tunnel(field, h.getMoveDir()));
+				}
+			}
+
+			///Monster Hobbin
 /*
 			//------ Monster Tobi
 			monster_steps = 1;
