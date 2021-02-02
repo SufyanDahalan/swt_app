@@ -528,7 +528,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 				} else if (m.x != 0) {
-					System.out.print(" reached x");
+
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] - nextfieldy})).isEmpty()) {
 						System.out.print(" reached x1");
 						//System.out.print(x);
@@ -538,23 +538,23 @@ public class Spiel extends Render implements Runnable, Filesystem {
 							m.setMoveDir(DIRECTION.DOWN);
 
 						}
-						else if (y_off>0) {
+						else  {
 							m.setStepCount(field_size);
 							m.setMoveDir(DIRECTION.UP);
 						}
 
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] + nextfieldx, m_pos[1]})).isEmpty()) {
 							//m.addPosOff(0, -y_off);
-							if(y_off<0){
+							if(x_off<0){
 								m.setStepCount(field_size);
-								m.setMoveDir(DIRECTION.DOWN);
+								m.setMoveDir(DIRECTION.LEFT);
 
 							}
-							else if (y_off>0) {
+							else {
 								m.setStepCount(field_size);
-								m.setMoveDir(DIRECTION.UP);
+								m.setMoveDir(DIRECTION.RIGHT);
 							}
-							m.u = 0;
+							m.x = 0;
 						}
 
 
@@ -574,19 +574,32 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {
 							//m.addPosOff(-x_off, 0);
-							if(x_off<0){
+							if(y_off<0){
 								m.setStepCount(field_size);
-								m.setMoveDir(DIRECTION.RIGHT);
+								m.setMoveDir(DIRECTION.DOWN);
 
 							}
-							else if (x_off>0) {
+							else if (y_off>0) {
 								m.setStepCount(field_size);
-								m.setMoveDir(DIRECTION.LEFT);
+								m.setMoveDir(DIRECTION.UP);
 							}
 							m.x = 0;
 						}
 
 
+					}
+					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] + nextfieldx, m_pos[1]})).isEmpty()) {
+						//m.addPosOff(0, -y_off);
+						if(x_off<0){
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.LEFT);
+
+						}
+						else {
+							m.setStepCount(field_size);
+							m.setMoveDir(DIRECTION.RIGHT);
+						}
+						m.x = 0;
 					}
 
 
