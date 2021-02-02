@@ -171,16 +171,18 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
             Animation ani_right = current_skin.getAnimation("digger_red_right");
             BufferedImage sp1Img;
             sp1Img = ani_right.nextFrame(super.field_size);
-            int x_pixel = spawn_sp1[0] - (sp1Img.getWidth() / 2);
-            int y_pixel = spawn_sp1[1] - (sp1Img.getHeight() / 2);
+            int[] field = super.getCenterOf(spawn_sp1);
+            int x_pixel = field[0] - (sp1Img.getWidth() / 2);
+            int y_pixel = field[1] - (sp1Img.getHeight() / 2);
             g.drawImage(sp1Img, x_pixel, y_pixel, null);
         }
         if(spawn_sp2 != null) {
             Animation ani_left = current_skin.getAnimation("digger_gre_left");
             BufferedImage spImg;
             spImg = ani_left.nextFrame(super.field_size);
-            int x_pixel = spawn_sp2[0] - (spImg.getWidth() / 2);
-            int y_pixel = spawn_sp2[1] - (spImg.getHeight() / 2);
+            int[] field = super.getCenterOf(spawn_sp2);
+            int x_pixel = field[0] - (spImg.getWidth() / 2);
+            int y_pixel = field[1] - (spImg.getHeight() / 2);
             g.drawImage(spImg, x_pixel, y_pixel, null);
         }
 
@@ -188,8 +190,9 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
         Animation ani_nobbin = current_skin.getAnimation("nobbin");
         BufferedImage nobbinImg = ani_nobbin.nextFrame(super.field_size);
         if (spawn_monster != null) {
-            int x_pixel = spawn_monster[0] - (nobbinImg.getWidth() / 2);
-            int y_pixel = spawn_monster[1] - (nobbinImg.getHeight() / 2);
+            int[] field = super.getCenterOf(spawn_monster);
+            int x_pixel = field[0] - (nobbinImg.getWidth() / 2);
+            int y_pixel = field[1] - (nobbinImg.getHeight() / 2);
 
             g.drawImage(nobbinImg, x_pixel, y_pixel, null);
         }
@@ -379,7 +382,7 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
                             LevelEditor.super.obj.put("spawn_p1", coordinations);
-                            spawn_sp1 = new int[]{x, y};
+                            spawn_sp1 = new int[]{P1[0], P1[1]};
                         }}
                     }
                 };
@@ -405,7 +408,7 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
                             LevelEditor.super.obj.put("spawn_p2", coordinations);
-                            spawn_sp2 = new int[]{x, y};
+                            spawn_sp2 = new int[]{P1[0], P1[1]};
                         }}
                     }
                 };
@@ -430,7 +433,7 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("horizontal") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("horizontal"), new JSONArray(coordinations))) ||
                                 (LevelEditor.super.obj.getJSONObject("pos_tun").has("space") && duplicate(LevelEditor.super.obj.getJSONObject("pos_tun").getJSONArray("space"), new JSONArray(coordinations))))){//make sure its not on a tunnel
                             LevelEditor.super.obj.put("spawn_mon", coordinations);
-                            spawn_monster = new int[]{x, y};
+                            spawn_monster = new int[]{P1[0], P1[1]};
                         }}
                     }
                 };

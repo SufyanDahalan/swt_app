@@ -226,7 +226,7 @@ public abstract class Render extends JPanel implements Filesystem {
         return borderOffset;
     }
 
-    int[] getCenterOf(int[] fp) {
+    protected int[] getCenterOf(int[] fp) {
 
         int x_field = fp[0] - 1;
         int y_field = fp[1] - 1;
