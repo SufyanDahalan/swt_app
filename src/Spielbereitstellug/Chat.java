@@ -4,6 +4,8 @@ import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*; // Create a simple GUI window
+import javax.swing.border.CompoundBorder;
+import javax.swing.plaf.basic.BasicTextFieldUI;
 
 
 /***
@@ -11,12 +13,12 @@ import javax.swing.*; // Create a simple GUI window
  * erstellt GUI zum chatten
  * arbeitet zusammen mit der Netzwerksteuerung zum verschicken und empfangen von Textnachrichten
  */
-public class Chat {
+public class Chat extends JPanel {
 
 	// Variablen Deklaration für praktischen Zugriff
 	private JFrame frame = new JFrame("Chat");
 	private javax.swing.JTextArea textfeld; // Zeigt Chatnachrichten an
-	private javax.swing.JTextArea eingabeFeld; // hier kann der Nutzer tippen
+	private javax.swing.JTextField eingabeFeld; // hier kann der Nutzer tippen
 	private Netzwerksteuerung netConnect;
 
 	/***
@@ -31,7 +33,7 @@ public class Chat {
 	 * Getter fürs Eingabedeld
 	 * @return JTextArea eingabeFeld
 	 */
-	public JTextArea getEingabeFeld() {
+	public JTextField getEingabeFeld() {
 		return eingabeFeld;
 	}
 
@@ -44,77 +46,58 @@ public class Chat {
 	// JButton sendButt;
 
 	/***
-	 * erstellt das Chatfenster (GUI)
-	 * bestehend aus: Ausgabefeld, Eingabefeld, Senden-Button
+	 * Konstruktor für den Chat, bekommt eine Netzwerksteuerung übergeben, über welche die Nachrichten ausgetauscht werden
+	 * @param netCon Netzwerksteuerung i.d.R. wird diese auch zum Austasch von Map und Steuerungsinformationen genutzt
 	 */
-	private void createWindow() { // Create and set up the window.
+	public Chat( Netzwerksteuerung netCon ){
 
-		frame = new JFrame("Chat");
-
-
-		// Wenn der Nutzer das Fenster Schließt, verschwindet der Chat
-		// Wenn der Nutzer das Fenster nur minimiert, öffnet sich dieses, bei erhalt einer Nachricht automatisch
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		// Denn HIDE_ON_CLOSE is the same as JFrame.setVisible(false)
-		// Leider ist der Unischtbare Frame nicht ohne weiteres wieder SetVisible
-
-
-		JLabel textLabel = new JLabel("I'm a label in the window", SwingConstants.CENTER);
-		textLabel.setPreferredSize(new Dimension(300, 100));
+		this.setLayout(new BorderLayout());
+		this.setBackground(new Color(0,0,0,200));
+		this.setBorder( BorderFactory.createEmptyBorder(10,10,10,10));
 
 		textfeld = new JTextArea(5, 20);
 		textfeld.setEditable(false);
-		textfeld.setFont(new java.awt.Font("Times New Roman", 0, 22));
+		textfeld.setOpaque(false);
+		textfeld.setBackground(new Color(0,0,0,0));
+		textfeld.setFont(new java.awt.Font("Times New Roman", 0, 20));
+		textfeld.setForeground(Color.white);
 
 		// textfeld.setText("Hier ist ein Teststring ");
 
 		textfeld.setLineWrap(true); // Zeilenumbruch wird eingeschaltet
 		textfeld.setWrapStyleWord(true); // Zeilenumbrüche erfolgen nur nach ganzen Wörtern
 
-		eingabeFeld = new JTextArea();
+		eingabeFeld = new JTextField();
 		eingabeFeld.setColumns(20);
-		eingabeFeld.setLineWrap(true);
-		eingabeFeld.setRows(5);
+		eingabeFeld.setForeground(Color.black);
+		eingabeFeld.setBackground(Color.white);
+		eingabeFeld.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.black),BorderFactory.createEmptyBorder(10,10,10,10)));
 
 		// Ein JScrollPane, der das Textfeld beinhaltet, wird erzeugt
 		JScrollPane scrollpane = new JScrollPane(textfeld);
 		scrollpane.setViewportView(textfeld);
-		// scrollpane.setFitToWidth(true); // geht nicht weil JscrollPane nicht nur
-		// scrollpane
-
-		// Ein JScrollPane, der das EingabeFeld beinhaltet, wird erzeugt
-		JScrollPane scrollpane2 = new JScrollPane(eingabeFeld);
-		scrollpane2.setViewportView(eingabeFeld);
+		scrollpane.setOpaque(false);
+		scrollpane.setBorder(BorderFactory.createEmptyBorder());
+		scrollpane.getViewport().setOpaque(false);
+		scrollpane.setViewportBorder(BorderFactory.createEmptyBorder());
 
 		// Hier wird der Sendenbutton erstellt
-		JButton sendButt = new JButton("senden");
+		/*JButton sendButt = new JButton("senden");
+		sendButt.setBackground(Color.RED);
 
 		sendButt.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// getTextfeld().append(" Der Button wurde geklickt");
 				senden();
 			}
-		});
+		});*/
 
 
-
-		frame.add(scrollpane, BorderLayout.NORTH);
-		frame.add(scrollpane2, BorderLayout.CENTER);
-		frame.add(sendButt, BorderLayout.SOUTH);
-
-		frame.setLocationRelativeTo(null);
-		frame.pack(); // Fenstergröße wird an Textfeld angepasst
-		frame.setVisible(true);
-
-	}
-
-	/***
-	 * Konstruktor für den Chat, bekommt eine Netzwerksteuerung übergeben, über welche die Nachrichten ausgetauscht werden
-	 * @param netCon Netzwerksteuerung i.d.R. wird diese auch zum Austasch von Map und Steuerungsinformationen genutzt
-	 */
-	public Chat( Netzwerksteuerung netCon ){
-		createWindow();
+		this.add(scrollpane, BorderLayout.NORTH);
+		this.add(eingabeFeld, BorderLayout.CENTER);
+		// this.add(sendButt, BorderLayout.SOUTH);
 		setConnection( netCon );
+
 	}
 
 	/***
@@ -137,13 +120,13 @@ public class Chat {
 	 * @param text Chatnachricht (ggf Mehrere aus der versandQueue des Absenders)
 	 */
 	public void empfangen(String text){
-		if( ! text.equals("") ){
+		if( !text.equals("") ){
+			this.setVisible(true);
 			getTextfeld().append("Dein Mitspieler: " + text + "\n");
 			// Falls das Fenster minimiert wurde, wird es bei erhalt einer Nachricht wieder sichtbar
 			// Achtung: Minimiert /= geschlossen !
 			frame.setState(JFrame.NORMAL);
 		}
 	}
-
 
 }

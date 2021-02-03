@@ -5,6 +5,8 @@ import Spielverlauf.*;
 import org.json.JSONObject;
 
 
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -116,6 +118,27 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		//System.out.println(field_size);
 
+
+		if(isMultiplayer) {
+
+			JPanel bottomPanel = new JPanel(new BorderLayout());
+			bottomPanel.setOpaque(false);
+			bottomPanel.add(chat, BorderLayout.LINE_END);
+
+			JButton toggelBtn = new JButton("C");
+			toggelBtn.setBounds(100,100, 45,45);
+
+			toggelBtn.addActionListener(e -> {
+				if(chat.isVisible())
+					chat.setVisible(false);
+				else
+					chat.setVisible(true);
+			});
+
+			this.setLayout(new BorderLayout());
+			this.add(toggelBtn, BorderLayout.LINE_END);
+			this.add(bottomPanel, BorderLayout.PAGE_END);
+		}
 	}
 
 	/**

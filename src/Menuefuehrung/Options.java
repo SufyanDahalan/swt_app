@@ -36,11 +36,11 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     Options(MainFrame babaFrame, JPanel menu, Skin skin){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
 
-        try {
+/*        try {
             clip = Music();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
             e1.printStackTrace();
-        }
+        }*/
 
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));

@@ -108,7 +108,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         layout.show(this.getContentPane(), "panel");
         pack();
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true);
 
         setVisible(true);
     }
@@ -264,6 +264,21 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lok.shoot();
+            }
+        });
+        addKeyBinding(spiel, "ENTER", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chat.senden();
+            }
+        });
+        addKeyBinding(spiel, "TAB", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!chat.isVisible())
+                    chat.setVisible(true);
+                else
+                    chat.setVisible(false);
             }
         });
 
