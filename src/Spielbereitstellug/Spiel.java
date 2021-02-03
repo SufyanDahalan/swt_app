@@ -114,7 +114,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		spieler_steps = field_size/10;
 		//monster_steps = field_size/aktuelles_level.getSpeed();
 
-		System.out.println(field_size);
+		//System.out.println(field_size);
 
 	}
 
@@ -322,7 +322,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						} else {
 							//Monster trifft Spieler
 							if (sp.isAlive() && dieing) {
-								System.out.println("sp is on m");
+								//System.out.println("sp is on m");
 								if (sp.decrementLife())
 									sp.setPosition(getCenterOf(aktuelles_level.getMap().getSpawn_SP1()));
 
@@ -438,17 +438,17 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 				if (m.z != 0) {
-					System.out.print("z happening   ");
+					//System.out.print("z happening   ");
 
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] , m_pos[1]+field_size})).isEmpty()) {
-						//System.out.print(u);
+						////System.out.print(u);
 						//m.addPosOff(-1, 0);
 						m.setStepCount(field_size);
 						m.setMoveDir(DIRECTION.DOWN);
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{nextfieldx +m_pos[0],  m_pos[1]})).isEmpty()) {
 							//m.addPosOff(-1, 0);
-							//System.out.print("reached u++");
-							System.out.print(" happened here z+");
+							////System.out.print("reached u++");
+							//System.out.print(" happened here z+");
 							if(x_off<0){
 								m.setStepCount(field_size);
 								m.setMoveDir(DIRECTION.LEFT);
@@ -485,15 +485,15 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 				} else if (m.u != 0) {
-					//System.out.print("reached u");
+					////System.out.print("reached u");
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - field_size, m_pos[1]})).isEmpty()) {
-						//System.out.print(u);
+						////System.out.print(u);
 						//m.addPosOff(-1, 0);
 						m.setStepCount(field_size);
 						m.setMoveDir(DIRECTION.LEFT);
 						if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {
 							//m.addPosOff(-1, 0);
-							//System.out.print("reached u++");
+							////System.out.print("reached u++");
 							if(y_off<0){
 								m.setStepCount(field_size);
 								m.setMoveDir(DIRECTION.UP);
@@ -509,7 +509,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] + nextfieldy})).isEmpty()) {
 						//m.addPosOff(0, 1);
-						System.out.print(" u ending here should go up     ");
+						//System.out.print(" u ending here should go up     ");
 						if(y_off<0){
 							m.setStepCount(field_size);
 							m.setMoveDir(DIRECTION.UP);
@@ -530,8 +530,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 				} else if (m.x != 0) {
 
 					if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], m_pos[1] - nextfieldy})).isEmpty()) {
-						System.out.print(" reached x1");
-						//System.out.print(x);
+						//System.out.print(" reached x1");
+						////System.out.print(x);
 						//m.addPosOff(0, -y_off);
 						if(y_off<0){
 							m.setStepCount(field_size);
@@ -559,8 +559,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 					} else if (!aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0] - nextfieldx, m_pos[1]})).isEmpty()) {
-						System.out.print(" reached x2");
-						//System.out.print(m.x);
+						//System.out.print(" reached x2");
+						////System.out.print(m.x);
 						//m.addPosOff(-x_off, 0);
 						if(x_off<0){
 							m.setStepCount(field_size);
@@ -604,15 +604,15 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 
 				} else {
-					//System.out.print(getFieldOf(m_pos)[1]+ "   " +getFieldOf(s_pos)[1]);
+					////System.out.print(getFieldOf(m_pos)[1]+ "   " +getFieldOf(s_pos)[1]);
 
 
 					if (getFieldOf(m_pos)[1]==getFieldOf(s_pos)[1] ) {
 						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
-							System.out.print("reached z1");
+							//System.out.print("reached z1");
 							m.z++;
-							//System.out.print(m.z);
+							////System.out.print(m.z);
 
 
 						}
@@ -622,21 +622,21 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					if (getFieldOf(m_pos)[0]==getFieldOf(s_pos)[0]) {
 						if (aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{m_pos[0], nextfieldy + m_pos[1]})).isEmpty()) {//check if nextpos is a tunnel or no, and then choose to execute the move or no
 							//m.addPosOff(0, -1);
-							System.out.print("  reached u   ");
+							//System.out.print("  reached u   ");
 							m.u++;
 
-							//System.out.print(m.u);
+							////System.out.print(m.u);
 						}
 						x_off = 0;
 						nextfieldx = 0;
 
 					}
-					//System.out.print(x_off+ "  "+y_off+getFieldOf(m_pos)[0] + "  " +getFieldOf(m_pos)[1]+ " "+ (getFieldOf(m_pos)[0]-x_off)+ "  ");
-					System.out.print(  getFieldOf(m_pos)[0]+ "   "+getFieldOf(s_pos)[0]+ "   " + nextfieldx+ "   " + x_off+ "   ");
+					////System.out.print(x_off+ "  "+y_off+getFieldOf(m_pos)[0] + "  " +getFieldOf(m_pos)[1]+ " "+ (getFieldOf(m_pos)[0]-x_off)+ "  ");
+					//System.out.print(  getFieldOf(m_pos)[0]+ "   "+getFieldOf(s_pos)[0]+ "   " + nextfieldx+ "   " + x_off+ "   ");
 
 
 					if (  nextfieldx != 0 && !aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ nextfieldx + m_pos[0], m_pos[1]})).isEmpty()) {
-						System.out.print("  reached sec  ");
+						//System.out.print("  reached sec  ");
 						if (m.z == 0 && m.u == 0) {
 							//m.addPosOff(0, y_off);
 							//m.addPosOff(x_off, 0);
@@ -655,7 +655,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 						}
 
 					} else if ( nextfieldy != 0  && !aktuelles_level.getMap().getTunnel(getFieldOf(new int[]{ m_pos[0], m_pos[1]+nextfieldy })).isEmpty()) {
-						System.out.print("  reached first  ");
+						//System.out.print("  reached first  ");
 
 							//m.addPosOff(0, y_off);
 							if(y_off<0){
@@ -667,7 +667,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 								m.setStepCount(field_size);
 								m.setMoveDir(DIRECTION.DOWN);
 							}
-							//System.out.print("catchedy  " +m_pos[1] + "  " + getFieldOf(m_pos)[1]);
+							////System.out.print("catchedy  " +m_pos[1] + "  " + getFieldOf(m_pos)[1]);
 
 
 
@@ -1089,7 +1089,7 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 				if (monRTime < 0) {
 					if(monsterSpawn) {
 						monsters.add(new Nobbin(getCenterOf(aktuelles_level.getMap().getSpawn_monster())));
-						System.out.println(getCenterOf(aktuelles_level.getMap().getSpawn_monster())[0]+" "+getCenterOf(aktuelles_level.getMap().getSpawn_monster())[1]);
+						//System.out.println(getCenterOf(aktuelles_level.getMap().getSpawn_monster())[0]+" "+getCenterOf(aktuelles_level.getMap().getSpawn_monster())[1]);
 					}
 					monRTime = aktuelles_level.getRegenTimeMonster();
 				} else
@@ -1137,7 +1137,7 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 				}
 				return false; // Spiel beendet
 			} else if (spielers.size() == 0) {
-				System.out.println("kein Spieler gespawnt. Loop beendet");
+				//System.out.println("kein Spieler gespawnt. Loop beendet");
 				return false;
 			}
 
@@ -1260,7 +1260,7 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 	}
 
 	public void pausieren() {
-		System.out.println("SP pausiert");
+		//System.out.println("SP pausiert");
 	}
 
 
@@ -1628,7 +1628,7 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 	}
 
 	public void resume() {
-		System.out.println("Spiel wurde fortgesetzt");
+		//System.out.println("Spiel wurde fortgesetzt");
 	}
 
 	public boolean getMultiplayer() {
