@@ -30,6 +30,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 	boolean isHost;
 
 	Netzwerksteuerung netControl;
+	Thread netexchange;
 	Chat chat;
 
 	private EndListener el;
@@ -1168,15 +1169,30 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 			// alle Änderungen sind nun vollzogen. Die Map kann nun an die Netzwerksteuerung gegeben und zum zweiten Spieler gesendet werden.
 
 			// Sende Mapobj
-			if (isMultiplayer && netControl != null){
-				netControl.serverExchange(this);
+			if (isMultiplayer && netControl != null && (netexchange == null || !netexchange.isAlive())){
 
+				Spiel spiel = this;
+
+				netexchange = new Thread() {
+					public void run() {
+						netControl.serverExchange(spiel);
+					}
+				};
+				netexchange.start();
 			}
 
 		}
 		else{ // !isHost
-			if (isMultiplayer && netControl != null){
-				netControl.clientExchange(this);
+			if (isMultiplayer && netControl != null && (netexchange == null || !netexchange.isAlive())){
+
+				Spiel spiel = this;
+
+				netexchange = new Thread() {
+					public void run() {
+						netControl.clientExchange(spiel);
+					}
+				};
+				netexchange.start();
 			}
 		}
 
