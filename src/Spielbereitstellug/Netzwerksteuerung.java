@@ -2,6 +2,7 @@ package Spielbereitstellug;
 
 import Spielverlauf.ClientPackage;
 import Spielverlauf.ServerPackage;
+import Spielverlauf.Spieler;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -76,7 +77,7 @@ public class Netzwerksteuerung {
 		// Server OUT
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
 		
-		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2, versandQueue);
+		ServerPackage sp = new ServerPackage(s.getLevel().getMap(), s.getSpielstand(), s.sp1, s.sp2, versandQueue, s.field_size);
 		versandQueue = "";
 
 		// Sende sp hier mit objectOutputStream_outToClient
@@ -106,7 +107,14 @@ public class Netzwerksteuerung {
 
 		if(cp != null) {
 			if(cp.getSp() != null) {
-				s.sp2.setPosition(cp.getSp().getPosition());
+
+				double scale = (double)s.field_size/(double)cp.getFieldSize();
+				int[] pos = cp.getSp().getPosition();
+				pos[0] *= scale;
+				pos[1] *= scale;
+
+
+				s.sp2.setPosition(pos);
 				s.sp2.setMoveDir(cp.getSp().getMoveDir());
 
 				// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
@@ -135,7 +143,7 @@ public class Netzwerksteuerung {
 		boolean try_fb = s.sp2.getFired();
 		s.sp2.setFired(false);
 
-		ClientPackage cp = new ClientPackage(s.sp2, try_fb, versandQueue);
+		ClientPackage cp = new ClientPackage(s.sp2, try_fb, versandQueue, s.field_size);
 		versandQueue = "";
 
 		// Sende cp hier mit objectOutputStream_outToServer
@@ -166,7 +174,15 @@ public class Netzwerksteuerung {
 		if (sp != null){
 			s.setMap(sp.getMap());
 			s.setSpielstand(sp.getSpielstand());
-			s.sp1 = sp.getSp1();
+
+			Spieler sp1 = sp.getSp1();
+
+			double scale = (double)s.field_size/(double)sp.getFieldSize();
+			int[] pos = sp1.getPosition();
+			pos[0] *= scale;
+			pos[1] *= scale;
+
+			s.sp1 = sp1;
 			s.sp2.setLeben(sp.getSp2().getLeben());
 			s.sp2.setFired(sp.getSp2().getFired());
 			s.getChat().empfangen(sp.getVS());
