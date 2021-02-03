@@ -108,7 +108,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         layout.show(this.getContentPane(), "panel");
         pack();
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);
 
         setVisible(true);
     }
