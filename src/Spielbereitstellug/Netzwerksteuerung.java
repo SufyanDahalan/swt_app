@@ -1,14 +1,13 @@
 package Spielbereitstellug;
 
-import Spielverlauf.ClientPackage;
-import Spielverlauf.ServerPackage;
-import Spielverlauf.Spieler;
+import Spielverlauf.*;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 
 public class Netzwerksteuerung {
@@ -172,12 +171,32 @@ public class Netzwerksteuerung {
 		}
 
 		if (sp != null){
-			s.setMap(sp.getMap());
+
+			double scale = (double)s.field_size/(double)sp.getFieldSize();
+
+			Map map = sp.getMap();
+
+			ArrayList<Geldsack> gsl = map.getGeldsaecke();
+			ArrayList<Monster> ml = map.getMonster();
+
+			for (Geldsack gs : gsl) {
+				int[] pos = gs.getPosition();
+				pos[0] *= scale;
+				pos[1] *= scale;
+			}
+
+			for (Monster m : ml) {
+				int[] pos = m.getPosition();
+				pos[0] *= scale;
+				pos[1] *= scale;
+			}
+
+			s.setMap(map);
 			s.setSpielstand(sp.getSpielstand());
 
 			Spieler sp1 = sp.getSp1();
 
-			double scale = (double)s.field_size/(double)sp.getFieldSize();
+			scale = (double)s.field_size/(double)sp.getFieldSize();
 			int[] pos = sp1.getPosition();
 			pos[0] *= scale;
 			pos[1] *= scale;
