@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -122,12 +123,22 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		if(isMultiplayer) {
 
+			int border = field_size/2;
+			this.setBorder(BorderFactory.createEmptyBorder(border,border,border,border));
+
 			JPanel bottomPanel = new JPanel(new BorderLayout());
 			bottomPanel.setOpaque(false);
 			bottomPanel.add(chat, BorderLayout.LINE_END);
 
-			JButton toggelBtn = new JButton("C");
-			toggelBtn.setBounds(100,100, 45,45);
+			JPanel topPanel = new JPanel(new BorderLayout());
+			topPanel.setOpaque(false);
+
+			JButton toggelBtn = new JButton("Chat");
+			toggelBtn.setBackground(new Color(255,255,255,100));
+			toggelBtn.setForeground(Color.WHITE);
+			toggelBtn.setFont(current_skin.getFont().deriveFont(Font.PLAIN, field_size));
+			toggelBtn.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.WHITE), BorderFactory.createEmptyBorder(field_size/5,field_size/5,field_size/5,field_size/5)));
+			topPanel.add(toggelBtn, BorderLayout.LINE_END);
 
 			toggelBtn.addActionListener(e -> {
 				if(chat.isVisible())
@@ -136,8 +147,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 					chat.setVisible(true);
 			});
 
+			chat.setVisible(false);
+
 			this.setLayout(new BorderLayout());
-			this.add(toggelBtn, BorderLayout.LINE_END);
+			this.add(topPanel, BorderLayout.PAGE_START);
 			this.add(bottomPanel, BorderLayout.PAGE_END);
 		}
 	}
@@ -167,8 +180,6 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 		// Take Time, set period
 		long beginTime = System.currentTimeMillis();
-
-
 
 		if(isHost) {
 			// link current lists
