@@ -3,6 +3,9 @@ package Spielverlauf;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/***
+ * Animiert bewegte Spielfiguren
+ */
 public class Animation {
 
     private Skin s;
@@ -16,6 +19,7 @@ public class Animation {
 
 
     private BufferedImage[] images;
+
 
     public Animation(int loss, BufferedImage[] bi, Skin sk, DIRECTION r, boolean rp) {
         DELAY_PERIOD = loss;
