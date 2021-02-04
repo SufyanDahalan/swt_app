@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-
+/***
+ * Klasse für den Spiel-Ablauf, organisiert alle Inhalte, Steuerungen und Darstellungen des Spielfensters
+ */
 public class Spiel extends Render implements Runnable, Filesystem {
 
 	// dev ops
@@ -65,10 +67,20 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	private Level aktuelles_level;
 
+	/***
+	 * Konstruktor mit Standardwerten im Singleplayer-Modus, ohne Netzwerksteuerung und Chat
+	 */
 	public Spiel(){
 		this(true, false, null, null);
 	}
 
+	/***
+	 * Konstruktor mit richtiger Initialisierung der Werte
+	 * @param isHost Booleanvariable für Unterscheidung Client / Host
+	 * @param isMultiplayer Booleanvariable für Unterscheidung Single- / Multiplayermodus
+	 * @param netC Netzwerksteuerung für sämtliche Kommunikation vom und zum Spielpartner
+	 * @param c Chat-Objekt, ist Teil des Multiplayermodus
+	 */
 	public Spiel( boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC, Chat c) {
 		// initalisiere game setup
 
@@ -157,7 +169,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
 
 	/**
 	 *	Spiellogik, die Positionen prüft und Ereignisse aufruft.
-	 * @return false if plaer dead; else true if game schoud be contiued
+	 * @return false if player dead; else true if game schoud be contiued
 	 */
 
 	private  void setFbRegTime(){
@@ -174,6 +186,10 @@ public class Spiel extends Render implements Runnable, Filesystem {
 		return spieler_steps;
 	}
 
+	/***
+	 * Getter für das Chat-Objekt
+	 * @return Chat
+	 */
 	public Chat getChat(){ return chat; }
 
 	private boolean loop() {
@@ -1232,10 +1248,17 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 			return false;
 	}
 
+	/***
+	 * Getter für das aktuelle Level
+	 * @return Level
+	 */
 	public Level getLevel() {
 		return aktuelles_level;
 	}
 
+	/***
+	 * setzt die Spielfiguren zum Levelstart an die richtigen Positionen
+	 */
 	public void spawnSpieler() {
 
 		int[] pixelPos = getCenterOf(aktuelles_level.getMap().getSpawn_SP1());
@@ -1249,6 +1272,10 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 
 	}
 
+	/***
+	 * prüft bei Schießbefehl, ob ein Feuerball geschossen werden darf, falls ja: setzt Feuerball ein
+	 * @param sp Spieler, der den Feuerball abfeuern will
+	 */
 	public void spawnFeuerball(Spieler sp) {
 		if(!sp.getFired() && sp.isAlive()) {
 			sp.setFired(true);
@@ -1331,6 +1358,12 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 		return d;
 	}
 
+	/***
+	 * Achtet darauf, dass ein Spieler nicht das Spielfeld verlässt, bewegt Spieler
+	 * @param velx Positionsänderung entlang der X-Achse
+	 * @param vely Positionsänderung entlang der Y-Achse
+	 * @param s Spieler
+	 */
 	public void moveSP(int velx, int vely, Spieler s) {
 		int[] spPos = s.getPosition().clone();
 
@@ -1588,6 +1621,9 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 		}
 	}
 
+	/***
+	 * startet das Spiel in eigenem Thread
+	 */
 	public void start(){
 		loopThreat = new Thread(this);
 		loopThreat.start();
@@ -1652,26 +1688,50 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 		this.el = el;
 	}
 
+	/***
+	 * startet neues Level mit übergebener Map
+	 * @param m Map-Objekt
+	 */
 	public void setMap( Map m ) {
 		aktuelles_level = new Level(0,0,0,0,  m);
 	}
 
+	/***
+	 * Setter für den Spielstand
+	 * @param st int Spielstand
+	 */
 	public void setSpielstand(int st) {
 		spielstand = st;
 	}
 
+	/***
+	 * Getter für den Spielstand
+	 * @return int Spielstand
+	 */
 	public int getSpielstand() {
 		return spielstand;
 	}
 
+	/***
+	 * ändert die Position von Spieler2
+	 * @param c_pos Position
+	 */
 	public void setClientPos(int[] c_pos) {
 		sp2.setPosition(c_pos);
 	}
 
+	/***
+	 * ändert die Richtung von Spieler2
+	 * @param moveDir Richtung
+	 */
 	public void setClientMoveDir(DIRECTION moveDir) {
 		sp2.setMoveDir(moveDir);
 	}
 
+	/***
+	 * erhöht den aktuellen Spielstand um s
+	 * @param s int Neue Punkte
+	 */
 	private void incScore(int s){
 		spielstand += s;
 		incLifeCount += s;
@@ -1681,6 +1741,10 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 		//System.out.println("Spiel wurde fortgesetzt");
 	}
 
+	/***
+	 * Getter: Unterscheidung zwischen Single- und Multiplayermodus
+	 * @return isMultiplayer
+	 */
 	public boolean getMultiplayer() {
 		return isMultiplayer;
 	}

@@ -30,7 +30,7 @@ public class Netzwerksteuerung {
 	 * wird vom Server aufgerufen, um auf Verbindung des Clients zu warten
 	 * @param serverSocket bekommt erstellen Serversocket
 	 * @return gibt verbundenen Socket zurück
-	 * @throws IOException
+	 * @throws IOException IOException falls der Socket die Verbindung nicht annehmen kann
 	 */
 	Socket awaitingConnection(ServerSocket serverSocket) throws IOException {
 		Socket socket = serverSocket.accept(); // blockiert, bis sich ein Client angemeldet hat
