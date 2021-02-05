@@ -144,7 +144,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
             topPanel.setOpaque(false);
 
             JButton toggelBtn = new JButton();
-            toggelBtn.setIcon(new ImageIcon(current_skin.getImage("chat_btn")));
+            toggelBtn.setIcon(new ImageIcon(current_skin.getImage("chat_btn", field_size)));
             toggelBtn.setOpaque(false);
             toggelBtn.setBorderPainted(false);
             toggelBtn.setContentAreaFilled(false);
@@ -412,12 +412,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
                     int[] m_pos = m.getPosition();
                     int[] s_pos = sp1.getPosition();
 
-					if(sp2 != null){
-						int[] s2_pos = sp2.getPosition().clone();
+                    if(isMultiplayer){
+                        int[] s2_pos = sp2.getPosition().clone();
 
-						if(Math.abs(s2_pos[0] - m_pos[0])+Math.abs(s2_pos[1] - m_pos[1]) < Math.abs(s_pos[0] - m_pos[0])+Math.abs(s_pos[1] - m_pos[1]))
-						s_pos = s2_pos;
-					}
+                        if(sp2.isAlive() && (!sp1.isAlive() || Math.abs(s2_pos[0] - m_pos[0])+Math.abs(s2_pos[1] - m_pos[1]) < Math.abs(s_pos[0] - m_pos[0])+Math.abs(s_pos[1] - m_pos[1])))
+                            s_pos = s2_pos;
+
+                    }
 
                     int x_off = 0;
                     int y_off = 0;
@@ -675,12 +676,13 @@ public class Spiel extends Render implements Runnable, Filesystem {
                     int[] m_pos = m.getPosition().clone();
                     int[] s_pos = sp1.getPosition().clone();
 
-                    if(sp2 != null){
-						int[] s2_pos = sp2.getPosition().clone();
+                    if(isMultiplayer){
+                        int[] s2_pos = sp2.getPosition().clone();
 
-						if(Math.abs(s2_pos[0] - m_pos[0])+Math.abs(s2_pos[1] - m_pos[1]) < Math.abs(s_pos[0] - m_pos[0])+Math.abs(s_pos[1] - m_pos[1]))
-							s_pos = s2_pos;
-					}
+                        if(sp2.isAlive() && (!sp1.isAlive() || Math.abs(s2_pos[0] - m_pos[0])+Math.abs(s2_pos[1] - m_pos[1]) < Math.abs(s_pos[0] - m_pos[0])+Math.abs(s_pos[1] - m_pos[1])))
+                            s_pos = s2_pos;
+
+                    }
 
                     // Bestimme und setze geblockte Richtungen
                     m.removeBlocks();
