@@ -78,8 +78,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         add(b8);
 
 
-        ImageIcon icon = new ImageIcon(imageDir+"VolumeIcon.png");
-        b8.setIcon(icon);
+        b8.setIcon(new ImageIcon(skin.getImage("mute_btn")));
         b8.addActionListener(this);
 
         JPanel sigleplayer = new JPanel();
@@ -215,22 +214,6 @@ public class Options extends JPanel implements ActionListener, Filesystem {
             layout.show(menu, "Manual");
 
         });
-
-       /* b7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                Desktop desktop = Desktop.getDesktop();
-                if (desktop != null && desktop.isSupported(Desktop.Action.OPEN)) {
-                    try {
-                        desktop.open(new File("bin/Benutzerhandbuch .pdf"));
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
-            }
-        });*/
-
     }
 
 

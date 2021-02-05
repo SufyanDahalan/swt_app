@@ -161,6 +161,43 @@ public class Skin {
 		gre_dbilder[5] = getImage("dig_gre_dow_f6");
 		animations.put("digger_gre_down", new Animation(animation_measure, gre_dbilder, this, DIRECTION.DOWN, true));
 
+		//Spieler tot
+		BufferedImage[] dead_rbilder = new BufferedImage[6];
+		dead_rbilder[0] = getImage("dig_dead_rgt_f1");
+		dead_rbilder[1] = getImage("dig_dead_rgt_f2");
+		dead_rbilder[2] = getImage("dig_dead_rgt_f3");
+		dead_rbilder[3] = getImage("dig_dead_rgt_f4");
+		dead_rbilder[4] = getImage("dig_dead_rgt_f5");
+		dead_rbilder[5] = getImage("dig_dead_rgt_f6");
+		animations.put("digger_dead_right", new Animation(animation_measure, dead_rbilder, this, DIRECTION.RIGHT, true));
+
+		BufferedImage[] dead_lbilder = new BufferedImage[6];
+		dead_lbilder[0] = getImage("dig_dead_lft_f1");
+		dead_lbilder[1] = getImage("dig_dead_lft_f2");
+		dead_lbilder[2] = getImage("dig_dead_lft_f3");
+		dead_lbilder[3] = getImage("dig_dead_lft_f4");
+		dead_lbilder[4] = getImage("dig_dead_lft_f5");
+		dead_lbilder[5] = getImage("dig_dead_lft_f6");
+		animations.put("digger_dead_left", new Animation(animation_measure, dead_lbilder, this, DIRECTION.LEFT, true));
+
+		BufferedImage[] dead_ubilder = new BufferedImage[6];
+		dead_ubilder[0] = getImage("dig_dead_up_f1");
+		dead_ubilder[1] = getImage("dig_dead_up_f2");
+		dead_ubilder[2] = getImage("dig_dead_up_f3");
+		dead_ubilder[3] = getImage("dig_dead_up_f4");
+		dead_ubilder[4] = getImage("dig_dead_up_f5");
+		dead_ubilder[5] = getImage("dig_dead_up_f6");
+		animations.put("digger_dead_up", new Animation(animation_measure, dead_ubilder, this, DIRECTION.UP, true));
+
+		BufferedImage[] dead_dbilder = new BufferedImage[6];
+		dead_dbilder[0] = getImage("dig_dead_dow_f1");
+		dead_dbilder[1] = getImage("dig_dead_dow_f2");
+		dead_dbilder[2] = getImage("dig_dead_dow_f3");
+		dead_dbilder[3] = getImage("dig_dead_dow_f4");
+		dead_dbilder[4] = getImage("dig_dead_dow_f5");
+		dead_dbilder[5] = getImage("dig_dead_dow_f6");
+		animations.put("digger_dead_down", new Animation(animation_measure, dead_dbilder, this, DIRECTION.DOWN, true));
+
 		BufferedImage[] hob_left_bilder = new BufferedImage[4];
 		hob_left_bilder[0] = getImage("hobbin_right_f1");
 		hob_left_bilder[1] = getImage("hobbin_right_f2");

@@ -1482,79 +1482,60 @@ for (Iterator<Hobbin> iterator = hobbins.iterator(); iterator.hasNext(); ) {
 
 			// Spieler
 
-			if (sp1 != null) {
-				if (sp1.isAlive()) {
+			Spieler[] sp = new Spieler[2];
 
-					Animation ani_left = current_skin.getAnimation("digger_red_left");
-					Animation ani_right = current_skin.getAnimation("digger_red_right");
-					Animation ani_up = current_skin.getAnimation("digger_red_up");
-					Animation ani_down = current_skin.getAnimation("digger_red_down");
+			sp[0] = sp1;
+			sp[1] = sp2;
 
-					BufferedImage sp1Img = null;
+			Animation ani_left;
+			Animation ani_right;
+			Animation ani_up;
+			Animation ani_down;
 
-					if (sp1.getMoveDir() == DIRECTION.RIGHT) {
-						sp1Img = ani_right.nextFrame(field_size);
+			for(int i = 0; i<sp.length; i++) {
+				if (sp[i] != null) {
+					if (sp[i].isAlive()) {
+						if(i == 0) {
+							ani_left = current_skin.getAnimation("digger_red_left");
+							ani_right = current_skin.getAnimation("digger_red_right");
+							ani_up = current_skin.getAnimation("digger_red_up");
+							ani_down = current_skin.getAnimation("digger_red_down");
+						}
+						else {
+							ani_left = current_skin.getAnimation("digger_gre_left");
+							ani_right = current_skin.getAnimation("digger_gre_right");
+							ani_up = current_skin.getAnimation("digger_gre_up");
+							ani_down = current_skin.getAnimation("digger_gre_down");
+						}
+					} else {
+						ani_left = current_skin.getAnimation("digger_dead_left");
+						ani_right = current_skin.getAnimation("digger_dead_right");
+						ani_up = current_skin.getAnimation("digger_dead_up");
+						ani_down = current_skin.getAnimation("digger_dead_down");
 					}
-					if (sp1.getMoveDir() == DIRECTION.LEFT) {
-						sp1Img = ani_left.nextFrame(field_size);
-					}
-					if (sp1.getMoveDir() == DIRECTION.UP) {
-						sp1Img = ani_up.nextFrame(field_size);
-					}
-					if (sp1.getMoveDir() == DIRECTION.DOWN) {
-						sp1Img = ani_down.nextFrame(field_size);
-					}
-
-
-					int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-					g.drawImage(sp1Img, x_pixel, y_pixel, null);
-
-				} else {
-					// gegen Geist ersetzen
-					//Animation ani_grave = current_skin.getAnimation("Grave");
-					BufferedImage sp1Img = current_skin.getImage("grave_f5");
-					int x_pixel = sp1.getPosition()[0] - (sp1Img.getWidth() / 2);
-					int y_pixel = sp1.getPosition()[1] - (sp1Img.getHeight() / 2);
-					g.drawImage(sp1Img, x_pixel, y_pixel, null);
-				}
-			}
-
-			if (sp2 != null) {
-				if (sp2.isAlive()) {
-					Animation ani_left = current_skin.getAnimation("digger_gre_left");
-					Animation ani_right = current_skin.getAnimation("digger_gre_right");
-					Animation ani_up = current_skin.getAnimation("digger_gre_up");
-					Animation ani_down = current_skin.getAnimation("digger_gre_down");
 
 					BufferedImage spImg = null;
 
-					if (sp2.getMoveDir() == DIRECTION.RIGHT) {
+					if (sp[i].getMoveDir() == DIRECTION.RIGHT) {
 						spImg = ani_right.nextFrame(field_size);
 					}
-					if (sp2.getMoveDir() == DIRECTION.LEFT) {
+					if (sp[i].getMoveDir() == DIRECTION.LEFT) {
 						spImg = ani_left.nextFrame(field_size);
 					}
-					if (sp2.getMoveDir() == DIRECTION.UP) {
+					if (sp[i].getMoveDir() == DIRECTION.UP) {
 						spImg = ani_up.nextFrame(field_size);
 					}
-					if (sp2.getMoveDir() == DIRECTION.DOWN) {
+					if (sp[i].getMoveDir() == DIRECTION.DOWN) {
 						spImg = ani_down.nextFrame(field_size);
 					}
 
 
-					int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
-					int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
-					g.drawImage(spImg, x_pixel, y_pixel, null);
-				} else {
-					// gegen Geist ersetzen
-					//Animation ani_grave = current_skin.getAnimation("Grave");
-					BufferedImage spImg = current_skin.getImage("grave_f5", field_size);
-					int x_pixel = sp2.getPosition()[0] - (spImg.getWidth() / 2);
-					int y_pixel = sp2.getPosition()[1] - (spImg.getHeight() / 2);
+					int x_pixel = sp[i].getPosition()[0] - (spImg.getWidth() / 2);
+					int y_pixel = sp[i].getPosition()[1] - (spImg.getHeight() / 2);
 					g.drawImage(spImg, x_pixel, y_pixel, null);
 				}
 			}
+
 
 			// Zeichne Score
 			int margin_y = field_size / 4;
