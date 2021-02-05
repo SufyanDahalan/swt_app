@@ -1,6 +1,9 @@
 package Spielverlauf;
 import java.util.ArrayList;
 
+/***
+ * Das Monster mit zwei Augen
+ */
 public class Hobbin extends Monster {
 
 

@@ -2,6 +2,10 @@ package Spielverlauf;
 
 import java.io.Serializable;
 
+/***
+ * Abstrakte Oberklasse für Hobbin und Nobbin,
+ * enthält Wertung (also Punkte fürs töten der Monster), Bewegungsrichtung, Position, Schrittzähler, Boolean-Array für Bewegungsoptionen (welche Richtung ist frei)
+ */
 public abstract class Monster implements Serializable {
 
 	private int[] position;
@@ -10,6 +14,10 @@ public abstract class Monster implements Serializable {
 	protected boolean[] blocks;
 	protected int stepCount;
 
+	/***
+	 * Konstruktor erstellt Monster an der gewünschten Position
+	 * @param pos Position
+	 */
 	public Monster(int[] pos) {
 		position = pos;
 		moveDir = DIRECTION.RIGHT;
@@ -40,11 +48,21 @@ public abstract class Monster implements Serializable {
 		return stepCount;
 	}
 
+	/***
+	 * für Positionsänderungen entlang der X- und Y-Achse
+	 * @param x X-Achse
+	 * @param y Y-Achse
+	 */
 	public void addPosOff(int x, int y){
 		position[0]+=x;
 		position[1]+=y;
 	}
 
+	/***
+	 * für Positionsänderungen mit Richtung und Offset
+	 * @param off int Offset
+	 * @param d Richtung
+	 */
 	public void addPosOff(int off, DIRECTION d){
 		switch (d){
 			case LEFT: addPosOff(-off,0); break;
@@ -66,6 +84,11 @@ public abstract class Monster implements Serializable {
     	return wertung;
 	}
 
+	/***
+	 * prüft ob Bewegung in eine Richtung d möglich ist
+	 * @param d Richtung
+	 * @return Booleanwert: True falls möglich
+	 */
 	public boolean isBlocked(DIRECTION d){
 
     	int i;
@@ -86,10 +109,17 @@ public abstract class Monster implements Serializable {
 		return blocks[i];
 	}
 
+	/***
+	 * schränkt Bewegungsoptionen ein, übernimmt blockierte Richtungen aus übergebenem Array
+	 * @param blocks Boolean Array
+	 */
 	public void setBlocks(boolean[] blocks) {
 		this.blocks = blocks;
 	}
 
+	/***
+	 * gibt Bewegungsoptionen frei, hebt alle blockierte Richtungen auf
+	 */
 	public void removeBlocks(){
     	blocks = new boolean[]{false,false,false,false};
 	}
