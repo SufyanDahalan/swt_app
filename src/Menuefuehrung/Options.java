@@ -23,7 +23,10 @@ import java.net.UnknownHostException;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
-
+/***
+ * Klasse für Auswahlmöglichkeiten im Hauptmenü,
+ * Optionen sind: Start, Options (für Einstellungen), Quit, Singleplayer, Multiplayer, Level Editor, Help me
+ */
 public class Options extends JPanel implements ActionListener, Filesystem {
 
     MediaPlayer clip, sound;
@@ -33,6 +36,13 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     JDialog digger;
     int mutedVolume = 10;
 
+    /***
+     * blendet die Optionen im übergebenen JPanel des JFrames ein, samt Buttons im Digger-Look,
+     * einige Optionen, werden erst nach klicken auf einen Button ausgeklappt z.B. sind Single- und Multiplayer unter einem Punkt Spielen vereint.
+     * @param babaFrame JFrame
+     * @param menu JPanel
+     * @param skin Skin
+     */
     Options(MainFrame babaFrame, JPanel menu, Skin skin){
         com.sun.javafx.application.PlatformImpl.startup(()->{});
 
@@ -249,6 +259,9 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         }
     }
 
+    /***
+     * Spielt einen Ton bei Betätigung eines Menü-Buttons ab
+     */
     public void playSound()
     {
         if(sound == null) {
@@ -261,6 +274,13 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         }
     }
 
+    /***
+     * Spielt Hintergrundmusik im Hauptmenü ab
+     * @return Mediaplayer
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     * @throws LineUnavailableException
+     */
     public MediaPlayer Music() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         String bip = musicDir+"Popcorn01.wav";
         Media hit = new Media(new File(bip).toURI().toString());
@@ -270,7 +290,10 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         return mediaPlayer;
     }
 
-
+    /***
+     * Methode zum Stummschalten der Hintergrundmusik per Schaltfläche mit Piktogramm
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if(music && clip != null) {

@@ -34,10 +34,23 @@
         "score": 9900,
         "name": "BAS",
         "age": "20"
-    },{
+    },
+    {
         "date": "02. Februar 2021",
         "score": 1200,
         "name": "TOB",
         "age": "20"
+    },
+    {
+        "date": "2. Februar 2021",
+        "score": 1025,
+        "name": "TIM",
+        "age": "10"
+    },
+    {
+        "date": "3. Februar 2021",
+        "score": 3675,
+        "name": "DNS",
+        "age": "22"
     }
 ]}

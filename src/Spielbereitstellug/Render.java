@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
+/***
+ * Klasse zum Zeichnen des Spielfeldes + Inhalt
+ */
 public abstract class Render extends JPanel implements Filesystem {
 
     protected int field_size;
@@ -21,6 +24,9 @@ public abstract class Render extends JPanel implements Filesystem {
     protected final double topbarHeight = 1; // Faktor von Feldgröße
     protected JSONObject obj;
 
+    /***
+     * Konstruktor liest Skin-Datei ein
+     */
     public Render()  {
 
         // initialisiere Skin
@@ -30,6 +36,10 @@ public abstract class Render extends JPanel implements Filesystem {
 
     }
 
+    /***
+     * Methode prüft Größenverhältnis der Spiel-Elemente und zeichnet Tunnel, Diamanten, Geldsäcke, ...
+     * @param g Graphics Objekt, auf dem alles Angezeigt wird
+     */
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
@@ -166,8 +176,9 @@ public abstract class Render extends JPanel implements Filesystem {
     }
 
 
-
-
+    /***
+     * Methode berechnet Größenverhältnis, wichtig auch beim Vollbildmodus
+     */
     protected void refreshSizing() {
 
         // Speichere Änderung
@@ -190,6 +201,11 @@ public abstract class Render extends JPanel implements Filesystem {
         field_size = Math.min(w_temp_size, h_temp_size);
     }
 
+    /***
+     * Getter für das Spielfeld-Raster
+     * @param pos Spieler- oder Objektposition
+     * @return  Rasterkoordinaten
+     */
     public int[] getFieldOf(int[] pos){
 
         int[] borderOffest = getBorderOffset();
@@ -209,6 +225,10 @@ public abstract class Render extends JPanel implements Filesystem {
         return fp;
     }
 
+    /***
+     * Getter für die Spielfeldgröße
+     * @return Feldgröße
+     */
     public int getFieldSize() {
         return field_size;
     }

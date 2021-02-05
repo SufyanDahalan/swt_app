@@ -42,6 +42,11 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
          */
     }
 
+    /***
+     * Konstruktor der ersten Klasse, die von der Main-Methode aufgerufen wird:
+     * Erstellt Panel, in dem Menü und später Spiel angezeigt werden,
+     * lädt den Skin ein und setzt die Tastenbelegung für den Vollbildmodus (F11)
+     */
     public MainFrame() {
         getContentPane().setLayout(new CardLayout());
         setTitle("Digger");
@@ -113,7 +118,9 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         setVisible(true);
     }
 
-
+    /***
+     * Funktion für den Vollbildmous, kann im Menü und Spiel mit eigener Taste ausgelöst werden.
+     */
     private void FullScreen(){
         if (fullscreen) {
             dispose();
@@ -129,7 +136,15 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         }
     }
 
-
+    /***
+     * Methode trifft Vorbereitungen für den Spielablauf,
+     * setzt Tastenbelegung der Pfeiltasten für die Steuerung,
+     * bereitet Ablauf bei Spielende vor: Speicherung von Initialien und Alter des Spielers zusammen mit seinem Score
+     * @param isHost Boolean, Unterscheidet Client/Host
+     * @param isMultiplayer Boolean, Unterscheidet Single- von Multiplayermodus
+     * @param netCont Netzerksteuerung
+     * @param chat Chat im Multiplayermodus
+     */
     public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont, Chat chat){//copied from Test.java, should be adjusted later
 
         final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont, chat);

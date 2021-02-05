@@ -7,6 +7,9 @@ import java.awt.*;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
+/***
+ * Klasse für das Pausen Menü, was im Spiel mit Esc angezeigt wird
+ */
 public class BreakPanel extends JPanel {
 
     BreakPanel(Spiel s, MainFrame babaFrame, boolean isAdmin) {

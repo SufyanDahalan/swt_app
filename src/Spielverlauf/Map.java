@@ -28,6 +28,12 @@ public class Map implements Serializable {
 	private Kirsche kirsche;
 	private boolean bonus;
 
+	/***
+	 * Konstruktor, baut Map-Objekt aus übergebenem JSON-Objekt und Skin auf,
+	 * bezieht Feldgröße und Positionen von Monstern, Spielern und Items aud dem JSON-Objekt
+	 * @param obj JSON
+	 * @param sk Skin
+	 */
 	public Map(JSONObject obj, Skin sk) {
 
 		// Set initial Content
@@ -106,6 +112,10 @@ public class Map implements Serializable {
 
 	}
 
+	/***
+	 * Copy-Konstruktor
+	 * @param m bestehende Map
+	 */
 	public Map(Map m) {
 
 		playground_size = m.playground_size.clone();
@@ -330,6 +340,10 @@ public class Map implements Serializable {
 		return ia;
 	}
 
+	/***
+	 * Export Methode, kann erstellte Map wieder als JSON-Objekt speichern, nützlich für den Level-Editor
+	 * @return JSONObject der Map
+	 */
 	public JSONObject exportStaticsAsJSON(){
 
 		JSONObject obj = new JSONObject();

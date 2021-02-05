@@ -9,11 +9,20 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/***
+ * Klasse für das Panel des Hauptmenüs, wird vom MainFrame genutzt
+ */
 public class MainPanel extends JPanel {
 
     JPanel menu;
     Skin skin;
 
+    /***
+     * Panel mit Menü, wird im übergebenen Frame erstellt,
+     * zeigt Auswahlmöglichkeiten der Options-Klasse an.
+     * @param babaFrame JFrame
+     * @param skin Skin
+     */
     MainPanel(MainFrame babaFrame, Skin skin){
 
         this.skin = skin;

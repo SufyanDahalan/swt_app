@@ -8,7 +8,9 @@ import java.awt.*;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
-
+/***
+ * Klasse für Schaltflächen im Digger-Look, wird z.B. im Pausen-Menü an stelle von langweiligen JButtons benutzt
+ */
 public class Button extends JButton implements Filesystem {
 
     private Skin current_skin;

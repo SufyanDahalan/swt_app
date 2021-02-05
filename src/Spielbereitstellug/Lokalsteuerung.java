@@ -5,7 +5,9 @@ import Spielverlauf.Spieler;
 
 import javax.swing.*;
 
-
+/***
+ * Klasse zur lokalen Steuerung der Spielfigur mit den Pfeiltasten und der Leertaste
+ */
 public class Lokalsteuerung {
 
 	private int velx;
@@ -13,6 +15,11 @@ public class Lokalsteuerung {
 	private Spiel spiel;
 	private boolean isHost;
 
+	/***
+	 * Konstruktor der Lokalsteuerung
+	 * @param m Spiel-Objekt, in dem die Position der Spielfigur zu finden ist
+	 * @param isHost Boolean Variable zur Unterscheidung von Host und Client im Multiplayer-Modus
+	 */
 	public Lokalsteuerung(Spiel m, boolean isHost) {
 
 		spiel = m;
@@ -21,19 +28,19 @@ public class Lokalsteuerung {
 		vely = 0;
 		spiel.setFocusTraversalKeysEnabled(false);
 
-
-
-//		 spiel.setOpaque(false); // macht den Inhalt Transparent, im Prototyp bekommt man damit die Spur weg, aber hier setzt sich die spiel dann vor den Spieler
-		// TODO - implement Lokalsteuerung.Lokalsteuerung
-		// throw new UnsupportedOperationException();
 	}
 
-	// Der Nachfolgende Teil stammt aus dem Prototyp und muss ggf angepasst werden
-
+	/***
+	 * Methode wendet Positionsveränderungen auf das Spiel an
+	 */
 	public void render(){
 		spiel.moveSP(velx,vely, getSpieler());
 	}
 
+	/***
+	 * Getter für das Spieler-Objekt
+	 * @return gibt Spieler1 bzw. Spieler2 zurück
+	 */
 	private Spieler getSpieler(){
 		if(isHost)
 			return spiel.sp1;
@@ -41,9 +48,9 @@ public class Lokalsteuerung {
 			return spiel.sp2;
 	}
 
-
-	// TODO: Randbereiche dynamisch auf Fenstergröße anpassen + Exception Cases überlegen
-
+	/***
+	 * bewegt den Spieler nach Oben
+	 */
 	public void up() {
 
 		DIRECTION latestDir = getSpieler().getMoveDir();
@@ -58,6 +65,9 @@ public class Lokalsteuerung {
 		nullifyDirVector();
 	}
 
+	/***
+	 * bewegt den Spieler nach Unten
+	 */
 	public void down() {
 
 		DIRECTION latestDir = getSpieler().getMoveDir();
@@ -72,6 +82,9 @@ public class Lokalsteuerung {
 		nullifyDirVector();
 	}
 
+	/***
+	 * bewegt den Spieler nach Links
+	 */
 	public void left() {
 
 		DIRECTION latestDir = getSpieler().getMoveDir();
@@ -86,6 +99,9 @@ public class Lokalsteuerung {
 		nullifyDirVector();
 	}
 
+	/***
+	 * bewegt den Spieler nach Rechts
+	 */
 	public void right() {
 
 		DIRECTION latestDir = getSpieler().getMoveDir();
@@ -101,8 +117,9 @@ public class Lokalsteuerung {
 		nullifyDirVector();
 	}
 
-	// Methode zum Abfeuern eines Feuerballs
-
+	/***
+	 * Methode zum Abfeuern eines Feuerballs
+	 */
 	public void shoot(){
 
 		if(isHost)
@@ -110,11 +127,11 @@ public class Lokalsteuerung {
 		else {
 			spiel.sp2.setFired(true);
 		}
-		// System.out.println("FEUEEEEEER!"); // System.out.println( spiel.getFeuerball_sp1().getPosition()[0] );
 
 		render();
 
 	}
+
 
 	private boolean isOnCrossroad() {
 
@@ -129,6 +146,7 @@ public class Lokalsteuerung {
 			return false;
 		}
 	}
+
 
 	private void repeatLastMove() {
 		DIRECTION latestDir = getSpieler().getMoveDir();
@@ -150,6 +168,7 @@ public class Lokalsteuerung {
 				break;
 		}
 	}
+
 
 	private void nullifyDirVector() {
 		velx = 0;
