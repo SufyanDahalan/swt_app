@@ -136,7 +136,6 @@ public class Netzwerksteuerung {
 	 * @param s Spiel, aus dem die Steuerungsinformationen bezogen werden
 	 */
 	public void clientExchange(Spiel s) {
-
 		connect();
 		// Client OUT
 		boolean try_fb = s.sp2.getFired();
@@ -157,11 +156,7 @@ public class Netzwerksteuerung {
 		// gibt noch Probleme beim serialisieren vom Bufferedimage
 
 		try {
-			streamSocket.setSoTimeout(250);
 			sp = (ServerPackage) objectInputStream.readObject();
-		}
-		catch(SocketTimeoutException timeout){
-			System.out.println("waiting too long. next!");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -178,6 +173,7 @@ public class Netzwerksteuerung {
 
 			ArrayList<Geldsack> gsl = map.getGeldsaecke();
 			ArrayList<Monster> ml = map.getMonster();
+			ArrayList<Feuerball> fl = map.getFeuerball();
 
 			for (Geldsack gs : gsl) {
 				int[] pos = gs.getPosition();
@@ -187,6 +183,12 @@ public class Netzwerksteuerung {
 
 			for (Monster m : ml) {
 				int[] pos = m.getPosition();
+				pos[0] *= scale;
+				pos[1] *= scale;
+			}
+
+			for (Feuerball f : fl) {
+				int[] pos = f.getPosition();
 				pos[0] *= scale;
 				pos[1] *= scale;
 			}
