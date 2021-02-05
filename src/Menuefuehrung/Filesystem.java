@@ -1,5 +1,8 @@
 package Menuefuehrung;
 
+/***
+ * Interface für häufig genutzte Speicherorte, enthält die Pfade für: Skins, Level, Musik und Bilder
+ */
 public interface Filesystem {
 
     String rootDir = "bin/";

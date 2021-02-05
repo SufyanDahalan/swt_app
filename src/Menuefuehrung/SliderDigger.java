@@ -7,6 +7,9 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/***
+ * Klasse für einen Slider, wird in den Optionen für die Lautstärkeregelung eingesetzt
+ */
 public class SliderDigger extends BasicSliderUI {
 
     Skin skin;

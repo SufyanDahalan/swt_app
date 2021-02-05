@@ -78,7 +78,7 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
     }
 
     /***
-     * speichert das erstellte Level, aber nur wenn alle für das Spiel notwenigen Elemente gesetzt wurden
+     * speichert das erstellte Level, aber nur wenn alle für das Spiel notwendigen Elemente gesetzt wurden
      */
     public void validateAndSave() {// can be called with ctrl+s
         if (super.obj.has("name") && super.obj.has("pg_size") && super.obj.has("spawn_p1") && super.obj.has("spawn_p2") && super.obj.has("spawn_mon")

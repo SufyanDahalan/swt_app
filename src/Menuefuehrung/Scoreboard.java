@@ -18,11 +18,19 @@ import java.util.Comparator;
 
 import static java.awt.Toolkit.getDefaultToolkit;
 
+/***
+ * Klasse für das Scoreboard, welches im Hauptmenü angezeigt und beim Ende einer Spielrunde befüllt wird
+ */
 public class Scoreboard extends JPanel implements Filesystem {
 
     private Skin current_skin;
     static private JTable Table;
     static private DefaultTableModel dtm;
+
+    /***
+     * Konstruktor bereitet die Score-Tabelle vor, berücksichtigt dabei die Schriftart aus dem Skin
+     * @param skin Skin
+     */
     Scoreboard(Skin skin){
         Table = new JTable();
         current_skin = skin; // Loads original_skin.png and original.json from skins/
@@ -74,6 +82,9 @@ public class Scoreboard extends JPanel implements Filesystem {
         revalidate();
     }
 
+    /***
+     * Methode überprüft ob es neue Scores für die Tabelle gibt, Quelle: scores.json
+     */
     public static void refeshScores(){
 
         JSONObject obj = null;
