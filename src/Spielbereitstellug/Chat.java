@@ -67,11 +67,28 @@ public class Chat extends JPanel {
 		textfeld.setLineWrap(true); // Zeilenumbruch wird eingeschaltet
 		textfeld.setWrapStyleWord(true); // Zeilenumbrüche erfolgen nur nach ganzen Wörtern
 
-		eingabeFeld = new JTextField();
+		eingabeFeld = new JTextField("write a message");
 		eingabeFeld.setColumns(20);
 		eingabeFeld.setForeground(Color.black);
 		eingabeFeld.setBackground(Color.white);
 		eingabeFeld.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.black),BorderFactory.createEmptyBorder(10,10,10,10)));
+		eingabeFeld.setForeground(Color.GRAY);
+		eingabeFeld.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (eingabeFeld.getText().equals("write a message")) {
+					eingabeFeld.setText("");
+					eingabeFeld.setForeground(Color.BLACK);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (eingabeFeld.getText().isEmpty()) {
+					eingabeFeld.setForeground(Color.GRAY);
+					eingabeFeld.setText("write a message");
+				}
+			}
+		});
 
 		// Ein JScrollPane, der das Textfeld beinhaltet, wird erzeugt
 		JScrollPane scrollpane = new JScrollPane(textfeld);
