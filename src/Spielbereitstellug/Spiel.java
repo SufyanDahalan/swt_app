@@ -5,6 +5,7 @@ import Spielverlauf.*;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1432,7 +1433,7 @@ public class Spiel extends Render implements Runnable, Filesystem {
     }
 
     /***
-     * startet das Spiel in eigenem Thread
+     * startet die Spiel-Loop in eigenem Thread
      */
     public void start() {
         loopThreat = new Thread(this);

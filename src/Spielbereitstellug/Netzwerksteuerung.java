@@ -117,7 +117,7 @@ public class Netzwerksteuerung {
 				s.sp2.setMoveDir(cp.getSp().getMoveDir());
 
 				// noch nicht sicher wie, aber falls der spieler einen fb abfeuert dann
-				if (cp.isFb_try()) {
+				if (cp.getSp().getFired()) {
 					s.spawnFeuerball(s.sp2);
 				}
 			}
@@ -138,10 +138,9 @@ public class Netzwerksteuerung {
 	public void clientExchange(Spiel s) {
 		connect();
 		// Client OUT
-		boolean try_fb = s.sp2.getFired();
-		s.sp2.setFired(false);
 
-		ClientPackage cp = new ClientPackage(s.sp2, try_fb, versandQueue, s.field_size);
+		ClientPackage cp = new ClientPackage(s.sp2, versandQueue, s.field_size);
+
 		versandQueue = "";
 
 		// Sende cp hier mit objectOutputStream_outToServer
@@ -150,6 +149,9 @@ public class Netzwerksteuerung {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		if(s.sp2.getFired())
+			s.sp2.setFired(false);
 
 		// Client IN
 		ServerPackage sp = null; // get this package
@@ -205,7 +207,6 @@ public class Netzwerksteuerung {
 
 			s.sp1 = sp1;
 			s.sp2.setLeben(sp.getSp2().getLeben());
-			s.sp2.setFired(sp.getSp2().getFired());
 			s.getChat().empfangen(sp.getVS());
 
 		}
