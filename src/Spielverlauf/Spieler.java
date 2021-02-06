@@ -1,9 +1,6 @@
 package Spielverlauf;
 
-import org.json.JSONArray;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Spieler implements Serializable {
 

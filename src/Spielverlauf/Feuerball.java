@@ -1,6 +1,5 @@
 package Spielverlauf;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 /***

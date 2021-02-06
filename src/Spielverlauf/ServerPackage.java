@@ -1,6 +1,5 @@
 package Spielverlauf;
 
-import java.awt.*;
 import java.io.Serializable;
 
 /***

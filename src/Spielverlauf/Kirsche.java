@@ -1,7 +1,5 @@
 package Spielverlauf;
 
-import java.awt.image.BufferedImage;
-
 /***
  * Klasse für die Kirsche,
  * enthält Wertung (im Bezug auf Scoreerhöhung), eine TimeToLive in der die Kirsche eingesammelt werden muss

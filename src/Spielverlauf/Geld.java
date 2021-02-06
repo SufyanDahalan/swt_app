@@ -1,7 +1,5 @@
 package Spielverlauf;
 
-import java.awt.image.BufferedImage;
-
 /***
  * Klasse für Geld-Objekt, Geld fällt aus einem Geldsack heraus, wenn dieser aus der Höhe auf den Boden trifft,
  * Geld hat einen Wert im Bezug auf den Score beim Aufsammeln, sowie eine TimeToLive, d.h. es verschwindet wenn es nicht aufgesammelt wird

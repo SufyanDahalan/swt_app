@@ -1,8 +1,5 @@
 package Spielverlauf;
-import org.json.JSONArray;
-import Spielverlauf.*;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 /***

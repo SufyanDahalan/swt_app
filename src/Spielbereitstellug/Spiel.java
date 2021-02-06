@@ -5,7 +5,6 @@ import Spielverlauf.*;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;

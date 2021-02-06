@@ -3,8 +3,6 @@ package Spielbereitstellug;
 import Spielverlauf.DIRECTION;
 import Spielverlauf.Spieler;
 
-import javax.swing.*;
-
 /***
  * Klasse zur lokalen Steuerung der Spielfigur mit den Pfeiltasten und der Leertaste
  */

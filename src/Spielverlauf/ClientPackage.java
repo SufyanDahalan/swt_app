@@ -1,8 +1,6 @@
 package Spielverlauf;
 
-import javax.print.DocFlavor;
 import java.io.Serializable;
-import java.util.concurrent.RecursiveTask;
 
 /***
  * Paket was der Client periodisch an den Host sendet, enthält: Spieler-Objekt, Schießbefehl des Feuerballs, neue Chatnachrichten, Spielfeldgröße

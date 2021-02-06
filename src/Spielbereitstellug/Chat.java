@@ -1,11 +1,10 @@
 package Spielbereitstellug;
 
-import java.net.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*; // Create a simple GUI window
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
-import javax.swing.plaf.basic.BasicTextFieldUI;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 
 /***

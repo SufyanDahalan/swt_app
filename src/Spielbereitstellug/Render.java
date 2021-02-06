@@ -1,7 +1,7 @@
 package Spielbereitstellug;
 
 import Menuefuehrung.Filesystem;
-import Spielverlauf.*;
+import Spielverlauf.Skin;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 
 /***
  * Klasse zum Zeichnen des Spielfeldes + Inhalt
