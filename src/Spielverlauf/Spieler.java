@@ -2,16 +2,28 @@ package Spielverlauf;
 
 import java.io.Serializable;
 
+/**
+ * Von ihr intanzierte Objekte stellen eine Spieler innerhalb eines Spielfeldes dar. Es enthält sowohl äußerliche Informationen über {@link #position Position} und Anzahl der noch vorhandnen {@link #leben Leben},
+ * alsauch interne Attribute im Bezug auf Objektzustände.
+ */
 public class Spieler implements Serializable {
 
+	/**	Position in Pixeln */
 	private int[] position;
-	// private String name; wird nicht benötigt, da Daten erst am Ende eines Spiels gebraucht werden und dann direkt in den Skore gespeichert werden.
-	// private int alter;
+	/** Anzahl der aktuell vorhanden Leben. Wenn 0, dann Spieler tot. */
 	private int leben = 3;
+	/** Bewegungsrichtung nach der letzten Positionsänderung */
 	private DIRECTION moveDir;
+	/** Verbleibende Regenerationszeit des Feuerball */
 	private long fbRegeneration;
+	/** Zustand, ob Spieler gefeuert hat */
 	private boolean fired;
 
+	/**
+	 * Erzeugt einen Spieler an einer Pixelposition x,y
+	 * @param x_pixel x Position in Pixel
+	 * @param y_pixel y Position in Pixel
+	 */
 	public Spieler(int x_pixel, int y_pixel) {
 
 		// Position
@@ -56,14 +68,6 @@ public class Spieler implements Serializable {
 
     public boolean decrementLife() {
     	leben -= 1;
-		/*
-    	try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		 */
 		return isAlive();
 	}
 
