@@ -1,21 +1,31 @@
 package Menuefuehrung;
 
 import Spielverlauf.Skin;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.ComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Vector;
 
 /***
  * Klasse für das Panel des Hauptmenüs, wird vom MainFrame genutzt
  */
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements Filesystem {
 
     JPanel menu;
     Skin skin;
+    MainFrame babaFrame;
 
     /***
      * Panel mit Menü, wird im übergebenen Frame erstellt,
@@ -26,6 +36,7 @@ public class MainPanel extends JPanel {
     MainPanel(MainFrame babaFrame, Skin skin){
 
         this.skin = skin;
+        this.babaFrame = babaFrame;
 
         setLayout(new GridBagLayout());
         setBackground(Color.BLACK);
@@ -101,6 +112,46 @@ public class MainPanel extends JPanel {
             musicLabel.setAlignmentX(CENTER_ALIGNMENT);
             musicLabel.setFont(skin.getFont().deriveFont(Font.PLAIN, 20));
 
+            JLabel skinLable = new JLabel("Skin", SwingConstants.CENTER);
+            skinLable.setForeground(Color.white);
+            skinLable.setAlignmentX(CENTER_ALIGNMENT);
+            skinLable.setFont(skin.getFont().deriveFont(Font.PLAIN, 20));
+
+
+            File directory = new File(skinfolder_name);
+            String[] fileList = directory.list(new FilenameFilter() {
+                public boolean accept(File directory, String fileName) {
+                    return fileName.endsWith(".json");
+                }
+            });
+
+            String[] skinList = {"witch_skin","original_skin"};
+           // Vector<String> skinList = new Vector<>();
+            /*
+            for(String s : fileList) {
+                JSONObject objf = null;
+                try {
+                    objf = new JSONObject(new String(Files.readAllBytes(Paths.get(skinfolder_name + s))));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if(objf.has("name"))
+                    skinList.add(objf.getString("name"));
+            }*/
+
+            JComboBox skinDropdown = new JComboBox(skinList);
+            skinDropdown.setForeground(Color.WHITE);
+            skinDropdown.setOpaque(false);
+            skinDropdown.setBackground(new Color(0,0,0,0));
+            skinDropdown.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.gray), BorderFactory.createEmptyBorder(4,4,4,4)));
+            skinDropdown.setFocusable(false);
+
+            skinDropdown.addActionListener(e -> {
+                    JComboBox cb = (JComboBox)e.getSource();
+                    String skinName = (String)cb.getSelectedItem();
+                    babaFrame.skin = new Skin(new File(skinfolder_name), skinName);
+                    babaFrame.getContentPane().repaint();
+                });
 
             controlles.setLayout(new BoxLayout(controlles, BoxLayout.PAGE_AXIS));
             controlles.setBackground(Color.black);
@@ -113,6 +164,10 @@ public class MainPanel extends JPanel {
             controlles.add(musicLabel);
             controlles.add(Box.createRigidArea(new Dimension(0, 10)));
             controlles.add(musicSlider);
+            controlles.add(Box.createRigidArea(new Dimension(0, 30)));
+            controlles.add(skinLable);
+            controlles.add(Box.createRigidArea(new Dimension(0, 20)));
+            controlles.add(skinDropdown);
             controlles.add(Box.createVerticalGlue());
 
             setBackground(Color.black);
@@ -168,6 +223,8 @@ public class MainPanel extends JPanel {
             dtm.addRow(new Object[]{"move left","LEFT"});
             dtm.addRow(new Object[]{"move rigth","RIGHT"});
             dtm.addRow(new Object[]{"fire","SPACE"});
+            dtm.addRow(new Object[]{"open/close chat","TAB"});
+            dtm.addRow(new Object[]{"send message","ENTER"});
             dtm.addRow(new Object[]{"fullscreen / windowed","F11"});
             dtm.addRow(new Object[]{"game pause","ESC"});
 

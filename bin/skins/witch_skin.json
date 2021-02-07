@@ -1,6 +1,6 @@
 {
     "reference":38,
-    "name" : "Witch",
+    "name" : "witch_skin",
     "data" : {
         "hobbin_right_f1": [388, 110, 19, 26],
         "hobbin_right_f2": [407, 110, 19, 26],
