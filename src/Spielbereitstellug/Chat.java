@@ -89,9 +89,8 @@ public class Chat extends JPanel {
 				if (eingabeFeld.getText().isEmpty()) {
 					eingabeFeld.setForeground(Color.GRAY);
 					eingabeFeld.setText("write a message");
-
-					usingSpaceBar = false; //Ab hier kann die Leertaste wieder zum Abfeuern des Feuerballs benutzt werden
 				}
+				usingSpaceBar = false; //Ab hier kann die Leertaste wieder zum Abfeuern des Feuerballs benutzt werden
 			}
 		});
 
