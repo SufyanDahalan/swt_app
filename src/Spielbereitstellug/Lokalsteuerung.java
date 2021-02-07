@@ -13,6 +13,9 @@ public class Lokalsteuerung {
 	private Spiel spiel;
 	private boolean isHost;
 
+	private Chat chat = null;
+	private boolean isSpaceBarAvailable = true; // um Konflikt mit Chat zu verhindern
+
 	/***
 	 * Konstruktor der Lokalsteuerung
 	 * @param m Spiel-Objekt, in dem die Position der Spielfigur zu finden ist
@@ -25,6 +28,18 @@ public class Lokalsteuerung {
 		velx = 0;
 		vely = 0;
 		spiel.setFocusTraversalKeysEnabled(false);
+
+	}
+
+	public Lokalsteuerung(Spiel m, boolean isHost, Chat c) {
+
+		spiel = m;
+		this.isHost = isHost;
+		velx = 0;
+		vely = 0;
+		spiel.setFocusTraversalKeysEnabled(false);
+
+		chat = c;
 
 	}
 
@@ -117,16 +132,22 @@ public class Lokalsteuerung {
 
 	/***
 	 * Methode zum Abfeuern eines Feuerballs
+	 * Prüft zunächst ob die Leertaste gerade vom Multiplayer-Chat benutzt wird
 	 */
 	public void shoot(){
 
-		if(isHost)
-			spiel.spawnFeuerball(spiel.sp1);
-		else {
-			spiel.sp2.setFired(true);
-		}
+		if(chat != null) updateSpaceAvailable();
 
-		render();
+
+		if(isSpaceBarAvailable){
+			if(isHost)
+				spiel.spawnFeuerball(spiel.sp1);
+			else {
+				spiel.sp2.setFired(true);
+			}
+
+			render();
+		}
 
 	}
 
@@ -171,6 +192,16 @@ public class Lokalsteuerung {
 	private void nullifyDirVector() {
 		velx = 0;
 		vely = 0;
+	}
+
+	/***
+	 * Prüft ob die Leertaste verfügbar ist, erfragt dies beim Chat
+	 */
+	private void updateSpaceAvailable() {
+
+		boolean inUse = chat.getSpaceBarUsage();
+
+		isSpaceBarAvailable = !inUse;
 	}
 
 }

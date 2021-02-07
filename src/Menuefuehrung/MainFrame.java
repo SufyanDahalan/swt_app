@@ -247,8 +247,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
         spiel.addListener(el);
 
-        // Naiv-Testing Area:
-        Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost);
+        Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost, chat);
 
         addKeyBinding(spiel, "DOWN", new AbstractAction() {
             @Override
