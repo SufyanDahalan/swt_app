@@ -247,8 +247,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
 
         spiel.addListener(el);
 
-        // Naiv-Testing Area:
-        Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost);
+        Lokalsteuerung lok = new Lokalsteuerung(spiel, isHost, chat);
 
         addKeyBinding(spiel, "DOWN", new AbstractAction() {
             @Override
@@ -280,21 +279,25 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
                 lok.shoot();
             }
         });
-        addKeyBinding(spiel, "ENTER", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chat.senden();
-            }
-        });
-        addKeyBinding(spiel, "TAB", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!chat.isVisible())
-                    chat.setVisible(true);
-                else
-                    chat.setVisible(false);
-            }
-        });
+
+        if(isMultiplayer) {
+            addKeyBinding(spiel, "ENTER", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    chat.senden();
+                    spiel.requestFocus();
+                }
+            });
+            addKeyBinding(spiel, "TAB", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!chat.isVisible())
+                        chat.setVisible(true);
+                    else
+                        chat.setVisible(false);
+                }
+            });
+        }
 
         final MainFrame b =this;
 

@@ -20,6 +20,8 @@ public class Chat extends JPanel {
 	private javax.swing.JTextField eingabeFeld; // hier kann der Nutzer tippen
 	private Netzwerksteuerung netConnect;
 
+	private boolean usingSpaceBar = false; // true, falls Leertaste für Leerzeichen benutzt wird. Also wenn der Chat im Fokus ist.
+
 	/***
 	 * Getter fürs Textfeld (aka. Ausgabefeld)
 	 * @return JTextArea textfeld
@@ -78,6 +80,8 @@ public class Chat extends JPanel {
 				if (eingabeFeld.getText().equals("write a message")) {
 					eingabeFeld.setText("");
 					eingabeFeld.setForeground(Color.BLACK);
+
+					usingSpaceBar = true;
 				}
 			}
 			@Override
@@ -86,6 +90,7 @@ public class Chat extends JPanel {
 					eingabeFeld.setForeground(Color.GRAY);
 					eingabeFeld.setText("write a message");
 				}
+				usingSpaceBar = false; //Ab hier kann die Leertaste wieder zum Abfeuern des Feuerballs benutzt werden
 			}
 		});
 
@@ -143,6 +148,23 @@ public class Chat extends JPanel {
 			// Achtung: Minimiert /= geschlossen !
 			frame.setState(JFrame.NORMAL);
 		}
+	}
+
+	/***
+	 * Getter für die Benutzung der Leertaste,
+	 * damit beim Tippen des Leerzeichens kein Feuerball abgefeuert wird
+	 * @return true, falls Leertaste vom Chat benutzt wird, sonst false
+	 */
+	public boolean getSpaceBarUsage(){
+		return usingSpaceBar;
+	}
+
+	/***
+	 * Setter für die Benutzung der Leertaste
+	 * @param b boolean: false, wenn chat eingeklappt wird
+	 */
+	public void setSpaceBarUsage(boolean b){
+		usingSpaceBar = b;
 	}
 
 }
