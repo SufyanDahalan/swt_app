@@ -26,10 +26,10 @@ public abstract class Render extends JPanel implements Filesystem {
     /***
      * Konstruktor liest Skin-Datei ein
      */
-    public Render()  {
+    public Render(Skin skin)  {
 
         // initialisiere Skin
-        current_skin = new Skin(new File(skinfolder_name), skinName); // Loades original_skin.png and original.json from skins/
+        current_skin = skin; // Loades original_skin.png and original.json from skins/
 
         obj = new JSONObject();
 

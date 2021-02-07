@@ -35,6 +35,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
     boolean music = true;
     JDialog digger;
     int mutedVolume = 10;
+    Skin skin;
 
     /***
      * blendet die Optionen im übergebenen JPanel des JFrames ein, samt Buttons im Digger-Look,
@@ -51,6 +52,8 @@ public class Options extends JPanel implements ActionListener, Filesystem {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e1) {
             e1.printStackTrace();
         }
+
+        this.skin = skin;
 
         setLayout(new FlowLayout(FlowLayout.CENTER, 500, 0));
         setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
@@ -247,7 +250,7 @@ public class Options extends JPanel implements ActionListener, Filesystem {
             ErrorDialog.add(text);
             ErrorDialog.setVisible(true);
         }else {
-            LevelEditor editor = new LevelEditor();
+            LevelEditor editor = new LevelEditor(skin);
             babaFrame.getContentPane().add(editor, "editor");// adds the LevelEditor to the cardboard layout
             CardLayout layout = (CardLayout) babaFrame.getContentPane().getLayout();
             MainFrame.addKeyBinding(editor, "ESCAPE", new AbstractAction() {

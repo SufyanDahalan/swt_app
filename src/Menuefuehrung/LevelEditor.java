@@ -38,9 +38,6 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
     private int[] spawn_sp1;
     private int[] spawn_sp2;
 
-    // static content
-    private final Skin current_skin = new Skin(new File(skinfolder_name), skinName);
-
     /***
      * um Tastenbelegung zu erstellen
      * @param c JComponent
@@ -66,7 +63,8 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
     /***
      * Konstruktor des LevelEditors
      */
-    public LevelEditor() {
+    public LevelEditor(Skin skin) {
+        super(skin);
         playground_size.put(0, 18);
         playground_size.put(1, 10);
         super.obj.put("pg_size", playground_size);

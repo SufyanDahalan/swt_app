@@ -17,8 +17,7 @@ import java.util.GregorianCalendar;
 
 
 public class MainFrame extends JFrame implements Filesystem, MouseListener {
-    Point evtPoint;
-    int xPos, yPos;
+    Skin skin;
 
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     boolean fullscreen = false;
@@ -57,7 +56,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
                 FullScreen();
             }
         });
-        Skin skin = new Skin(new File(skinfolder_name), skinName);
+        skin = new Skin(new File(skinfolder_name), skinName);
         MainPanel Panel = new MainPanel(this, skin);
         getContentPane().add(Panel, "panel");
        /*this.addMouseListener(new MouseListener() {
@@ -147,7 +146,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
      */
     public void prepareMap(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netCont, Chat chat){//copied from Test.java, should be adjusted later
 
-        final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont, chat);
+        final Spiel spiel = new Spiel(isHost, isMultiplayer, netCont, chat, skin);
 
 
         EndListener el = spielstand -> {

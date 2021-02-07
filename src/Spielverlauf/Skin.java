@@ -288,7 +288,7 @@ public class Skin {
 
 		// scale cropped image
 
-		double scale_factor = fs/reference; // calculate teh scaling factor by referece of skin
+		double scale_factor = (double) fs/(double)reference; // calculate teh scaling factor by referece of skin
 
 		int new_width = (int)Math.round(scale_factor * dest.getWidth());
 		int new_height = (int)Math.round(scale_factor * dest.getHeight());

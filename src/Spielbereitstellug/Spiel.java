@@ -69,8 +69,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
     /***
      * Konstruktor mit Standardwerten im Singleplayer-Modus, ohne Netzwerksteuerung und Chat
      */
-    public Spiel() {
-        this(true, false, null, null);
+    public Spiel(Skin skin) {
+        this(true, false, null, null, skin);
     }
 
     /***
@@ -80,7 +80,8 @@ public class Spiel extends Render implements Runnable, Filesystem {
      * @param netC Netzwerksteuerung für sämtliche Kommunikation vom und zum Spielpartner
      * @param c Chat-Objekt, ist Teil des Multiplayermodus
      */
-    public Spiel(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC, Chat c) {
+    public Spiel(boolean isHost, boolean isMultiplayer, Netzwerksteuerung netC, Chat c, Skin skin) {
+        super(skin);
         // initalisiere game setup
 
         this.isHost = isHost;
