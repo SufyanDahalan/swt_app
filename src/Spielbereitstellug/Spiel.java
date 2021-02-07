@@ -153,8 +153,9 @@ public class Spiel extends Render implements Runnable, Filesystem {
             topPanel.add(toggelBtn, BorderLayout.LINE_END);
 
             toggelBtn.addActionListener(e -> {
-                if (chat.isVisible())
-                    chat.setVisible(false);
+                if (chat.isVisible()){
+                    chat.setVisible(false); chat.setSpaceBarUsage(false);
+                }
                 else
                     chat.setVisible(true);
             });

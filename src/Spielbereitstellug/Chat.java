@@ -160,4 +160,12 @@ public class Chat extends JPanel {
 		return usingSpaceBar;
 	}
 
+	/***
+	 * Setter für die Benutzung der Leertaste
+	 * @param b boolean: false, wenn chat eingeklappt wird
+	 */
+	public void setSpaceBarUsage(boolean b){
+		usingSpaceBar = b;
+	}
+
 }
