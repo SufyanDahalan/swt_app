@@ -59,53 +59,7 @@ public class MainFrame extends JFrame implements Filesystem, MouseListener {
         skin = new Skin(new File(skinfolder_name), skinName);
         MainPanel Panel = new MainPanel(this, skin);
         getContentPane().add(Panel, "panel");
-       /*this.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
 
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                xPos = getBounds().x;
-                yPos = getBounds().y;
-                evtPoint = e.getPoint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (e.getX() < evtPoint.x) {
-                    setLocation(xPos--, yPos);
-                }
-                if (e.getX() > evtPoint.x) {
-                    setLocation(xPos++, yPos);
-                }
-                if (e.getY() < evtPoint.y) {
-                    setLocation(xPos, yPos--);
-                }
-                if (e.getY() > evtPoint.y) {
-                    setLocation(xPos, yPos++);
-                }
-            }}
-        );
-
-*/
         setIconImage(new ImageIcon(imageDir+"Logo.png").getImage());
         setUndecorated(false);
         CardLayout layout = (CardLayout) getContentPane().getLayout();

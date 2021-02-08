@@ -35,7 +35,6 @@ public class Scoreboard extends JPanel implements Filesystem {
         Table = new JTable();
         current_skin = skin; // Loads original_skin.png and original.json from skins/
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        //setBorder(new CompoundBorder( BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20), BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED) ));
 
         setOpaque(false);
         dtm = new DefaultTableModel(0,0) {
@@ -52,8 +51,6 @@ public class Scoreboard extends JPanel implements Filesystem {
         Table.setFillsViewportHeight(true);
         Table.setForeground(Color.white);
         Table.setFont(current_skin.getFont().deriveFont(Font.PLAIN, 15));
-        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
-
 
         Dimension screenSize = getDefaultToolkit().getScreenSize();
         int Height = (int) screenSize.getHeight(), Width = (int) screenSize.getWidth();
@@ -78,8 +75,7 @@ public class Scoreboard extends JPanel implements Filesystem {
 
         add(Header);
         add(Table);
-        repaint();
-        revalidate();
+        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
     }
 
     /***
@@ -125,5 +121,6 @@ public class Scoreboard extends JPanel implements Filesystem {
         super.paintComponent(g);
         setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
     }
+
 
 }

@@ -155,7 +155,6 @@ public class LevelEditor extends Render implements MouseListener, Filesystem {
 
     }
 
-
     /***
      * zeigt das Spielfeld an und animiert Monster und Spieler Figuren
      * @param g Graphics-Object

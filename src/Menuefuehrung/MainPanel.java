@@ -10,12 +10,14 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.ComboBoxUI;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Vector;
 
 /***
@@ -80,7 +82,9 @@ public class MainPanel extends JPanel implements Filesystem {
         @Override
         public void paintComponent(Graphics g){
             super.paintComponent(g);
-            setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );        }
+            setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED), BorderFactory.createEmptyBorder(getHeight()/20,getHeight()/20,getHeight()/20,getHeight()/20)) );
+        }
+
     }
 
     private class SetupPanel extends SubMenu {
@@ -125,9 +129,29 @@ public class MainPanel extends JPanel implements Filesystem {
                 }
             });
 
-            String[] skinList = {"witch_skin","original_skin"};
-           // Vector<String> skinList = new Vector<>();
-            /*
+            /**
+             * Dropdownlistenelement mit Anzeigename und hinterlegtem Wert
+             */
+            class ListItem {
+                String listeName;
+                String fileName;
+
+                ListItem(String n, String f){
+                    listeName = n;
+                    fileName = f;
+                }
+
+                public String toString(){
+                    return listeName;
+                }
+
+                public String getFileName() {
+                    return fileName;
+                }
+            }
+
+            Vector<ListItem> skinList = new Vector<>();
+
             for(String s : fileList) {
                 JSONObject objf = null;
                 try {
@@ -135,22 +159,36 @@ public class MainPanel extends JPanel implements Filesystem {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if(objf.has("name"))
-                    skinList.add(objf.getString("name"));
-            }*/
+                if(objf.has("name")) {
+                    // entferne Dateiendung
+                    s = s.substring(0, s.lastIndexOf('.'));
+                    // erstelle Listenelement
+                    skinList.add(new ListItem(objf.getString("name"), s));
+                }
+            }
 
             JComboBox skinDropdown = new JComboBox(skinList);
+            skinDropdown.setUI(new BasicComboBoxUI() {
+
+                @Override
+                public void paintCurrentValueBackground(
+                        Graphics g, Rectangle bounds, boolean hasFocus) {
+
+                }
+
+            });
+            skinDropdown.setMaximumSize(new Dimension((int)skinDropdown.getMaximumSize().getWidth(), 100));
             skinDropdown.setForeground(Color.WHITE);
             skinDropdown.setOpaque(false);
+
             skinDropdown.setBackground(new Color(0,0,0,0));
             skinDropdown.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(2,2,2,2,Color.gray), BorderFactory.createEmptyBorder(4,4,4,4)));
             skinDropdown.setFocusable(false);
 
             skinDropdown.addActionListener(e -> {
                     JComboBox cb = (JComboBox)e.getSource();
-                    String skinName = (String)cb.getSelectedItem();
+                    String skinName = ((ListItem)cb.getSelectedItem()).getFileName();
                     babaFrame.skin = new Skin(new File(skinfolder_name), skinName);
-                    babaFrame.getContentPane().repaint();
                 });
 
             controlles.setLayout(new BoxLayout(controlles, BoxLayout.PAGE_AXIS));
@@ -168,6 +206,7 @@ public class MainPanel extends JPanel implements Filesystem {
             controlles.add(skinLable);
             controlles.add(Box.createRigidArea(new Dimension(0, 20)));
             controlles.add(skinDropdown);
+            controlles.add(Box.createRigidArea(new Dimension(0, 20)));
             controlles.add(Box.createVerticalGlue());
 
             setBackground(Color.black);
